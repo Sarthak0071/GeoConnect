@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
@@ -107,7 +108,8 @@ const SignUp = () => {
   };
 
   const handleAlreadyHaveAccount = () => {
-    navigate("/Login"); // Redirect to login page
+    navigate("/");
+
   };
 
   return (
