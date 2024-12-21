@@ -1,0 +1,44 @@
+.home {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  
+  .map-container {
+    height: 500px;
+    margin: 20px 0;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .famous-places {
+    margin-top: 20px;
+  }
+  
+  .category {
+    margin-bottom: 20px;
+  }
+  
+  .category h3 {
+    color: #4caf50;
+    text-transform: capitalize;
+  }
+  
+  .category ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .category ul li {
+    background: #f9f9f9;
+    margin: 5px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .error {
+    color: red;
+    margin-top: 20px;
+  }
+  

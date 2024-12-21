@@ -1,0 +1,112 @@
+.container-signup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f2f5;
+    box-sizing: border-box;
+  }
+  
+  .content-signup {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 30px;
+    text-align: center;
+  }
+  
+  .form-signup h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #1877f2;
+    margin-bottom: 10px;
+  }
+  
+  .form-signup .error-message {
+    font-size: 14px;
+    color: #f02849;
+    margin-bottom: 15px;
+  }
+  
+  .form-signup input,
+  .form-signup select {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 15px;
+    border: 1px solid #ccd0d5;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: #f5f6f7;
+  }
+  
+  .form-signup input::placeholder,
+  .form-signup select {
+    font-size: 14px;
+    color: #8d949e;
+  }
+  
+  .form-signup button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    background-color: #42b72a;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .form-signup button:hover {
+    background-color: #36a420;
+  }
+  
+  .google-signup {
+    background-color: #db4437;
+    margin-top: 10px;
+  }
+  
+  .google-signup:hover {
+    background-color: #c1351d;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .content-signup {
+      padding: 20px;
+    }
+  
+    .form-signup h2 {
+      font-size: 24px;
+    }
+  
+    .form-signup input,
+    .form-signup button {
+      padding: 12px;
+    }
+  }
+  
+
+  .already-account {
+    margin-top: 15px;
+    padding: 12px;
+    width: 100%;
+    background-color: transparent;
+    color: #1877f2;
+    border: 1px solid #1877f2;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .already-account:hover {
+    background-color: #e4f0fb;
+  }
+  
