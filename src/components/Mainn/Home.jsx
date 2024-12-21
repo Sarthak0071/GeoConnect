@@ -1,6 +1,3 @@
-
-
-
 import React, { useEffect, useState } from "react";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 
@@ -28,29 +25,28 @@ const Home = () => {
     }
   };
 
-  // Fetch tourist places (with a focus on temples, museums, lakes, rivers, and historical sites)
+  // Fetch tourist places with a focus on famous attractions
   const fetchTouristPlaces = async (lat, lng) => {
     try {
-      // Define the types and keywords you're interested in (temples, museums, lakes, rivers, historical places)
-      const types = 'museum|church|synagogue|temple|park|zoo';
-      const keyword = 'temple|museum|lake|river|historical';
+      // Define the types and keywords you're interested in for famous places
+      const types = 'tourist_attraction|point_of_interest|landmark|museum|park';
+      const keyword = 'famous tourist attractions';
 
       const response = await fetch(
         `http://localhost:5000/api/places?lat=${lat}&lng=${lng}&type=${types}&keyword=${keyword}&key=AIzaSyDIZ4wZgZyI7Zxbb4DPwnvDmQ6JFMyVum4`
       );
-    
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-    
+
       const data = await response.json();
-    
-      // Filter the results to include places with the keywords we're interested in
+
       setTouristPlaces(
         (data.results || []).map((place) => ({
           name: place.name,
           location: place.geometry.location,
-          address: place.vicinity, // Add address to show the location in a list
+          address: place.vicinity,
         }))
       );
     } catch (err) {
@@ -154,7 +150,7 @@ const Home = () => {
         </GoogleMap>
       </div>
       <div>
-        <h2>Tourist Places Within 50km</h2>
+        <h2>Famous Tourist Places Within 50km</h2>
         <ul>
           {touristPlaces.map((place, index) => (
             <li key={index}>{place.name}</li>
@@ -166,6 +162,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
-
