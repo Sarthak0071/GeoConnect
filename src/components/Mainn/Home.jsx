@@ -61,26 +61,63 @@ const Home = () => {
       const response = await fetch("https://ipapi.co/json/");
       const data = await response.json();
       const { latitude, longitude } = data;
-      setCurrentLocation({ lat: latitude, lng: longitude });
-      reverseGeocode(latitude, longitude);
+      if (latitude && longitude) {
+        setCurrentLocation({ lat: latitude, lng: longitude });
+        reverseGeocode(latitude, longitude);
+      } else {
+        console.error("Invalid IP location data");
+      }
     } catch (err) {
       console.error("Error fetching IP-based location:", err);
     }
   };
 
   const reverseGeocode = async (lat, lng) => {
+    if (!lat || !lng) {
+      console.error("Invalid latitude or longitude for reverse geocoding");
+      return;
+    }
+
     try {
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyDIZ4wZgZyI7Zxbb4DPwnvDmQ6JFMyVum4`
       );
       const data = await response.json();
-      const city = data.results.find((result) =>
-        result.types.includes("locality")
-      )?.address_components[0]?.long_name;
-      setMainCity(city || "Unknown");
-      if (city) fetchTouristPlacesFromServer(city);
+
+      if (data.status === "OK") {
+        const city = data.results.find((result) =>
+          result.types.includes("locality")
+        )?.address_components[0]?.long_name;
+
+        setMainCity(city || "Unknown");
+        if (city) fetchTouristPlacesFromServer(city);
+      } else {
+        console.error("Reverse geocoding error:", data.error_message || data.status);
+      }
     } catch (err) {
       console.error("Error reverse geocoding location:", err);
+    }
+  };
+
+  const updateLocation = async () => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+          newLocation
+        )}&key=AIzaSyDIZ4wZgZyI7Zxbb4DPwnvDmQ6JFMyVum4`
+      );
+      const data = await response.json();
+
+      if (data.status === "OK" && data.results.length > 0) {
+        const { lat, lng } = data.results[0].geometry.location;
+        setCurrentLocation({ lat, lng });
+        reverseGeocode(lat, lng);
+        setZoomLevel(15);
+      } else {
+        console.error("Error updating location:", data.error_message || data.status);
+      }
+    } catch (err) {
+      console.error("Error geocoding new location:", err);
     }
   };
 
@@ -118,9 +155,7 @@ const Home = () => {
         setIsChangingLocation={setIsChangingLocation}
         newLocation={newLocation}
         setNewLocation={setNewLocation}
-        updateLocation={() =>
-          reverseGeocode(newLocation, setCurrentLocation, setMainCity, setZoomLevel, setMapType, fetchTouristPlacesFromServer)
-        }
+        updateLocation={updateLocation}
       />
       <MapView
         currentLocation={currentLocation}
@@ -145,5 +180,4 @@ const Home = () => {
 };
 
 export default Home;
-
 
