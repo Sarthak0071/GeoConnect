@@ -29,3 +29,5 @@ const MapView = ({ currentLocation, selectedPlace, touristPlaces, zoomLevel, map
 };
 
 export default MapView;
+
+
