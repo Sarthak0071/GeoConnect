@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
+import "./UserProfile.css";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
@@ -34,7 +35,6 @@ const UserProfile = () => {
     return <div>Loading your profile...</div>;
   }
 
-  // Convert Firebase Timestamp to readable date string
   const formatDate = (timestamp) => {
     if (!timestamp) return "N/A";
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp.seconds * 1000);
@@ -46,13 +46,13 @@ const UserProfile = () => {
   };
 
   return (
-    <div>
+    <div className="user-profile">
       <h1>About Me</h1>
       <p><strong>Name:</strong> {userData.name}</p>
       <p><strong>Email:</strong> {userData.email}</p>
       <p><strong>Gender:</strong> {userData.gender}</p>
       <p><strong>Date of Birth:</strong> {userData.dob}</p>
-      <h3>Locations:</h3>
+      <h3>Locations Visited:</h3>
       <ul>
         {userData.locations && userData.locations.map((loc, index) => (
           <li key={index}>{loc.name}</li>
