@@ -29,3 +29,5 @@ const TouristPlacesList = ({ touristPlaces, handleShowOnMap }) => {
 };
 
 export default TouristPlacesList;
+
+
