@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth"; // Ensure proper imports for auth and provider
 import { getFirestore } from "firebase/firestore"; // Import Firestore for database functionality
+import { getDatabase } from "firebase/database"; // Realtime Database
+
 const firebaseConfig = {
   apiKey: "AIzaSyD3s6E5DpyPPs5R25NdmMgd11BvurAohXI",
   authDomain: "geoconnect-97c66.firebaseapp.com",
@@ -15,3 +17,4 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 export const db = getFirestore(app);
+export const database = getDatabase(app); // Add Realtime Database

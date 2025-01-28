@@ -30,5 +30,3 @@ const LocationControls = ({
 };
 
 export default LocationControls;
-
-
