@@ -20,4 +20,4 @@ export const googleProvider = new GoogleAuthProvider();
 export const db = getFirestore(app);
 export const database = getDatabase(app); // Add Realtime Database
 
-export {ref, set, push, onValue, update };
+export {ref, set, push, onValue, update, };
