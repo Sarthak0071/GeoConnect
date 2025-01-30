@@ -1,3 +1,6 @@
+
+
+
 import React, { useState, useEffect } from "react";
 import { fetchAllUsersLocations } from "./firestoreUtils"; // Adjust the path if needed
 import { auth } from "../../firebase";
@@ -5,50 +8,62 @@ import { getDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { getDistance } from "geolib";
 import { onSnapshot } from "firebase/firestore";
+import Chat from "./Chat"; // Import Chat component
+import { useNavigate } from "react-router-dom";
 
-
-const NearbyUsers = ({ onChatStart }) => {  // 'onChatStart' is passed as prop for handling chat initiation
+const NearbyUsers = () => {
   const [nearbyUsers, setNearbyUsers] = useState([]);
   const [currentUserLocation, setCurrentUserLocation] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null); // To store the user for chat
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       const user = auth.currentUser;
       if (!user) return;
-  
-      // Get the current user's selected location
+
       const userRef = doc(db, "users", user.uid);
-      
+
       // Listen for real-time updates
       const unsubscribe = onSnapshot(userRef, (userDoc) => {
         if (userDoc.exists() && userDoc.data().currentSelected) {
           const currentLocation = userDoc.data().currentSelected;
           setCurrentUserLocation(currentLocation);
-  
+
           // Fetch all users' locations and filter based on the updated location
           fetchAllUsersLocations((allUsers) => {
             const nearby = allUsers.filter((user) => {
               if (!user.lat || !user.lng || user.uid === auth.currentUser.uid) return false;
-  
+
               const distance = getDistance(
                 { latitude: currentLocation.lat, longitude: currentLocation.lng },
                 { latitude: user.lat, longitude: user.lng }
               );
-  
+
               return distance <= 50000; // 50km radius
             });
-  
+
             setNearbyUsers(nearby);
           });
         }
       });
-  
+
       return () => unsubscribe(); // Cleanup listener on unmount
     };
-  
+
     fetchData();
   }, [auth.currentUser?.uid]);
-  
+
+  // Function to handle chat start
+  const handleChatStart = (user) => {
+    navigate(`/chat/${user.uid}`); // Navigate to Chat page
+  };
+
+  // If a user is selected, show the Chat UI
+  if (selectedUser) {
+    return <Chat user={selectedUser} />;
+  }
+
   return (
     <div>
       <h2>Nearby Users (Within 50km)</h2>
@@ -58,7 +73,7 @@ const NearbyUsers = ({ onChatStart }) => {  // 'onChatStart' is passed as prop f
             <li key={user.uid}>
               <strong>{user.name}</strong> - {user.locationName}
               <button
-                onClick={() => onChatStart(user)}  // Pass the user to the parent component to handle chat initiation
+                onClick={() => handleChatStart(user)}
                 style={{
                   marginLeft: "10px",
                   padding: "5px 10px",
@@ -82,7 +97,4 @@ const NearbyUsers = ({ onChatStart }) => {  // 'onChatStart' is passed as prop f
 };
 
 export default NearbyUsers;
-
-
-
 

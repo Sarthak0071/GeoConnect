@@ -1,0 +1,176 @@
+.ChatContainer {
+    display: flex;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+  
+  .ChatSidebar {
+    width: 25%;
+    background: #f5f5f5;
+    padding: 15px;
+    border-right: 1px solid #ddd;
+  }
+  
+  .ChatHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .ChatAddButton {
+    background: #007bff;
+    color: white;
+    border: none;
+    font-size: 20px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .ChatSearch input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .ChatPinned p {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 15px;
+  }
+  
+  .ChatUser {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+  }
+  
+  .ChatUser:hover {
+    background: #ddd;
+  }
+  
+  .ChatActive {
+    background: #e1f5fe;
+  }
+  
+  .ChatUserInfo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .ChatUserAvatar {
+    width: 40px;
+    height: 40px;
+    background: #bbb;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .ChatUserText h4 {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  .ChatUserText span {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .ChatTyping {
+    color: #007bff;
+  }
+  
+  .ChatTime {
+    font-size: 12px;
+    color: #999;
+  }
+  
+  .ChatWindow {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .ChatWindowHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .ChatOnline {
+    color: #28a745;
+    font-size: 12px;
+  }
+  
+  .ChatIcons button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  
+  .ChatMessages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #f9f9f9;
+  }
+  
+  .ChatMessage {
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 60%;
+    margin-bottom: 10px;
+  }
+  
+  .ChatReceived {
+    background: #fff;
+    align-self: flex-start;
+    border: 1px solid #ddd;
+  }
+  
+  .ChatSent {
+    background: #007bff;
+    color: white;
+    align-self: flex-end;
+  }
+  
+  .ChatInputArea {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background: white;
+  }
+  
+  .ChatInputArea input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .ChatSendButton {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-left: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .ChatSendButton:hover {
+    background: #0056b3;
+  }
+  
