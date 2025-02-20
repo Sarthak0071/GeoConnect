@@ -409,7 +409,7 @@ const Home = () => {
 
       <div className="content">
         <div className="left-panel">
-          <h2>Tourist Places</h2>
+          {/* <h2>Tourist Places</h2> */}
           <TouristPlacesList 
             touristPlaces={touristPlaces} 
             handleShowOnMap={(place) => {

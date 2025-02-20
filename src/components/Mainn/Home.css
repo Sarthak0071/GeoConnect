@@ -42,7 +42,9 @@
   width: 30%;
   padding: 10px;
   background-color: #ecf0f1;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* ✨ Prevents extra scrollbar */
 }
 
 .right-panel {

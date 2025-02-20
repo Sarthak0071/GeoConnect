@@ -1,34 +1,42 @@
+/* Container Styling */
 .tourist-places-container {
   width: 100%;
-  max-width: 450px;
-  background: white;
+  max-width: 500px;
+  background: #ffffff;
   border-radius: 12px;
   padding: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  max-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* ✨ Remove this if unnecessary */
 }
 
+/* Header Styling */
 .tourist-places-header {
   font-size: 20px;
   font-weight: bold;
-  padding-bottom: 10px;
-  text-align: center;
-  color: #333;
+  color: #222;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
+/* List Styling */
 .tourist-places-list {
-  max-height: 320px;
-  overflow-y: auto;
+  flex: 1; /* ✨ Takes available space */
+  overflow-y: auto; /* ✨ Controls scrolling */
   scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
+  scrollbar-color: #b0b0b0 transparent;
+  padding-right: 5px;
 }
 
+/* Custom Scrollbar */
 .tourist-places-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.tourist-places-list::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  width: 5px;
 }
 
 .tourist-places-list::-webkit-scrollbar-thumb {
@@ -36,77 +44,116 @@
   border-radius: 10px;
 }
 
+/* Tourist Place Item */
 .tourist-place-item {
-  background: #f9f9f9;
-  border-radius: 8px;
+  background: linear-gradient(to bottom, #ffffff, #f8f8f8);
+  border-radius: 10px;
   padding: 12px;
   margin-bottom: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  font-size: 16px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
   font-weight: 500;
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: transform 0.2s ease-in-out;
 }
 
+.tourist-place-item:hover {
+  transform: scale(1.02);
+}
+
+/* Place Name */
 .place-name {
   font-size: 16px;
   font-weight: bold;
   color: #333;
 }
 
+/* Action Buttons */
 .place-actions {
   display: flex;
-  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
   margin-top: 8px;
 }
 
+/* Individual Buttons */
 .show-on-map-btn,
-.navigate-btn {
-  flex: 1;
-  padding: 8px;
+.navigate-btn,
+.description-btn {
+  padding: 6px 10px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
-  text-align: center;
-  transition: 0.3s;
+  font-size: 13px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: all 0.3s;
 }
 
+/* Show on Map Button */
 .show-on-map-btn {
-  background: #28a745;
+  background: #4CAF50;
   color: white;
 }
 
 .show-on-map-btn:hover {
-  background: #218838;
+  background: #3e8e41;
 }
 
+/* Navigate Button */
 .navigate-btn {
   background: #007bff;
   color: white;
   text-decoration: none;
-  display: inline-block;
 }
 
 .navigate-btn:hover {
   background: #0056b3;
 }
 
-.view-more-btn {
-  width: 100%;
-  padding: 10px;
+/* Description Button */
+.description-btn {
   background: #ff9800;
   color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-top: 10px;
-  font-size: 14px;
-  text-align: center;
-  transition: 0.3s;
 }
 
-.view-more-btn:hover {
+.description-btn:hover {
   background: #e68900;
+}
+
+/* Place Description */
+.place-description {
+  margin-top: 8px;
+  padding: 8px;
+  background: #f7f7f7;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #444;
+  text-align: center;
+  max-width: 90%;
+}
+
+/* Toggle View Button */
+.toggle-view-btn {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(to right, #ff9800, #ff7b00);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.toggle-view-btn:hover {
+  background: linear-gradient(to right, #e68900, #cc6900);
 }
