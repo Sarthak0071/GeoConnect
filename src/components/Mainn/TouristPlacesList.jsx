@@ -31,7 +31,6 @@
 // export default TouristPlacesList;
 
 
-
 import React, { useState } from "react";
 import "./TouristPlaces.css";
 
@@ -39,7 +38,7 @@ const TouristPlacesList = ({ touristPlaces, handleShowOnMap }) => {
   const [visiblePlaces, setVisiblePlaces] = useState(5);
 
   const showMorePlaces = () => {
-    setVisiblePlaces(visiblePlaces + 5);
+    setVisiblePlaces((prev) => prev + 5);
   };
 
   return (
@@ -48,7 +47,7 @@ const TouristPlacesList = ({ touristPlaces, handleShowOnMap }) => {
       <div className="tourist-places-list">
         {touristPlaces.slice(0, visiblePlaces).map((place, index) => (
           <div key={index} className="tourist-place-item">
-            {place.name}
+            <span className="place-name">{place.name}</span>
             {place.location && (
               <div className="place-actions">
                 <button className="show-on-map-btn" onClick={() => handleShowOnMap(place)}>
@@ -67,7 +66,12 @@ const TouristPlacesList = ({ touristPlaces, handleShowOnMap }) => {
           </div>
         ))}
       </div>
-      
+
+      {visiblePlaces < touristPlaces.length && (
+        <button className="view-more-btn" onClick={showMorePlaces}>
+          Show More
+        </button>
+      )}
     </div>
   );
 };

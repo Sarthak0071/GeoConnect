@@ -1,102 +1,112 @@
 .tourist-places-container {
-    width: 100%;
-    max-width: 400px;
-    background: white;
-    border-radius: 12px;
-    padding: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-  }
-  
-  .tourist-places-header {
-    font-size: 18px;
-    font-weight: bold;
-    padding-bottom: 10px;
-  }
-  
-  .tourist-places-list {
-    max-height: 300px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #888 #f1f1f1;
-  }
-  
-  .tourist-places-list::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  .tourist-places-list::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-  
-  .tourist-places-list::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-  }
-  
-  .tourist-place-item {
-    background: #f9f9f9;
-    border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    font-size: 16px;
-    font-weight: 500;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .place-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 8px;
-  }
-  
-  .show-on-map-btn, .navigate-btn {
-    flex: 1;
-    padding: 8px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    text-align: center;
-  }
-  
-  .show-on-map-btn {
-    background: #28a745;
-    color: white;
-  }
-  
-  .show-on-map-btn:hover {
-    background: #218838;
-  }
-  
-  .navigate-btn {
-    background: #007bff;
-    color: white;
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-  }
-  
-  .navigate-btn:hover {
-    background: #0056b3;
-  }
-  
-  .view-more-btn {
-    width: 100%;
-    padding: 10px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 10px;
-    font-size: 14px;
-    text-align: center;
-  }
-  
-  .view-more-btn:hover {
-    background: #0056b3;
-  }
-  
+  width: 100%;
+  max-width: 450px;
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.tourist-places-header {
+  font-size: 20px;
+  font-weight: bold;
+  padding-bottom: 10px;
+  text-align: center;
+  color: #333;
+}
+
+.tourist-places-list {
+  max-height: 320px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+.tourist-places-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tourist-places-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.tourist-places-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.tourist-place-item {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.place-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.place-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.show-on-map-btn,
+.navigate-btn {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.show-on-map-btn {
+  background: #28a745;
+  color: white;
+}
+
+.show-on-map-btn:hover {
+  background: #218838;
+}
+
+.navigate-btn {
+  background: #007bff;
+  color: white;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.navigate-btn:hover {
+  background: #0056b3;
+}
+
+.view-more-btn {
+  width: 100%;
+  padding: 10px;
+  background: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.view-more-btn:hover {
+  background: #e68900;
+}
