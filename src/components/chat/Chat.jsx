@@ -378,6 +378,7 @@ import { sendMessage, subscribeToMessages, subscribeToChats, createChat } from "
 import { doc, getDoc } from "firebase/firestore";
 import "./Chat.css";
 
+
 const Chat = () => {
   const navigate = useNavigate();
   const { userId: otherUserId } = useParams();
@@ -449,8 +450,11 @@ const Chat = () => {
   }, []);
 
   const handleBack = () => {
+    setCurrentChatId(null); // Clear chat state
+    setMessages([]); // Clear messages
     navigate(-1); // Go back in history
   };
+  
 
   const handleChatSelect = async (chat) => {
     setCurrentChatId(chat.id);

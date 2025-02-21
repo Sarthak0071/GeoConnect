@@ -7,7 +7,7 @@ import SignUp from "./components/Login/Signup";
 import ForgetPassword from "./components/Login/ForgetPassword";
 import Home from "./components/Mainn/Home";
 import UserProfile from "./components/User/UserProfile";
-import Chat from "./components/Mainn/Chat"; // Ensure correct path
+import Chat from "./components/chat/Chat"; // Ensure correct path
 import NearbyUsers from "./components/Mainn/NearbyUsers"; // Ensure correct path
 
 function App() {

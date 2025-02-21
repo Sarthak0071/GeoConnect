@@ -5,6 +5,10 @@
   height: 100vh;
   font-family: Arial, sans-serif;
 }
+.home-header img {
+  height: 30vh;
+  width: 30vw;
+}
 
 .home-header {
   display: flex;
