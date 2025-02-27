@@ -178,7 +178,7 @@ const NearbyUsers = () => {
             <h2>Nearby Users (50km)</h2>
             {nearbyUsers.length > 0 ? (
               <ul className="nearby-list">
-                {(showAll ? nearbyUsers : nearbyUsers.slice(0, 4)).map((user) => (
+                {nearbyUsers.map((user) => (
                   <li key={user.uid} className="nearby-user">
                     <div className="user-info">
                       <strong>{user.name}</strong>
