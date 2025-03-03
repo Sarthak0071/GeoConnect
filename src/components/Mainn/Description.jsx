@@ -22,3 +22,4 @@ const Description = ({ placeName, description, isLoading, onClose }) => {
 };
 
 export default Description;
+

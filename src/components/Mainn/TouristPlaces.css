@@ -1,159 +1,233 @@
-/* Container Styling */
+/* Tourist Places Container */
 .tourist-places-container {
   width: 100%;
-  max-width: 500px;
+  height: 100%;
   background: #ffffff;
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-  text-align: center;
-  max-height: calc(100vh - 120px);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* ✨ Remove this if unnecessary */
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 /* Header Styling */
 .tourist-places-header {
-  font-size: 20px;
-  font-weight: bold;
-  color: #222;
-  margin-bottom: 10px;
+  padding: 20px;
+  background: linear-gradient(to right, #3498db, #2980b9);
+  color: white;
   display: flex;
   align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.tourist-places-header h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.header-icon {
+  font-size: 1.5rem;
+}
+
+/* No Places Message */
+.no-places-message {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  gap: 8px;
+  align-items: center;
+  padding: 40px 20px;
+  color: #8e9aaf;
+  text-align: center;
+}
+
+.location-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.6;
 }
 
 /* List Styling */
 .tourist-places-list {
-  flex: 1; /* ✨ Takes available space */
-  overflow-y: auto; /* ✨ Controls scrolling */
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
   scrollbar-width: thin;
-  scrollbar-color: #b0b0b0 transparent;
-  padding-right: 5px;
+  scrollbar-color: #cfd8dc #f5f5f5;
 }
 
 /* Custom Scrollbar */
 .tourist-places-list::-webkit-scrollbar {
-  width: 5px;
+  width: 6px;
+}
+
+.tourist-places-list::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 10px;
 }
 
 .tourist-places-list::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #cfd8dc;
   border-radius: 10px;
+}
+
+.tourist-places-list::-webkit-scrollbar-thumb:hover {
+  background: #b0bec5;
 }
 
 /* Tourist Place Item */
 .tourist-place-item {
-  background: linear-gradient(to bottom, #ffffff, #f8f8f8);
-  border-radius: 10px;
-  padding: 12px;
-  margin-bottom: 10px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-  font-size: 14px;
-  font-weight: 500;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.2s ease-in-out;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
 }
 
 .tourist-place-item:hover {
-  transform: scale(1.02);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  border-color: #e0e0e0;
+}
+
+/* Place Icon */
+.place-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  border-radius: 12px;
+  color: white;
+  font-size: 18px;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+/* Place Content */
+.place-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Place Name */
 .place-name {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
 }
 
 /* Action Buttons */
 .place-actions {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 8px;
   margin-top: 8px;
 }
 
-/* Individual Buttons */
-.show-on-map-btn,
-.navigate-btn,
-.description-btn {
-  padding: 6px 10px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: bold;
+/* Individual Action Button */
+.action-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  transition: all 0.3s;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.action-button i {
+  font-size: 1rem;
 }
 
 /* Show on Map Button */
 .show-on-map-btn {
-  background: #4CAF50;
+  background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
   color: white;
 }
 
 .show-on-map-btn:hover {
-  background: #3e8e41;
+  background: linear-gradient(135deg, #3eba91 0%, #144e85 100%);
 }
 
 /* Navigate Button */
 .navigate-btn {
-  background: #007bff;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
   color: white;
-  text-decoration: none;
 }
 
 .navigate-btn:hover {
-  background: #0056b3;
+  background: linear-gradient(135deg, #5d0fba 0%, #1e64df 100%);
 }
 
 /* Description Button */
 .description-btn {
-  background: #ff9800;
+  background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%);
   color: white;
 }
 
 .description-btn:hover {
-  background: #e68900;
-}
-
-/* Place Description */
-.place-description {
-  margin-top: 8px;
-  padding: 8px;
-  background: #f7f7f7;
-  border-radius: 8px;
-  font-size: 13px;
-  color: #444;
-  text-align: center;
-  max-width: 90%;
+  background: linear-gradient(135deg, #ff8b54 0%, #ff4c52 100%);
 }
 
 /* Toggle View Button */
 .toggle-view-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   width: 100%;
-  padding: 10px;
-  background: linear-gradient(to right, #ff9800, #ff7b00);
+  padding: 12px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 0;
   cursor: pointer;
-  margin-top: 12px;
-  font-size: 14px;
-  font-weight: bold;
-  transition: all 0.3s;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  margin-top: auto;
 }
 
 .toggle-view-btn:hover {
-  background: linear-gradient(to right, #e68900, #cc6900);
+  background: linear-gradient(135deg, #258cd1, #226a9c);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .place-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .action-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .tourist-place-item {
+    flex-direction: column;
+  }
+  
+  .place-icon {
+    margin-right: 0;
+    margin-bottom: 12px;
+    width: 40px;
+    height: 40px;
+  }
 }
