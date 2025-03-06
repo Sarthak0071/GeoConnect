@@ -8,6 +8,7 @@ import ForgetPassword from "./components/Login/ForgetPassword";
 import Home from "./components/Mainn/Home";
 import UserProfile from "./components/User/UserProfile";
 import Chat from "./components/chat/Chat"; // Ensure correct path
+import TravelHistory from "./components/Mainn/TravelHistory";
 import NearbyUsers from "./components/Mainn/NearbyUsers"; // Ensure correct path
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/chat/:userId" element={<Chat />} />
         <Route path="/nearby-users" element={<NearbyUsers />} />
         <Route path="/user-profile" element={<UserProfile />} />
+        <Route path="/travel-history" element={<TravelHistory />} />
       </Routes>
     </Router>
   );

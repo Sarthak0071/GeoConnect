@@ -97,19 +97,7 @@
 
 
 import { db } from "../../firebase";
-import { 
-  collection, 
-  query, 
-  where, 
-  addDoc, 
-  serverTimestamp, 
-  onSnapshot,
-  orderBy,
-  getDocs,
-  doc,
-  setDoc,
-  getDoc
-} from "firebase/firestore";
+import { collection, query, where, addDoc, serverTimestamp, onSnapshot,orderBy,getDocs,doc,setDoc,getDoc} from "firebase/firestore";
 
 export const createChat = async (currentUserId, otherUserId) => {
   if (currentUserId === otherUserId) return null; // Prevent self-chatting

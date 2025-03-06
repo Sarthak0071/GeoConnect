@@ -315,13 +315,13 @@ const Home = () => {
       </div>
 
       <footer className="home-footer">
-        <button className="footer-btn history-btn">
-          <i className="fas fa-history"></i> Travel History
-        </button>
-        <Link to="/chat" className="footer-btn chat-btn">
-          <i className="fas fa-comments"></i> Chat
-        </Link>
-      </footer>
+  <Link to="/travel-history" className="footer-btn history-btn">
+    <i className="fas fa-history"></i> Travel History
+  </Link>
+  <Link to="/chat" className="footer-btn chat-btn">
+    <i className="fas fa-comments"></i> Chat
+  </Link>
+</footer>
 
       {showAboutMe && (
         <div className="user-profile-overlay">
@@ -339,4 +339,6 @@ const Home = () => {
 };
 
 export default Home;
+
+
 
