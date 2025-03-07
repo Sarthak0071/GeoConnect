@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db, auth } from "../../firebase"; // Adjust this path to where your Firebase config is
+import { useNavigate } from "react-router-dom";
 import "./TravelHistory.css";
-import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
+import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from "@react-google-maps/api";
 
 const TravelHistory = () => {
   const [visitedLocations, setVisitedLocations] = useState([]);
@@ -11,6 +12,12 @@ const TravelHistory = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [mapCenter, setMapCenter] = useState({ lat: 27.7, lng: 85.3 }); // Default to Kathmandu
   const [showInfoWindow, setShowInfoWindow] = useState(null);
+  const navigate = useNavigate();
+
+  // Load Google Maps API using the same API key as in Home component
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: "AIzaSyDIZ4wZgZyI7Zxbb4DPwnvDmQ6JFMyVum4",
+  });
 
   useEffect(() => {
     const fetchTravelHistory = async () => {
@@ -51,8 +58,10 @@ const TravelHistory = () => {
       }
     };
 
-    fetchTravelHistory();
-  }, []);
+    if (isLoaded) {
+      fetchTravelHistory();
+    }
+  }, [isLoaded]);
 
   const processLocationHistory = (locations) => {
     if (!locations.length) return [];
@@ -111,6 +120,12 @@ const TravelHistory = () => {
     setMapCenter({ lat: location.lat, lng: location.lng });
   };
 
+  const handleGoBack = () => {
+    // Navigate to home page without forcing a re-render
+    navigate(-1); // Goes back to the previous page without reloading Home
+
+  };
+
   const mapContainerStyle = {
     width: '100%',
     height: '100%'
@@ -127,7 +142,7 @@ const TravelHistory = () => {
     anchor: { x: 12, y: 24 },
   };
 
-  if (loading) {
+  if (!isLoaded || loading) {
     return (
       <div className="travel-history-loading">
         <div className="loading-spinner"></div>
@@ -139,8 +154,13 @@ const TravelHistory = () => {
   return (
     <div className="travel-history-container">
       <div className="travel-history-header">
-        <h1>My Travel History</h1>
-        <p>Discover the places you've explored</p>
+        <button className="back-button" onClick={handleGoBack}>
+          <i className="fas fa-arrow-left"></i> Back
+        </button>
+        <div className="header-title">
+          <h1>My Travel History</h1>
+          <p>Discover the places you've explored</p>
+        </div>
       </div>
 
       <div className="travel-history-content">
