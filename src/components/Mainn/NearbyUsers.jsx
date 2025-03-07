@@ -329,8 +329,10 @@
 
 
 // Updated NearbyUsers.jsx
+
+
 import React, { useState, useEffect, useRef } from "react";
-import { fetchAllUsersLocations } from "./firestoreUtils";
+import { fetchAllUsersLocations } from "./utils/firestoreUtils";
 import { auth, db } from "../../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import { getDistance } from "geolib";
