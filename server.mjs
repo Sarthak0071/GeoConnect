@@ -1,11 +1,17 @@
+
+
+
+
+
+
 import express from "express";
 import cors from "cors";
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import dotenv from "dotenv";
 import NodeCache from "node-cache";
 import compression from "compression";
 import cluster from "cluster";
 import os from "os";
+import { Groq } from "groq-sdk";
 
 dotenv.config();
 
@@ -32,13 +38,9 @@ if (CLUSTER_MODE && cluster.isPrimary) {
   const CACHE_TTL = process.env.CACHE_TTL || 2592000; // 30 days default
   const POPULAR_CITIES = ["Kathmandu", "Pokhara", "Chitwan", "Lumbini", "Bhaktapur"]; // Pre-cache these
 
-  // Initialize Google Generative AI with optimized settings
-  const llm = new ChatGoogleGenerativeAI({
-    model: "gemini-2.0-flash",
-    googleApiKey: process.env.GOOGLE_API_KEY,
-    apiVersion: "v1",
-    maxOutputTokens: 512,
-    temperature: 0.2, // Lower temperature for more consistent, faster responses
+  // Initialize Groq AI client
+  const groq = new Groq({
+    apiKey: process.env.GROQ_API_KEY || "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"
   });
 
   // Enhanced cache configuration
@@ -84,8 +86,14 @@ if (CLUSTER_MODE && cluster.isPrimary) {
             
             const prompt = `Provide a concise and informative description (maximum 80 words) of the tourist attraction "${placeName}" ${city ? `in or near ${city}, Nepal` : ""}. Focus on key facts that tourists need to know.`;
             
-            const result = await llm.invoke(prompt);
-            const description = result.text.trim();
+            const result = await groq.chat.completions.create({
+              model: "mixtral-8x7b-32768",  // Using Groq's Mixtral model
+              messages: [{ role: "user", content: prompt }],
+              temperature: 0.2,
+              max_tokens: 512
+            });
+            
+            const description = result.choices[0].message.content.trim();
             
             cache.set(cacheKey, description);
             
@@ -161,8 +169,14 @@ if (CLUSTER_MODE && cluster.isPrimary) {
         const prompt = `Provide a concise and informative description (maximum 80 words) of the tourist attraction "${place}" in or near ${city}, Nepal. Focus on key facts that tourists need to know.`;
         
         try {
-          const result = await llm.invoke(prompt);
-          const description = result.text.trim();
+          const result = await groq.chat.completions.create({
+            model: "mixtral-8x7b-32768",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.2,
+            max_tokens: 512
+          });
+          
+          const description = result.choices[0].message.content.trim();
           cache.set(cacheKey, description);
         } catch (error) {
           console.error(`Failed to prefetch description for ${place}: ${error.message}`);
@@ -192,8 +206,14 @@ if (CLUSTER_MODE && cluster.isPrimary) {
       try {
         const prompt = `List exactly 15 top famous tourist destinations in or near the city (not more than 30km and within city of) "${city}, Nepal". Ensure the names are precise and geocodable by Google Maps. Only return the names. Don't generate any other text except name of famous places.`;
         
-        const result = await llm.invoke(prompt);
-        const places = result.text.trim().split("\n")
+        const result = await groq.chat.completions.create({
+          model: "mixtral-8x7b-32768",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.2,
+          max_tokens: 512
+        });
+        
+        const places = result.choices[0].message.content.trim().split("\n")
           .map((place) => place.trim())
           .filter(place => place && !place.startsWith("*") && !place.startsWith("-"));
         
@@ -258,8 +278,14 @@ if (CLUSTER_MODE && cluster.isPrimary) {
     const prompt = `List exactly 15 top famous tourist destinations in or near the city (not more than 30km and within city of) "${city}, Nepal". Ensure the names are precise and geocodable by Google Maps. Only return the names. Don't generate any other text except name of famous places.`;
    
     try {
-      const result = await llm.invoke(prompt);
-      const allPlaces = result.text.trim().split("\n")
+      const result = await groq.chat.completions.create({
+        model: "mixtral-8x7b-32768",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.2,
+        max_tokens: 512
+      });
+      
+      const allPlaces = result.choices[0].message.content.trim().split("\n")
         .map((place) => place.trim())
         .filter(place => place && !place.startsWith("*") && !place.startsWith("-"));
       
@@ -287,7 +313,7 @@ if (CLUSTER_MODE && cluster.isPrimary) {
         }
       });
     } catch (error) {
-      console.error("Error invoking Google Generative AI:", error.message);
+      console.error("Error invoking Groq AI:", error.message);
       res.status(500).json({ error: "Internal Server Error" });
     }
   });
@@ -359,8 +385,14 @@ if (CLUSTER_MODE && cluster.isPrimary) {
         const prompt = `Provide a concise and informative description (maximum 80 words) of the tourist attraction "${placeName}" ${city ? `in or near ${city}, Nepal` : ""}. Focus on key facts that tourists need to know.`;
         
         try {
-          const result = await llm.invoke(prompt);
-          const description = result.text.trim();
+          const result = await groq.chat.completions.create({
+            model: "mixtral-8x7b-32768",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.2,
+            max_tokens: 512
+          });
+          
+          const description = result.choices[0].message.content.trim();
           cache.set(cacheKey, description);
           results[placeName] = description;
         } catch (error) {
