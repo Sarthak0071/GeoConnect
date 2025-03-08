@@ -486,4 +486,78 @@ if (CLUSTER_MODE && cluster.isPrimary) {
       console.error("Error warming up cache:", error);
     }
   });
+
+
+
+
+  // AI Chatbot endpoint
+app.post("/api/chatbot", async (req, res) => {
+  const { message, sessionId, userName } = req.body;
+  
+  if (!message) {
+    return res.status(400).json({ error: "Missing required parameter: message" });
+  }
+
+  // Create cache key for this conversation
+  const cacheKey = `chat:${sessionId || "anonymous"}:${Date.now()}`;
+  
+  // Get conversation history from cache or initialize new one
+  const conversationKey = `conversation:${sessionId || "anonymous"}`;
+  let conversationHistory = cache.get(conversationKey) || [];
+  
+  // Limit conversation history length (keep last 10 messages)
+  if (conversationHistory.length > 10) {
+    conversationHistory = conversationHistory.slice(-10);
+  }
+  
+  // Add user message to history
+  conversationHistory.push({ role: "user", content: message });
+  
+  try {
+    // Create the travel assistant context with user name if available
+    let systemPrompt = "You are a helpful travel assistant for Nepal. You help tourists find information about places to visit, local customs, transportation options, and travel tips. Keep your responses friendly, informative, and concise (max 150 words).";
+    
+    // Add user name to system prompt if available
+    if (userName) {
+      systemPrompt += ` The user's name is ${userName}. Refer to them by name occasionally to personalize the conversation, but don't overdo it. For example, you might say "That's a great question, ${userName}!" or "I'd recommend visiting Pokhara, ${userName}."`;
+    }
+    
+    systemPrompt += " If asked about places not in Nepal, politely redirect to Nepal travel topics. Focus on providing practical and current information for travelers.";
+    
+    const systemMessage = {
+      role: "system",
+      content: systemPrompt
+    };
+    
+    // Create messages array for the API
+    const messages = [systemMessage, ...conversationHistory];
+    
+    // Call Groq API
+    const completion = await groq.chat.completions.create({
+      model: "mixtral-8x7b-32768",
+      messages,
+      temperature: 0.7,
+      max_tokens: 800
+    });
+    
+    const botReply = completion.choices[0].message.content.trim();
+    
+    // Add bot response to conversation history
+    conversationHistory.push({ role: "assistant", content: botReply });
+    
+    // Update conversation in cache (with 60 minute TTL)
+    cache.set(conversationKey, conversationHistory, 3600);
+    
+    // Return response
+    res.json({ 
+      message: botReply,
+      conversationId: sessionId || "anonymous"
+    });
+    
+  } catch (error) {
+    console.error("Error calling Groq API for chatbot:", error.message);
+    res.status(500).json({ error: "Failed to process your message" });
+  }
+});
+
 }
