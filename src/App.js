@@ -8,8 +8,8 @@ import ForgetPassword from "./components/Login/ForgetPassword";
 import Home from "./components/Mainn/Home";
 import UserProfile from "./components/User/UserProfile";
 import Chat from "./components/chat/Chat"; // Ensure correct path
-import TravelHistory from "./components/Mainn/TravelHistory";
-import NearbyUsers from "./components/Mainn/NearbyUsers"; // Ensure correct path
+import TravelHistory from "./components/TravelHistory/TravelHistory";
+import NearbyUsers from "./components/NearUsers/NearbyUsers"; // Ensure correct path
 
 function App() {
   return (
