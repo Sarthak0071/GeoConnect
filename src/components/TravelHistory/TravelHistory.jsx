@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db, auth } from "../../firebase"; // Adjust this path to where your Firebase config is
@@ -121,9 +122,7 @@ const TravelHistory = () => {
   };
 
   const handleGoBack = () => {
-    // Navigate to home page without forcing a re-render
-    navigate(-1); // Goes back to the previous page without reloading Home
-
+    navigate(-1); // Use history stack to go back
   };
 
   const mapContainerStyle = {

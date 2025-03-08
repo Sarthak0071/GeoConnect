@@ -1,3 +1,4 @@
+
 export const fetchDescription = async (place) => {
     console.log(`Fetching description for: ${place.name}`);
     
