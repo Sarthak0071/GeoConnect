@@ -96,8 +96,8 @@
 //   };
 
 
-import { db } from "../../firebase";
-import { collection, query, where, addDoc, serverTimestamp, onSnapshot,orderBy,getDocs,doc,setDoc,getDoc} from "firebase/firestore";
+import { db,auth } from "../../firebase";
+import { collection, query, where, addDoc, serverTimestamp,deleteDoc, onSnapshot,orderBy,getDocs,doc,setDoc,getDoc} from "firebase/firestore";
 
 export const createChat = async (currentUserId, otherUserId) => {
   if (currentUserId === otherUserId) return null; // Prevent self-chatting
@@ -157,37 +157,34 @@ export const subscribeToChats = (userId, callback) => {
   );
 
   return onSnapshot(q, async (snapshot) => {
-    let chatMap = new Map(); // Prevent duplicate entries
-    const chats = await Promise.all(
-      snapshot.docs.map(async (docSnap) => {
-        const chatData = docSnap.data();
-        const chatId = docSnap.id;
+    let seenUsers = new Set(); // Track unique users
+    const chats = [];
 
-        // Find the other user's ID
-        const otherUserId = chatData.participants.find(id => id !== userId);
-        if (!otherUserId) return null;
+    for (const docSnap of snapshot.docs) {
+      const chatData = docSnap.data();
+      const chatId = docSnap.id;
 
-        // Avoid duplicate chats
-        if (chatMap.has(otherUserId)) return null;
-        chatMap.set(otherUserId, true);
+      const otherUserId = chatData.participants.find(id => id !== userId);
+      if (!otherUserId || seenUsers.has(otherUserId)) continue; // Skip duplicates
 
-        // Fetch the other user's name
-        const userRef = doc(db, "users", otherUserId);
-        const userSnap = await getDoc(userRef);
-        const otherUserName = userSnap.exists() ? userSnap.data().name : "Unknown";
+      seenUsers.add(otherUserId); // Mark as seen
 
-        return {
-          id: chatId,
-          ...chatData,
-          otherUserId,
-          otherUserName
-        };
-      })
-    );
+      const userRef = doc(db, "users", otherUserId);
+      const userSnap = await getDoc(userRef);
+      const otherUserName = userSnap.exists() ? userSnap.data().name : "Unknown";
 
-    callback(chats.filter(chat => chat !== null)); // Remove null entries
+      chats.push({
+        id: chatId,
+        ...chatData,
+        otherUserId,
+        otherUserName
+      });
+    }
+
+    callback(chats);
   });
 };
+
 
 export const subscribeToMessages = (chatId, callback) => {
   if (!chatId) return () => {};
@@ -206,3 +203,45 @@ export const subscribeToMessages = (chatId, callback) => {
     callback(messages);
   });
 };
+
+
+
+
+export const deleteChat = async (chatId, otherUserId) => {
+  if (!chatId || !otherUserId) return;
+  const currentUserId = auth.currentUser?.uid;
+  if (!currentUserId) return;
+
+  try {
+    // Get all chats where both users are participants
+    const chatsRef = collection(db, "chats");
+    const chatQuery = query(chatsRef, where("participants", "array-contains", currentUserId));
+    const chatSnapshot = await getDocs(chatQuery);
+
+    // Find all chat documents that contain both users
+    const chatsToDelete = chatSnapshot.docs.filter((doc) => {
+      const participants = doc.data().participants;
+      return participants.includes(currentUserId) && participants.includes(otherUserId);
+    });
+
+    // Delete all messages from each chat
+    for (const chat of chatsToDelete) {
+      const messagesRef = collection(db, `chats/${chat.id}/messages`);
+      const messagesSnapshot = await getDocs(messagesRef);
+
+      const deleteMessages = messagesSnapshot.docs.map((msg) => deleteDoc(msg.ref));
+      await Promise.all(deleteMessages);
+
+      // Delete the chat itself
+      await deleteDoc(doc(db, "chats", chat.id));
+    }
+
+    console.log("All conversations between users deleted successfully!");
+  } catch (error) {
+    console.error("Error deleting chat:", error);
+    throw error;
+  }
+};
+
+
+
