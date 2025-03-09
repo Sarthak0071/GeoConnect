@@ -12,6 +12,7 @@
     "express": "^4.21.2",
     "firebase": "^11.1.0",
     "geolib": "^3.3.4",
+    "groq-sdk": "^0.15.0",
     "haversine-distance": "^1.2.3",
     "ioredis": "^5.4.2",
     "node-cache": "^5.1.2",

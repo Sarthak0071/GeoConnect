@@ -11,6 +11,7 @@ import Chat from "./components/chat/Chat"; // Ensure correct path
 import TravelHistory from "./components/TravelHistory/TravelHistory";
 import NearbyUsers from "./components/NearUsers/NearbyUsers"; // Ensure correct path
 
+
 function App() {
   return (
     <Router>
@@ -29,3 +30,4 @@ function App() {
 }
 
 export default App;
+
