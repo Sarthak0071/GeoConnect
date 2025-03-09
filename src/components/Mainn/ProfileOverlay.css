@@ -1,0 +1,68 @@
+/* ProfileOverlay.css */
+.profile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 2rem;
+  }
+  
+  .profile-overlay-content {
+    background-color: #f9fafb;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: #4f46e5;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+  }
+  
+  .close-button:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    transform: scale(1.1);
+  }
+  
+  /* Scrollbar styling */
+  .profile-overlay-content::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .profile-overlay-content::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  
+  .profile-overlay-content::-webkit-scrollbar-thumb {
+    background-color: #c7d2fe;
+    border-radius: 4px;
+  }
+  
+  .profile-overlay-content::-webkit-scrollbar-thumb:hover {
+    background-color: #a5b4fc;
+  }
