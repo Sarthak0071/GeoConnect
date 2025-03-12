@@ -607,3 +607,89 @@
   padding: 5px 15px;
   border-radius: 15px;
 }
+.blocked-message {
+  text-align: center;
+  color: #dc3545;
+  font-weight: bold;
+  padding: 20px;
+}
+
+.NoChatSelected {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #666;
+  font-size: 18px;
+}
+
+
+
+/* Existing styles remain unchanged, add these at the end */
+
+.SettingsMenu {
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  z-index: 100;
+}
+
+.SettingsMenu button {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+}
+
+.SettingsMenu button:hover {
+  background: #f0f0f0;
+}
+
+.BlockedMessage {
+  text-align: center;
+  padding: 20px;
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.NoChatSelected {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #666;
+  font-size: 18px;
+}
+
+
+
+
+.CreateGroupPopup,
+.ManageMembers {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 100;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.CreateGroupPopup select,
+.ManageMembers select {
+  height: 100px;
+  width: 200px;
+}
+
+.ChatUser .UserAvatar {
+  font-size: 24px;
+}

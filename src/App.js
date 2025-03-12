@@ -12,6 +12,7 @@ import TravelHistory from "./components/TravelHistory/TravelHistory";
 import NearbyUsers from "./components/NearUsers/NearbyUsers"; // Ensure correct path
 
 
+
 function App() {
   return (
     <Router>
@@ -21,6 +22,7 @@ function App() {
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/home" element={<Home />} />
         <Route path="/chat/:userId" element={<Chat />} />
+
         <Route path="/nearby-users" element={<NearbyUsers />} />
         <Route path="/user-profile" element={<UserProfile />} />
         <Route path="/travel-history" element={<TravelHistory />} />

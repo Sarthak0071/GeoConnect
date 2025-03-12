@@ -1,98 +1,84 @@
-
-// import React, { useState } from "react";
-// import ChatMessages from "./ChatMessages";
-
-// const ChatWindow = ({ otherUserName, messages, handleSendMessage }) => {
-//   const [message, setMessage] = useState("");
-
-//   return (
-//     <div className="ChatWindow">
-//       <div className="ChatWindowHeader">
-//         <div className="UserAvatar"></div>
-//         <div>
-//           <h3>{otherUserName}</h3>
-//           <span className="OnlineStatus" style={{ color: '#007AFF', fontSize: 12 }}>Online</span>
-//         </div>
-//       </div>
-
-//       <ChatMessages messages={messages} />
-
-//       <div className="InputContainer">
-//         <div className="InputWrapper">
-//           <input
-//             className="ChatInput"
-//             placeholder="Type message..."
-//             value={message}
-//             onChange={(e) => setMessage(e.target.value)}
-//             onKeyPress={(e) => e.key === "Enter" && handleSendMessage(message, setMessage)}
-//           />
-//         </div>
-//         <button
-//           className="SendButton"
-//           onClick={() => handleSendMessage(message, setMessage)}
-//           disabled={!message.trim()}
-//         >
-//           ➤
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ChatWindow;
-
-
-
-
-
-
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db, auth } from "../../firebase";
 import ChatMessages from "./ChatMessages";
+import "./Chat.css";
 
-const ChatWindow = ({ otherUserName, messages, handleSendMessage, isGroupChat, participants }) => {
+const ChatWindow = ({ otherUserName, messages, handleSendMessage, otherUserId, handleBlock }) => {
   const [message, setMessage] = useState("");
+  const [isBlockedByOther, setIsBlockedByOther] = useState(false);
+  const [isBlockingOther, setIsBlockingOther] = useState(false);
+
+  useEffect(() => {
+    if (!otherUserId || !auth.currentUser) return;
+
+    const checkBlockingStatus = async () => {
+      // Check if current user is blocked by other user
+      const otherUserRef = doc(db, "users", otherUserId);
+      const otherUserSnap = await getDoc(otherUserRef);
+      if (otherUserSnap.exists()) {
+        const otherBlockedUsers = otherUserSnap.data().blockedUsers || [];
+        setIsBlockedByOther(otherBlockedUsers.includes(auth.currentUser.uid));
+      }
+
+      // Check if current user has blocked other user
+      const currentUserRef = doc(db, "users", auth.currentUser.uid);
+      const currentUserSnap = await getDoc(currentUserRef);
+      if (currentUserSnap.exists()) {
+        const currentBlockedUsers = currentUserSnap.data().blockedUsers || [];
+        setIsBlockingOther(currentBlockedUsers.includes(otherUserId));
+      }
+    };
+
+    checkBlockingStatus();
+  }, [otherUserId]);
+
+  const isChatDisabled = isBlockedByOther || isBlockingOther;
 
   return (
     <div className="ChatWindow">
       <div className="ChatWindowHeader">
         <div className="UserAvatar"></div>
         <div>
-          <h3>{isGroupChat ? "Group Chat" : otherUserName}</h3>
-          {isGroupChat && (
-            <div className="GroupParticipants">
-              {participants.map((participant) => (
-                <span key={participant}>{participant}</span>
-              ))}
-            </div>
+          <h3>{otherUserName}</h3>
+          {otherUserId && !isBlockedByOther && (
+            <button onClick={() => handleBlock(otherUserId)}>Block</button>
           )}
         </div>
       </div>
 
       <ChatMessages messages={messages} />
 
-      <div className="InputContainer">
-        <div className="InputWrapper">
-          <input
-            className="ChatInput"
-            placeholder="Type message..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleSendMessage(message, setMessage)}
-          />
+      {isChatDisabled ? (
+        <div className="BlockedMessage">
+          <p>
+            {isBlockedByOther
+              ? "You cannot reply to this conversation"
+              : "You cannot chat with this person"}
+          </p>
         </div>
-        <button
-          className="SendButton"
-          onClick={() => handleSendMessage(message, setMessage)}
-          disabled={!message.trim()}
-        >
-          ➤
-        </button>
-      </div>
+      ) : (
+        <div className="InputContainer">
+          <div className="InputWrapper">
+            <input
+              className="ChatInput"
+              placeholder="Type message..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && handleSendMessage(message, setMessage)}
+            />
+          </div>
+          <button
+            className="SendButton"
+            onClick={() => handleSendMessage(message, setMessage)}
+            disabled={!message.trim()}
+          >
+            ➤
+          </button>
+        </div>
+      )}
     </div>
   );
 };
 
 export default ChatWindow;
-
-

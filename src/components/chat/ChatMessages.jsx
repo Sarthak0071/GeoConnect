@@ -28,6 +28,3 @@ const ChatMessages = ({ messages }) => {
 };
 
 export default ChatMessages;
-
-
-
