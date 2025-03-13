@@ -1,4 +1,7 @@
 
+
+
+
 import { db, auth } from "../../firebase";
 import {
   collection,
@@ -21,12 +24,9 @@ import {
 // Create a new one-on-one chat
 export const createChat = async (userId1, userId2) => {
   const chatsRef = collection(db, "chats");
-  const q = query(
-    chatsRef,
-    where("participants", "array-contains", userId1)
-  );
+  const q = query(chatsRef, where("participants", "array-contains", userId1));
   const querySnapshot = await getDocs(q);
-  
+
   let chatId = null;
   for (const docSnap of querySnapshot.docs) {
     const chatData = docSnap.data();
@@ -51,21 +51,24 @@ export const createChat = async (userId1, userId2) => {
 
 // Create a new group chat
 export const createGroupChat = async (groupName, creatorId, initialMembers) => {
-  if (initialMembers.length < 3) {
-    throw new Error("Group must have at least 4 members including you.");
+  if (!initialMembers || initialMembers.length < 2) {
+    throw new Error("Group must have at least 3 members including you.");
   }
-  const allMembers = [creatorId, ...initialMembers];
-  
+
+  const allParticipants = [creatorId, ...initialMembers];
+
   const chatsRef = collection(db, "chats");
   const newGroupRef = await addDoc(chatsRef, {
     type: "group",
     groupName,
     admin: creatorId,
-    members: allMembers,
+    participants: allParticipants,
+    members: allParticipants,
     createdAt: serverTimestamp(),
     lastMessage: "",
     lastMessageTime: serverTimestamp(),
   });
+
   return newGroupRef.id;
 };
 
@@ -73,10 +76,18 @@ export const createGroupChat = async (groupName, creatorId, initialMembers) => {
 export const addMemberToGroup = async (chatId, adminId, newMemberId) => {
   const chatRef = doc(db, "chats", chatId);
   const chatSnap = await getDoc(chatRef);
-  if (!chatSnap.exists() || chatSnap.data().admin !== adminId) {
+
+  if (!chatSnap.exists()) {
+    throw new Error("Chat doesn't exist.");
+  }
+
+  const chatData = chatSnap.data();
+  if (chatData.admin !== adminId) {
     throw new Error("Only the admin can add members.");
   }
+
   await updateDoc(chatRef, {
+    participants: arrayUnion(newMemberId),
     members: arrayUnion(newMemberId),
   });
 };
@@ -85,28 +96,63 @@ export const addMemberToGroup = async (chatId, adminId, newMemberId) => {
 export const removeMemberFromGroup = async (chatId, adminId, memberId) => {
   const chatRef = doc(db, "chats", chatId);
   const chatSnap = await getDoc(chatRef);
+
+  if (!chatSnap.exists()) {
+    throw new Error("Chat doesn't exist.");
+  }
+
   const chatData = chatSnap.data();
-  if (!chatSnap.exists() || chatData.admin !== adminId) {
+  if (chatData.admin !== adminId) {
     throw new Error("Only the admin can remove members.");
   }
+
   if (memberId === adminId) {
-    throw new Error("Admin cannot remove themselves.");
+    throw new Error("Admin cannot remove themselves. Delete the group instead.");
   }
+
   await updateDoc(chatRef, {
+    participants: arrayRemove(memberId),
     members: arrayRemove(memberId),
   });
 };
 
+// Delete a group chat (admin only)
+export const deleteGroupChat = async (chatId, userId) => {
+  const chatRef = doc(db, "chats", chatId);
+  const chatSnap = await getDoc(chatRef);
+
+  if (!chatSnap.exists()) {
+    throw new Error("Chat doesn't exist.");
+  }
+
+  const chatData = chatSnap.data();
+  if (chatData.type === "group" && chatData.admin !== userId) {
+    throw new Error("Only the admin can delete this group.");
+  }
+
+  await deleteDoc(chatRef);
+};
+
 // Send a message
 export const sendMessage = async (chatId, senderId, receiverId, text) => {
+  const chatRef = doc(db, "chats", chatId);
+  const chatSnap = await getDoc(chatRef);
+
+  if (!chatSnap.exists()) {
+    throw new Error("Chat doesn't exist.");
+  }
+
+  const chatData = chatSnap.data();
+  const isGroup = chatData.type === "group";
+
   const messagesRef = collection(db, "chats", chatId, "messages");
   await addDoc(messagesRef, {
     senderId,
     text,
     timestamp: serverTimestamp(),
+    senderName: auth.currentUser.displayName || "User",
   });
 
-  const chatRef = doc(db, "chats", chatId);
   await updateDoc(chatRef, {
     lastMessage: text,
     lastMessageTime: serverTimestamp(),
@@ -117,6 +163,7 @@ export const sendMessage = async (chatId, senderId, receiverId, text) => {
 export const subscribeToMessages = (chatId, callback) => {
   const messagesRef = collection(db, "chats", chatId, "messages");
   const q = query(messagesRef, orderBy("timestamp", "asc"));
+
   return onSnapshot(q, (snapshot) => {
     const messages = snapshot.docs.map((doc) => ({
       id: doc.id,
@@ -126,7 +173,7 @@ export const subscribeToMessages = (chatId, callback) => {
   });
 };
 
-// Subscribe to user's chats (handles both one-on-one and group chats)
+// Subscribe to user's chats
 export const subscribeToChats = (userId, callback) => {
   const q = query(
     collection(db, "chats"),
@@ -135,36 +182,59 @@ export const subscribeToChats = (userId, callback) => {
   );
 
   return onSnapshot(q, async (snapshot) => {
-    let seenUsers = new Set(); // Track unique users for one-on-one
-    const chats = [];
+    const processedChats = [];
+    const oneOnOneChats = [];
+    const groupChats = [];
 
     for (const docSnap of snapshot.docs) {
       const chatData = docSnap.data();
       const chatId = docSnap.id;
 
       if (chatData.type === "group") {
-        chats.push({
-          id: chatId,
-          ...chatData,
-          isGroup: true,
-        });
+        if (chatData.members && chatData.members.includes(userId)) {
+          groupChats.push({
+            id: chatId,
+            ...chatData,
+            isGroup: true,
+          });
+        }
       } else {
-        const otherUserId = chatData.participants.find((id) => id !== userId);
-        if (!otherUserId || seenUsers.has(otherUserId)) continue;
-        seenUsers.add(otherUserId);
-        const userRef = doc(db, "users", otherUserId);
+        const otherUserId = chatData.participants.find(id => id !== userId);
+        if (otherUserId) {
+          oneOnOneChats.push({
+            id: chatId,
+            otherUserId,
+            ...chatData,
+            isGroup: false,
+          });
+        }
+      }
+    }
+
+    const seenUsers = new Set();
+    for (const chat of oneOnOneChats) {
+      if (!seenUsers.has(chat.otherUserId)) {
+        seenUsers.add(chat.otherUserId);
+        const userRef = doc(db, "users", chat.otherUserId);
         const userSnap = await getDoc(userRef);
         const otherUserName = userSnap.exists() ? userSnap.data().name : "Unknown";
-        chats.push({
-          id: chatId,
-          ...chatData,
-          otherUserId,
+
+        processedChats.push({
+          ...chat,
           otherUserName,
-          isGroup: false,
         });
       }
     }
-    callback(chats);
+
+    processedChats.push(...groupChats);
+
+    processedChats.sort((a, b) => {
+      const timeA = a.lastMessageTime ? a.lastMessageTime.seconds : 0;
+      const timeB = b.lastMessageTime ? b.lastMessageTime.seconds : 0;
+      return timeB - timeA;
+    });
+
+    callback(processedChats);
   });
 };
 
@@ -188,4 +258,74 @@ export const unblockUser = async (currentUserId, userToUnblockId) => {
   await updateDoc(userRef, {
     blockedUsers: arrayRemove(userToUnblockId),
   });
+};
+
+// Get user details by ID
+export const getUserDetails = async (userId) => {
+  const userRef = doc(db, "users", userId);
+  const userSnap = await getDoc(userRef);
+
+  if (userSnap.exists()) {
+    return {
+      id: userId,
+      ...userSnap.data(),
+    };
+  }
+
+  return null;
+};
+
+// Search for users
+export const searchUsers = async (searchTerm) => {
+  const usersRef = collection(db, "users");
+  const q = query(usersRef);
+  const querySnapshot = await getDocs(q);
+
+  const currentUser = auth.currentUser;
+  const currentUserId = currentUser.uid;
+  const currentUserDoc = await getDoc(doc(db, "users", currentUserId));
+  const currentUserBlockedUsers = currentUserDoc.exists() ? currentUserDoc.data().blockedUsers || [] : [];
+
+  const seenUsers = new Map(); // Track unique users by name and id
+  const results = [];
+
+  querySnapshot.forEach((doc) => {
+    const userData = doc.data();
+    const userId = doc.id;
+
+    // Skip if it's the current user
+    if (userId === currentUserId) {
+      return;
+    }
+
+    // Simple search by name
+    if (
+      userData.name &&
+      userData.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ) {
+      // Check if the current user has blocked this user
+      const isBlockedByCurrentUser = currentUserBlockedUsers.includes(userId);
+
+      // Check if this user has blocked the current user
+      const isBlockedByOtherUser = userData.blockedUsers?.includes(currentUserId) || false;
+
+      // Skip if either user has blocked the other
+      if (isBlockedByCurrentUser || isBlockedByOtherUser) {
+        return;
+      }
+
+      // Deduplicate by name, keeping the first occurrence
+      const userKey = userData.name.toLowerCase(); // Use lowercase for case-insensitive deduplication
+      if (!seenUsers.has(userKey)) {
+        seenUsers.set(userKey, true);
+        results.push({
+          id: userId,
+          name: userData.name,
+        });
+      }
+    }
+  });
+
+  console.log("Search Results:", results); // Debug log
+  return results;
 };
