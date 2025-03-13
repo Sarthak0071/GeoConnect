@@ -55,7 +55,7 @@ const ChatSidebar = ({
         <div className="ChatHeader">
           <h2>Chat Buddies</h2>
           <button onClick={handleBack} className="BackButton">
-            ← Back
+            ← 
           </button>
           <button
             onClick={() => setShowSettings(!showSettings)}
