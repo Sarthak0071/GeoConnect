@@ -1,3 +1,6 @@
+
+
+// Chat.jsx
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { auth, db } from "../../firebase";
@@ -18,9 +21,7 @@ const Chat = () => {
   const { userId: otherUserId } = useParams();
   const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState([]);
-  const [currentChatId, setCurrentChatId] = useState(null);
-  const [currentOtherUserId, setCurrentOtherUserId] = useState(null);
-  const [otherUserName, setOtherUserName] = useState("");
+  const [currentChat, setCurrentChat] = useState(null);
   const [blockedUsers, setBlockedUsers] = useState([]);
 
   useEffect(() => {
@@ -41,44 +42,45 @@ const Chat = () => {
     const initializeChat = async () => {
       if (!otherUserId) return;
       const chatId = await createChat(auth.currentUser.uid, otherUserId);
-      setCurrentChatId(chatId);
-      setCurrentOtherUserId(otherUserId);
-
       const userRef = doc(db, "users", otherUserId);
       const userSnap = await getDoc(userRef);
-      if (userSnap.exists()) {
-        setOtherUserName(userSnap.data().name);
-      }
+      const otherUserName = userSnap.exists() ? userSnap.data().name : "Unknown";
+      setCurrentChat({ id: chatId, otherUserId, otherUserName, isGroup: false });
     };
 
     initializeChat();
   }, [otherUserId]);
 
   useEffect(() => {
-    if (!currentChatId) return;
-    const unsubscribeMessages = subscribeToMessages(currentChatId, setMessages);
+    if (!currentChat?.id) return;
+    const unsubscribeMessages = subscribeToMessages(currentChat.id, setMessages);
     return () => unsubscribeMessages();
-  }, [currentChatId]);
+  }, [currentChat?.id]);
 
   useEffect(() => {
     if (!auth.currentUser) return;
     const unsubscribeChats = subscribeToChats(auth.currentUser.uid, (updatedChats) => {
-      const filteredChats = updatedChats.filter((chat) => !blockedUsers.includes(chat.otherUserId));
+      const filteredChats = updatedChats.filter(
+        (chat) => !chat.otherUserId || !blockedUsers.includes(chat.otherUserId)
+      );
       setChats(filteredChats);
     });
     return () => unsubscribeChats();
   }, [blockedUsers]);
 
   const handleChatSelect = (chat) => {
-    setCurrentChatId(chat.id);
-    setCurrentOtherUserId(chat.otherUserId);
-    setOtherUserName(chat.otherUserName);
+    setCurrentChat(chat);
   };
 
   const handleSendMessage = async (text, setMessage) => {
-    if (!text.trim() || !currentChatId || !currentOtherUserId) return;
+    if (!text.trim() || !currentChat?.id) return;
     try {
-      await sendMessage(currentChatId, auth.currentUser.uid, currentOtherUserId, text.trim());
+      await sendMessage(
+        currentChat.id,
+        auth.currentUser.uid,
+        currentChat.isGroup ? null : currentChat.otherUserId,
+        text.trim()
+      );
       setMessage("");
     } catch (error) {
       alert(error.message);
@@ -91,13 +93,11 @@ const Chat = () => {
       const updatedChats = chats.filter((chat) => chat.otherUserId !== userToBlockId);
       setChats(updatedChats);
 
-      if (currentOtherUserId === userToBlockId) {
+      if (currentChat?.otherUserId === userToBlockId) {
         if (updatedChats.length > 0) {
           handleChatSelect(updatedChats[0]);
         } else {
-          setCurrentChatId(null);
-          setCurrentOtherUserId(null);
-          setOtherUserName("");
+          setCurrentChat(null);
         }
       }
     }
@@ -111,19 +111,22 @@ const Chat = () => {
     <div className="ChatContainer">
       <ChatSidebar
         chats={chats}
-        currentChatId={currentChatId}
+        currentChatId={currentChat?.id}
         handleChatSelect={handleChatSelect}
         setChats={setChats}
         blockedUsers={blockedUsers}
         handleUnblock={handleUnblock}
       />
-      {currentChatId ? (
+      {currentChat ? (
         <ChatWindow
-          otherUserName={otherUserName}
+          otherUserName={currentChat.otherUserName}
           messages={messages}
           handleSendMessage={handleSendMessage}
-          otherUserId={currentOtherUserId}
+          otherUserId={currentChat.otherUserId}
           handleBlock={handleBlock}
+          chatId={currentChat.id}
+          isGroup={currentChat.isGroup}
+          groupName={currentChat.groupName}
         />
       ) : (
         <div className="NoChatSelected">
