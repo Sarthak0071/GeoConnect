@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
@@ -24,8 +26,13 @@ const BlockedUsersPopup = ({ currentUserId, blockedUsers, onClose, handleUnblock
   }, [blockedUsers]);
 
   const onUnblock = async (userId) => {
-    await handleUnblock(userId);
-    setBlockedUsersData(blockedUsersData.filter((user) => user.id !== userId));
+    try {
+      await handleUnblock(userId);
+      setBlockedUsersData(blockedUsersData.filter((user) => user.id !== userId));
+    } catch (error) {
+      console.error("Error unblocking user:", error);
+      alert("Failed to unblock user: " + error.message);
+    }
   };
 
   return (
@@ -55,6 +62,3 @@ const BlockedUsersPopup = ({ currentUserId, blockedUsers, onClose, handleUnblock
 };
 
 export default BlockedUsersPopup;
-
-
-
