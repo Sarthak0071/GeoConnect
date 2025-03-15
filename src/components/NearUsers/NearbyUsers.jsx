@@ -1,6 +1,7 @@
 
+
 // import React, { useState, useEffect, useRef } from "react";
-// import { fetchAllUsersLocations } from "../utils/firestoreUtils";
+// import { fetchAllUsersLocations, fetchUserData } from "../utils/firestoreUtils";
 // import { auth, db } from "../../firebase";
 // import { doc, onSnapshot } from "firebase/firestore";
 // import { getDistance } from "geolib";
@@ -12,29 +13,47 @@
 //   const [currentUserLocation, setCurrentUserLocation] = useState(null);
 //   const [showPopup, setShowPopup] = useState(false);
 //   const [showAll, setShowAll] = useState(false);
+//   const [blockedUsers, setBlockedUsers] = useState([]);
+//   const [selectedUserDetails, setSelectedUserDetails] = useState(null);
 //   const navigate = useNavigate();
 //   const location = useLocation();
 //   const unsubscribeRef = useRef(null);
 //   const dataFetchedRef = useRef(false);
 
 //   useEffect(() => {
-//     // Only fetch data if it hasn't been fetched already or we're remounting the component
+//     if (!auth.currentUser) return;
+//     const userRef = doc(db, "users", auth.currentUser.uid);
+//     const unsubscribe = onSnapshot(userRef, (doc) => {
+//       if (doc.exists()) {
+//         setBlockedUsers(doc.data().blockedUsers || []);
+//       }
+//     });
+//     return () => unsubscribe();
+//   }, []);
+
+//   useEffect(() => {
 //     if (!dataFetchedRef.current) {
 //       const fetchData = async () => {
 //         const user = auth.currentUser;
 //         if (!user) return;
-        
+
 //         const userRef = doc(db, "users", user.uid);
 //         if (unsubscribeRef.current) unsubscribeRef.current();
-        
+
 //         unsubscribeRef.current = onSnapshot(userRef, (userDoc) => {
 //           if (userDoc.exists() && userDoc.data().currentSelected) {
 //             const currentLocation = userDoc.data().currentSelected;
 //             setCurrentUserLocation(currentLocation);
-            
+
 //             fetchAllUsersLocations((allUsers) => {
 //               const nearby = allUsers.filter((user) => {
-//                 if (!user.lat || !user.lng || user.uid === auth.currentUser.uid) return false;
+//                 if (
+//                   !user.lat ||
+//                   !user.lng ||
+//                   user.uid === auth.currentUser.uid ||
+//                   blockedUsers.includes(user.uid)
+//                 )
+//                   return false;
 //                 const distance = getDistance(
 //                   { latitude: currentLocation.lat, longitude: currentLocation.lng },
 //                   { latitude: user.lat, longitude: user.lng }
@@ -47,21 +66,43 @@
 //           }
 //         });
 //       };
-      
+
 //       fetchData();
 //     }
-    
+
 //     return () => {
-//       // Only unsubscribe when completely unmounting, not when navigating to chat
-//       if (unsubscribeRef.current && !location.pathname.includes('/chat')) {
+//       if (unsubscribeRef.current && !location.pathname.includes("/chat")) {
 //         unsubscribeRef.current();
 //         dataFetchedRef.current = false;
 //       }
 //     };
-//   }, [location.pathname]);
+//   }, [location.pathname, blockedUsers]);
 
 //   const handleChatStart = (user) => {
 //     navigate(`/chat/${user.uid}`);
+//   };
+
+//   const handleNavigate = (lat, lng) => {
+//     const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+//     window.open(url, "_blank");
+//   };
+
+//   const handleShowAbout = async (userId) => {
+//     try {
+//       const userData = await fetchUserData(userId);
+//       setSelectedUserDetails(userData);
+//     } catch (error) {
+//       console.error("Error fetching user details:", error);
+//     }
+//   };
+
+//   const closeAboutPopup = () => {
+//     setSelectedUserDetails(null);
+//   };
+
+//   const formatTimestamp = (timestamp) => {
+//     if (!timestamp) return "N/A";
+//     return new Date(timestamp.toDate()).toLocaleString();
 //   };
 
 //   return (
@@ -81,9 +122,26 @@
 //                       <strong>{user.name}</strong>
 //                       <span>{user.locationName}</span>
 //                     </div>
-//                     <button className="chat-btn" onClick={() => handleChatStart(user)}>
-//                       Chat
-//                     </button>
+//                     <div className="user-actions">
+//                       <button 
+//                         className="navigate-btn" 
+//                         onClick={() => handleNavigate(user.lat, user.lng)}
+//                       >
+//                         Navigate
+//                       </button>
+//                       <button 
+//                         className="about-btn" 
+//                         onClick={() => handleShowAbout(user.uid)}
+//                       >
+//                         About
+//                       </button>
+//                       <button 
+//                         className="chat-btn" 
+//                         onClick={() => handleChatStart(user)}
+//                       >
+//                         Chat
+//                       </button>
+//                     </div>
 //                   </li>
 //                 ))}
 //               </ul>
@@ -101,6 +159,26 @@
 //           </div>
 //         </div>
 //       )}
+
+//       {selectedUserDetails && (
+//         <div className="about-popup-overlay">
+//           <div className="about-popup">
+//             <h3>User Details</h3>
+//             <div className="user-details">
+//               <p><strong>Name:</strong> {selectedUserDetails.name || "N/A"}</p>
+//               <p><strong>Email:</strong> {selectedUserDetails.email || "N/A"}</p>
+//               <p><strong>Description:</strong> {selectedUserDetails.description || "N/A"}</p>
+//               <p><strong>Gender:</strong> {selectedUserDetails.gender || "N/A"}</p>
+//               <p><strong>Date of Birth:</strong> {selectedUserDetails.dob || "N/A"}</p>
+//               <p><strong>Location:</strong> {selectedUserDetails.currentSelected?.locationName || "N/A"}</p>
+//               <p><strong>Joined:</strong> {formatTimestamp(selectedUserDetails.createdAt)}</p>
+//             </div>
+//             <button className="close-btn" onClick={closeAboutPopup}>
+//               Close
+//             </button>
+//           </div>
+//         </div>
+//       )}
 //     </div>
 //   );
 // };
@@ -109,8 +187,13 @@
 
 
 
+
+
+
+
+
 import React, { useState, useEffect, useRef } from "react";
-import { fetchAllUsersLocations } from "../utils/firestoreUtils";
+import { fetchAllUsersLocations, fetchUserData } from "../utils/firestoreUtils";
 import { auth, db } from "../../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import { getDistance } from "geolib";
@@ -123,6 +206,7 @@ const NearbyUsers = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [blockedUsers, setBlockedUsers] = useState([]);
+  const [selectedUserDetails, setSelectedUserDetails] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const unsubscribeRef = useRef(null);
@@ -178,16 +262,44 @@ const NearbyUsers = () => {
       fetchData();
     }
 
+    // Cleanup: Only reset if navigating away from NearbyUsers entirely
     return () => {
-      if (unsubscribeRef.current && !location.pathname.includes("/chat")) {
+      if (
+        unsubscribeRef.current &&
+        !location.pathname.includes("/chat") &&
+        !location.pathname.includes("/nearby-users")
+      ) {
         unsubscribeRef.current();
-        dataFetchedRef.current = false;
+        dataFetchedRef.current = false; // Only reset when leaving NearbyUsers completely
       }
     };
   }, [location.pathname, blockedUsers]);
 
   const handleChatStart = (user) => {
-    navigate(`/chat/${user.uid}`);
+    navigate(`/chat/${user.uid}`, { state: { fromNearbyUsers: true } });
+  };
+
+  const handleNavigate = (lat, lng) => {
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    window.open(url, "_blank");
+  };
+
+  const handleShowAbout = async (userId) => {
+    try {
+      const userData = await fetchUserData(userId);
+      setSelectedUserDetails(userData);
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  };
+
+  const closeAboutPopup = () => {
+    setSelectedUserDetails(null);
+  };
+
+  const formatTimestamp = (timestamp) => {
+    if (!timestamp) return "N/A";
+    return new Date(timestamp.toDate()).toLocaleString();
   };
 
   return (
@@ -207,9 +319,26 @@ const NearbyUsers = () => {
                       <strong>{user.name}</strong>
                       <span>{user.locationName}</span>
                     </div>
-                    <button className="chat-btn" onClick={() => handleChatStart(user)}>
-                      Chat
-                    </button>
+                    <div className="user-actions">
+                      <button
+                        className="navigate-btn"
+                        onClick={() => handleNavigate(user.lat, user.lng)}
+                      >
+                        Navigate
+                      </button>
+                      <button
+                        className="about-btn"
+                        onClick={() => handleShowAbout(user.uid)}
+                      >
+                        About
+                      </button>
+                      <button
+                        className="chat-btn"
+                        onClick={() => handleChatStart(user)}
+                      >
+                        Chat
+                      </button>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -227,12 +356,28 @@ const NearbyUsers = () => {
           </div>
         </div>
       )}
+
+      {selectedUserDetails && (
+        <div className="about-popup-overlay">
+          <div className="about-popup">
+            <h3>User Details</h3>
+            <div className="user-details">
+              <p><strong>Name:</strong> {selectedUserDetails.name || "N/A"}</p>
+              <p><strong>Email:</strong> {selectedUserDetails.email || "N/A"}</p>
+              <p><strong>Description:</strong> {selectedUserDetails.description || "N/A"}</p>
+              <p><strong>Gender:</strong> {selectedUserDetails.gender || "N/A"}</p>
+              <p><strong>Date of Birth:</strong> {selectedUserDetails.dob || "N/A"}</p>
+              <p><strong>Location:</strong> {selectedUserDetails.currentSelected?.locationName || "N/A"}</p>
+              <p><strong>Joined:</strong> {formatTimestamp(selectedUserDetails.createdAt)}</p>
+            </div>
+            <button className="close-btn" onClick={closeAboutPopup}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default NearbyUsers;
-
-
-
-
