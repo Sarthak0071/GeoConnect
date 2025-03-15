@@ -63,11 +63,27 @@ export const fetchAllUsersLocations = (setAllUserLocations) => {
   });
 };
 
-export const fetchUserData = async () => {
+// export const fetchUserData = async () => {
+//   try {
+//     const user = auth.currentUser;
+//     if (!user) return null;
+//     const userDocRef = doc(db, "users", user.uid);
+//     const userDoc = await getDoc(userDocRef);
+//     if (userDoc.exists()) {
+//       return userDoc.data();
+//     }
+//     return null;
+//   } catch (error) {
+//     console.error("Error fetching user data:", error);
+//     return null;
+//   }
+// };
+export const fetchUserData = async (userId) => {
   try {
     const user = auth.currentUser;
-    if (!user) return null;
-    const userDocRef = doc(db, "users", user.uid);
+    if (!user && !userId) return null;
+    const targetUserId = userId || user.uid;
+    const userDocRef = doc(db, "users", targetUserId);
     const userDoc = await getDoc(userDocRef);
     if (userDoc.exists()) {
       return userDoc.data();
