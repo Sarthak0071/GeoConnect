@@ -156,6 +156,7 @@ body {
   font-size: 15px;
 }
 
+
 .history-btn:hover, .chat-btn:hover {
   background: rgba(255, 255, 255, 0.25);
   transform: translateY(-3px);
@@ -258,3 +259,11 @@ body {
     gap: 20px;
   }
 }
+
+
+
+
+
+
+
+
