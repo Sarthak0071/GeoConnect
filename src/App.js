@@ -22,6 +22,7 @@ function App() {
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/home" element={<Home />} />
         <Route path="/chat/:userId" element={<Chat />} />
+        <Route path="/chat" element={<Chat />} /> {/* General chat route */}
 
         <Route path="/nearby-users" element={<NearbyUsers />} />
         <Route path="/user-profile" element={<UserProfile />} />
