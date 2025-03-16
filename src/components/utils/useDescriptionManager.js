@@ -1,4 +1,4 @@
-
+// useDescriptionManager.js
 import { useState, useRef, useCallback } from 'react';
 import { fetchDescription } from '../utils/descriptionUtils';
 

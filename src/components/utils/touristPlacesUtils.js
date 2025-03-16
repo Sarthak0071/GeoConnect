@@ -1,4 +1,4 @@
-
+// touristPlacesUtils.js
 import { geocodeLocation } from "./locationUtils";
 
 export const fetchTouristPlacesFromServer = async (city, apiKey) => {
