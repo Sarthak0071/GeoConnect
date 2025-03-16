@@ -1,4 +1,4 @@
-
+// App.js
 import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -10,11 +10,18 @@ import UserProfile from "./components/User/UserProfile";
 import Chat from "./components/chat/Chat"; // Ensure correct path
 import TravelHistory from "./components/TravelHistory/TravelHistory";
 import NearbyUsers from "./components/NearUsers/NearbyUsers"; // Ensure correct path
+import AdminDashboard from "./components/Admin/AdminDashboard";
+import AllUsers from "./components/Admin/AllUsers";
+import BannedUsers from "./components/Admin/BannedUsers";
+import AdminManagement from "./components/Admin/AdminManagement";
+
+
 
 
 
 function App() {
   return (
+
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
@@ -27,10 +34,17 @@ function App() {
         <Route path="/nearby-users" element={<NearbyUsers />} />
         <Route path="/user-profile" element={<UserProfile />} />
         <Route path="/travel-history" element={<TravelHistory />} />
+        <Route path="/admin" element={<AdminDashboard />}/>
+        <Route path="/admin/AllUsers" element={<AllUsers />} />
+        <Route path="/admin/banned-users" element={<BannedUsers />} />
+        <Route path="/admin/AdminManagement" element={<AdminManagement />} />
       </Routes>
     </Router>
+
   );
 }
 
 export default App;
+
+
 

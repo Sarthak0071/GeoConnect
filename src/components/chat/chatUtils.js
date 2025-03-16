@@ -1,6 +1,6 @@
 
 
-
+// chatUtils.js
 
 import { db, auth } from "../../firebase";
 import {
