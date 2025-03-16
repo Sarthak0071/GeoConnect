@@ -1,4 +1,4 @@
-
+// useLocationManager.js
 import { useState, useEffect } from "react";
 import { 
   reverseGeocode, 
@@ -115,3 +115,9 @@ export const useLocationManager = () => {
     updateLocation,
   };
 };
+
+
+
+
+
+
