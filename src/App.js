@@ -14,6 +14,8 @@ import AdminDashboard from "./components/Admin/AdminDashboard";
 import AllUsers from "./components/Admin/AllUsers";
 import BannedUsers from "./components/Admin/BannedUsers";
 import AdminManagement from "./components/Admin/AdminManagement";
+import LiveTracking from "./components/Admin/LiveTracking";
+import AdminTravelHistory from "./components/Admin/AdminTravelHistory";
 
 
 
@@ -38,6 +40,8 @@ function App() {
         <Route path="/admin/AllUsers" element={<AllUsers />} />
         <Route path="/admin/banned-users" element={<BannedUsers />} />
         <Route path="/admin/AdminManagement" element={<AdminManagement />} />
+        <Route path="/admin/live-tracking" element={<LiveTracking />} /> {/* Live tracking route */}
+        <Route path="/admin/travel-history" element={<AdminTravelHistory />} />
       </Routes>
     </Router>
 
