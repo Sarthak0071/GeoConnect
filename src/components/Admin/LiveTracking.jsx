@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { collection, query, onSnapshot, orderBy } from "firebase/firestore";
 import { db } from "../../firebase";
 import AdminSidebar from "./AdminSidebar";
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import "./LiveTracking.css";
 
 const API_KEY = "AIzaSyDIZ4wZgZyI7Zxbb4DPwnvDmQ6JFMyVum4";
@@ -14,8 +14,7 @@ const LiveTracking = () => {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
-  const [selectedMarker, setSelectedMarker] = useState(null);
-  const [mapCenter, setMapCenter] = useState(null);
+  const [mapCenter, setMapCenter] = useState({ lat: 20, lng: 0 });
   const [mapZoom, setMapZoom] = useState(2);
   const [map, setMap] = useState(null);
   const mapRef = useRef(null);
@@ -61,8 +60,9 @@ const LiveTracking = () => {
     fetchUsers();
   }, []);
 
+  // Initial map setup - fit bounds to show all markers
   useEffect(() => {
-    if (map && users.length > 0 && !selectedUser) { // Only fit bounds when no user is selected
+    if (isLoaded && map && users.length > 0) {
       const usersWithLocation = users.filter(user => 
         user.currentSelected?.lat && user.currentSelected?.lng
       );
@@ -70,15 +70,17 @@ const LiveTracking = () => {
       if (usersWithLocation.length > 0) {
         const bounds = new window.google.maps.LatLngBounds();
         usersWithLocation.forEach(user => {
-          bounds.extend({
-            lat: user.currentSelected.lat,
-            lng: user.currentSelected.lng
-          });
+          if (user.currentSelected?.lat && user.currentSelected?.lng) {
+            bounds.extend({
+              lat: user.currentSelected.lat,
+              lng: user.currentSelected.lng
+            });
+          }
         });
         map.fitBounds(bounds);
       }
     }
-  }, [map, users, selectedUser]);
+  }, [isLoaded, map, users]);
 
   useEffect(() => {
     let result = [...users];
@@ -97,7 +99,6 @@ const LiveTracking = () => {
 
   const handleUserSelect = (user) => {
     setSelectedUser(user);
-    setSelectedMarker(user);
     
     if (user.currentSelected?.lat && user.currentSelected?.lng && map) {
       const position = {
@@ -105,11 +106,10 @@ const LiveTracking = () => {
         lng: user.currentSelected.lng
       };
       
-      // Set state
       setMapCenter(position);
       setMapZoom(15);
       
-      // Directly control the map
+      // Directly center and zoom the map
       map.setCenter(position);
       map.setZoom(15);
     }
@@ -124,15 +124,15 @@ const LiveTracking = () => {
         lng: user.currentSelected.lng
       };
       
-      // Set state
       setMapCenter(position);
       setMapZoom(15);
       
-      // Directly control the map
+      // Directly center and zoom the map
       map.setCenter(position);
       map.setZoom(15);
     }
   };
+
   const handleNavigate = (lat, lng) => {
     const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
     window.open(googleMapsUrl, '_blank');
@@ -140,13 +140,19 @@ const LiveTracking = () => {
 
   const formatTimestamp = (timestamp) => {
     if (!timestamp) return "Unknown";
-    const date = new Date(timestamp.seconds * 1000);
-    return date.toLocaleString();
+    try {
+      const date = new Date(timestamp.seconds * 1000);
+      return date.toLocaleString();
+    } catch (error) {
+      console.error("Error formatting timestamp:", error);
+      return "Unknown";
+    }
   };
 
   const onMapLoad = (mapInstance) => {
     setMap(mapInstance);
     mapRef.current = mapInstance;
+    console.log("Map loaded");
   };
 
   const onUnmount = () => {
@@ -155,16 +161,12 @@ const LiveTracking = () => {
   };
 
   // Define marker icons
-  const redMarker = {
-    url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
-    scaledSize: new window.google.maps.Size(40, 40),
-    anchor: new window.google.maps.Point(20, 40),
+  const redMarkerIcon = {
+    url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
   };
-
-  const blueMarker = {
-    url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-    scaledSize: new window.google.maps.Size(40, 40),
-    anchor: new window.google.maps.Point(20, 40),
+  
+  const blueMarkerIcon = {
+    url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
   };
 
   return (
@@ -253,23 +255,27 @@ const LiveTracking = () => {
                 options={{
                   mapTypeControl: true,
                   streetViewControl: true,
-                  fullscreenControl: true
+                  fullscreenControl: true,
+                  zoomControl: true
                 }}
               >
-                // In your LiveTracking component, remove the InfoWindow code and simplify the markers
-                {filteredUsers.map(user => 
-  user.currentSelected?.lat && user.currentSelected?.lng ? (
-    <Marker
-      key={user.id}
-      position={{
-        lat: user.currentSelected.lat,
-        lng: user.currentSelected.lng
-      }}
-      onClick={() => handleMarkerClick(user)}
-      icon={selectedUser?.id === user.id ? blueMarker : redMarker}
-    />
-  ) : null
-)}
+                {filteredUsers.map(user => {
+                  // Only create markers for users with location data
+                  if (user.currentSelected?.lat && user.currentSelected?.lng) {
+                    return (
+                      <Marker
+                        key={user.id}
+                        position={{
+                          lat: user.currentSelected.lat,
+                          lng: user.currentSelected.lng
+                        }}
+                        onClick={() => handleMarkerClick(user)}
+                        icon={selectedUser?.id === user.id ? blueMarkerIcon : redMarkerIcon}
+                      />
+                    );
+                  }
+                  return null;
+                })}
               </GoogleMap>
             ) : (
               <div className="loading-map">
