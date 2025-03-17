@@ -149,6 +149,7 @@ const BannedUsers = () => {
         banned: false,
         banReason: null,
         bannedAt: null,
+        authDisabled: false, // Add this line to reset the authDisabled flag
         unbanNote: unbanNote || null,
         unbannedAt: new Date()
       });
