@@ -3,7 +3,8 @@
 import React, { useRef, useEffect, useState } from "react";
 import { auth, db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
-import "./Chat.css";
+// import "./Chat.css";
+import "./ChatMessages.css";
 
 const ChatMessages = ({ messages, isGroup = false }) => {
   const messagesEndRef = useRef(null);

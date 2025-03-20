@@ -1,0 +1,297 @@
+/* ChatMessages.css - Premium styling for ChatMessages component */
+
+/* Modern Color Palette for Chat Messages */
+:root {
+    --msg-bg-sent: linear-gradient(135deg, #6366f1, #4f46e5);
+    --msg-bg-received: #ffffff;
+    --msg-text-sent: #ffffff;
+    --msg-text-primary: #1e293b;
+    --msg-text-secondary: #64748b;
+    --msg-time-sent: rgba(255, 255, 255, 0.75);
+    --msg-time-received: #94a3b8;
+    --msg-sender-color: #6366f1;
+    --msg-shadow-sent: 0 4px 12px rgba(79, 70, 229, 0.2);
+    --msg-shadow-received: 0 2px 10px rgba(0, 0, 0, 0.05);
+    --msg-bg-container: #f8fafc;
+    --msg-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Chat Messages Container */
+  .ChatMessages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    background-color: var(--msg-bg-container);
+    background-image: 
+      radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(99, 102, 241, 0.03) 0%, transparent 50%);
+    scroll-behavior: smooth;
+  }
+  
+  /* Custom Scrollbar */
+  .ChatMessages::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .ChatMessages::-webkit-scrollbar-thumb {
+    background-color: rgba(99, 102, 241, 0.2);
+    border-radius: 3px;
+  }
+  
+  .ChatMessages::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  
+  /* Message Groups - Add space between different sender groups */
+  .ChatMessages > div + div:not([class]) {
+    margin-top: 0.5rem;
+  }
+  
+  /* Message Bubble */
+  .MessageBubble {
+    max-width: 68%;
+    padding: 0.875rem 1.125rem;
+    border-radius: 16px;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: var(--msg-transition);
+    animation: messageAppear 0.3s ease forwards;
+    transform-origin: bottom;
+    word-break: break-word;
+  }
+  
+  /* Sent Message (by current user) */
+  .MessageBubble.Sent {
+    align-self: flex-end;
+    background: var(--msg-bg-sent);
+    color: var(--msg-text-sent);
+    border-bottom-right-radius: 4px;
+    box-shadow: var(--msg-shadow-sent);
+  }
+  
+  /* Received Message (from other users) */
+  .MessageBubble.Received {
+    align-self: flex-start;
+    background-color: var(--msg-bg-received);
+    color: var(--msg-text-primary);
+    border-bottom-left-radius: 4px;
+    box-shadow: var(--msg-shadow-received);
+  }
+  
+  /* Message animations */
+  @keyframes messageAppear {
+    0% {
+      opacity: 0;
+      transform: translateY(10px) scale(0.98);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  /* Hover effects */
+  .MessageBubble:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  }
+  
+  .MessageBubble.Sent:hover {
+    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.25);
+  }
+  
+  /* Message tail decorations */
+  .MessageBubble.Sent::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: -8px;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(135deg, transparent 50%, #4f46e5 50%);
+    transform: rotate(-45deg);
+  }
+  
+  .MessageBubble.Received::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -8px;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(225deg, transparent 50%, #ffffff 50%);
+    transform: rotate(45deg);
+    box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.02);
+  }
+  
+  /* Message Sender (for group chats) */
+  .MessageSender {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    color: var(--msg-sender-color);
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+  }
+  
+  .MessageSender::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: var(--msg-sender-color);
+    border-radius: 50%;
+    margin-right: 6px;
+  }
+  
+  /* Message Content */
+  .MessageBubble p {
+    margin: 0;
+    margin-bottom: 0.35rem;
+    white-space: pre-wrap;
+    line-height: 1.4;
+    font-size: 0.9375rem;
+  }
+  
+  .MessageBubble.Sent p {
+    font-weight: 500;
+  }
+  
+  /* Message Time */
+  .MessageTime {
+    display: block;
+    font-size: 0.75rem;
+    margin-top: 0.35rem;
+    text-align: right;
+    opacity: 0.9;
+    font-weight: 500;
+  }
+  
+  .MessageBubble.Sent .MessageTime {
+    color: var(--msg-time-sent);
+  }
+  
+  .MessageBubble.Received .MessageTime {
+    color: var(--msg-time-received);
+  }
+  
+  /* Handle consecutive messages from same sender */
+  .MessageBubble.Sent + .MessageBubble.Sent,
+  .MessageBubble.Received + .MessageBubble.Received {
+    margin-top: -0.5rem;
+  }
+  
+  /* Special styling for media content */
+  .MessageBubble img, 
+  .MessageBubble video {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Status indicators for sent messages */
+  .MessageBubble.Sent.Delivered::before {
+    content: '✓';
+    position: absolute;
+    bottom: 8px;
+    left: -20px;
+    font-size: 0.75rem;
+    color: var(--msg-text-secondary);
+  }
+  
+  .MessageBubble.Sent.Read::before {
+    content: '✓✓';
+    position: absolute;
+    bottom: 8px;
+    left: -20px;
+    font-size: 0.75rem;
+    color: var(--msg-sender-color);
+  }
+  
+  /* Date separators */
+  .DateSeparator {
+    align-self: center;
+    padding: 6px 12px;
+    background-color: rgba(99, 102, 241, 0.1);
+    color: var(--msg-text-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 12px;
+    margin: 1.5rem 0;
+  }
+  
+  /* Message pending animation */
+  .MessageBubble.Pending {
+    opacity: 0.8;
+  }
+  
+  .MessageBubble.Pending::after {
+    content: '...';
+    position: absolute;
+    bottom: 2px;
+    right: 8px;
+    animation: pendingDots 1.5s infinite;
+  }
+  
+  @keyframes pendingDots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+  }
+  
+  /* Media Queries */
+  @media (max-width: 768px) {
+    .ChatMessages {
+      padding: 1.25rem;
+    }
+    
+    .MessageBubble {
+      max-width: 85%;
+      padding: 0.75rem 1rem;
+    }
+    
+    .MessageBubble::after {
+      display: none; /* Hide tails on mobile */
+    }
+  }
+  
+  /* Typing indicator animation */
+  .TypingIndicator {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: var(--msg-bg-received);
+    border-radius: 16px;
+    width: fit-content;
+    box-shadow: var(--msg-shadow-received);
+    margin-top: 0.5rem;
+  }
+  
+  .TypingDot {
+    width: 8px;
+    height: 8px;
+    margin: 0 3px;
+    background-color: var(--msg-sender-color);
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: typingAnimation 1.5s infinite ease-in-out;
+  }
+  
+  .TypingDot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .TypingDot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  
+  @keyframes typingAnimation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.5); }
+    100% { transform: scale(1); }
+  }
