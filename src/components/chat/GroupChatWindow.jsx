@@ -7,7 +7,8 @@ import { db, auth } from "../../firebase";
 import ChatMessages from "./ChatMessages";
 import GroupInfoPopup from "./GroupInfoPopup";
 import { deleteGroupChat } from "./chatUtils";
-import "./Chat.css";
+// import "./Chat.css";
+import "./GroupChatWindow.css";
 
 const GroupChatWindow = ({ groupId, groupName, messages, handleSendMessage }) => {
   const [message, setMessage] = useState("");
