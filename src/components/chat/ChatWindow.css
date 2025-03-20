@@ -1,0 +1,125 @@
+/* ChatWindow.css - Styling for ChatWindow component */
+
+/* Chat Window Container */
+.ChatWindow {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: var(--bg-primary);
+  }
+  
+  /* Chat Window Header */
+  .ChatWindowHeader {
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-primary);
+  }
+  
+  .ChatWindowHeader h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-right: 1rem;
+  }
+  
+  .ChatWindowHeader .UserAvatar {
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--radius-full);
+    background-color: var(--primary-color);
+    margin-right: 1rem;
+  }
+  
+  .ChatWindowHeader button {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: var(--transition);
+  }
+  
+  .ChatWindowHeader button:hover {
+    background-color: rgba(239, 68, 68, 0.2);
+  }
+  
+  /* Input Container */
+  .InputContainer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: var(--bg-primary);
+  }
+  
+  .InputWrapper {
+    flex: 1;
+    position: relative;
+  }
+  
+  .ChatInput {
+    width: 100%;
+    padding: 0.875rem 1.25rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    transition: var(--transition);
+  }
+  
+  .ChatInput:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+  }
+  
+  /* Send Button */
+  .SendButton {
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--radius-full);
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    transition: var(--transition);
+  }
+  
+  .SendButton:hover {
+    background-color: var(--primary-hover);
+    transform: scale(1.05);
+  }
+  
+  .SendButton:disabled {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  /* Blocked Message */
+  .BlockedMessage {
+    padding: 1rem 1.5rem;
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    text-align: center;
+    font-weight: 500;
+    border-top: 1px solid var(--border-color);
+  }
+  
+  .BlockedMessage p {
+    margin: 0;
+  }
+  
+  /* Media Queries */
+  @media (max-width: 768px) {
+    .ChatWindowHeader {
+      padding: 0.75rem 1rem;
+    }
+  }
