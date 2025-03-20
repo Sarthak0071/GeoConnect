@@ -1,0 +1,189 @@
+/* GroupInfoPopup.css - Styling for GroupInfoPopup component */
+
+/* Overlay */
+.group-info-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  /* Popup Container */
+  .group-info-popup {
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background-color: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    animation: slideUp 0.3s ease;
+  }
+  
+  .group-info-popup h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .created-on {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Members Section */
+  .members-section {
+    margin-top: 1.5rem;
+  }
+  
+  .members-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  
+  .members-header h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+  
+  /* Add Member Toggle Button */
+  .add-member-toggle {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: var(--transition);
+  }
+  
+  .add-member-toggle:hover {
+    background-color: var(--primary-hover);
+  }
+  
+  /* Add Member Section */
+  .add-member-section {
+    margin-bottom: 1.5rem;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-secondary);
+    transition: var(--transition);
+  }
+  
+  .search-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+  }
+  
+  .searching-indicator {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+  }
+  
+  .search-results {
+    list-style: none;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+  }
+  
+  .search-result-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .search-result-item:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .search-result-item:hover {
+    background-color: var(--bg-accent);
+  }
+  
+  /* Members List */
+  .members-list {
+    list-style: none;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
+  .member-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+  }
+  
+  .member-item:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .member-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .member-name {
+    font-weight: 500;
+  }
+  
+  .admin-badge {
+    padding: 0.25rem 0.5rem;
+    background-color: var(--bg-accent);
+    color: var(--primary-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  
+  /* Remove Member Button */
+  .remove-member-btn {
+    padding: 0.375rem 0.75rem;
+    border-radius: var(--radius-md);
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: var(--transition);
+  }
+  
+  .remove-member-btn:hover {
+    background-color: rgba(239, 68, 68, 0.2);
+  }
+  
+  /* Close Button */
+  .close-btn {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: var(--radius-md);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    font-weight: 500;
+    margin-top: 1.5rem;
+    transition: var(--transition);
+  }
+  
+  .close-btn:hover {
+    background-color: var(--bg-accent);
+  }

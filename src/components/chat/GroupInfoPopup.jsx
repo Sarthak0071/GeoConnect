@@ -6,7 +6,8 @@ import React, { useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { addMemberToGroup, removeMemberFromGroup, searchUsers } from "./chatUtils";
-import "./Chat.css";
+// import "./Chat.css";
+import "./GroupInfoPopup.css";
 
 const GroupInfoPopup = ({ groupData, groupId, isAdmin, onClose, blockedUsers = [] }) => {
   const [members, setMembers] = useState([]);
