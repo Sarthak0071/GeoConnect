@@ -1,0 +1,180 @@
+/* BannedUsers.css */
+
+.banned-users-table .reason-cell {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .banned-users-table .reason-cell:hover {
+    white-space: normal;
+    overflow: visible;
+    background-color: #f9f9f9;
+    position: relative;
+    z-index: 1;
+  }
+  
+  th.sortable {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+  }
+  
+  th.sortable:hover {
+    background-color: #f5f5f5;
+  }
+  
+  th.sorted {
+    background-color: #f0f0f0;
+  }
+  
+  th.sortable i {
+    margin-left: 5px;
+    font-size: 12px;
+  }
+  
+  .header-stats {
+    display: flex;
+    margin-top: 10px;
+  }
+  
+  .stat-card {
+    background-color: #f44336;
+    color: white;
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin-right: 15px;
+    display: flex;
+    flex-direction: column;
+    min-width: 100px;
+    text-align: center;
+  }
+  
+  .stat-value {
+    font-size: 24px;
+    font-weight: 600;
+  }
+  
+  .stat-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-top: 5px;
+  }
+  
+  .ban-details {
+    background-color: #f9f9f9;
+    border-left: 3px solid #f44336;
+    padding: 10px 15px;
+    margin: 15px 0;
+  }
+  
+  .unban-modal {
+    max-width: 500px;
+  }
+  
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 450px;
+  }
+  
+  .modal h3 {
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+  }
+  
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    gap: 10px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  .unban-btn {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .unban-btn:hover {
+    background-color: #0b7dda;
+  }
+  
+  .cancel-btn {
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #e5e5e5;
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 40px 0;
+    color: #666;
+  }
+  
+  .empty-state i {
+    font-size: 48px;
+    color: #4CAF50;
+    margin-bottom: 15px;
+  }
+
+
+  .users-table-container {
+    overflow-x: auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    min-height: 400px; /* Shows even if table is empty */
+  }
