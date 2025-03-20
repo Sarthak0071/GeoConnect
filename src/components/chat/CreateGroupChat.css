@@ -1,0 +1,193 @@
+/* CreateGroupChat.css - Styling for CreateGroupChat component */
+
+/* Overlay */
+.create-group-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  /* Popup Container */
+  .create-group-popup {
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background-color: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    animation: slideUp 0.3s ease;
+  }
+  
+  .create-group-popup h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Form Group */
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  /* Inputs */
+  .group-name-input,
+  .search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-secondary);
+    transition: var(--transition);
+  }
+  
+  .group-name-input:focus,
+  .search-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+  }
+  
+  /* Search Results */
+  .searching-indicator {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+  }
+  
+  .search-results {
+    list-style: none;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+  }
+  
+  .search-result-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .search-result-item:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .search-result-item:hover {
+    background-color: var(--bg-accent);
+  }
+  
+  /* Selected Members */
+  .selected-members {
+    margin-bottom: 1.5rem;
+  }
+  
+  .selected-members h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+  
+  .member-list {
+    list-style: none;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+  }
+  
+  .no-members {
+    padding: 1rem;
+    color: var(--text-secondary);
+    text-align: center;
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+  }
+  
+  .selected-member {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+  }
+  
+  .selected-member:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  /* Remove Button */
+  .remove-btn {
+    padding: 0.25rem;
+    border-radius: var(--radius-full);
+    color: var(--text-secondary);
+    transition: var(--transition);
+  }
+  
+  .remove-btn:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+  }
+  
+  /* Error Message */
+  .error-message {
+    padding: 0.75rem 1rem;
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Button Group */
+  .button-group {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .cancel-btn,
+  .create-btn {
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    transition: var(--transition);
+    text-align: center;
+  }
+  
+  .cancel-btn {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+  }
+  
+  .cancel-btn:hover {
+    background-color: var(--bg-accent);
+    color: var(--text-primary);
+  }
+  
+  .create-btn {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+  }
+  
+  .create-btn:hover {
+    background-color: var(--primary-hover);
+  }
+  
+  .create-btn:disabled {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+  }

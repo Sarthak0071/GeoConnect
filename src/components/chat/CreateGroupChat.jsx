@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { createGroupChat, searchUsers } from "./chatUtils";
 import { auth } from "../../firebase";
-import "./Chat.css";
+// import "./Chat.css";
+import "./CreateGroupChat.css";
 
 const CreateGroupChat = ({ onClose, onGroupCreated, blockedUsers = [] }) => {
   const [groupName, setGroupName] = useState("");
