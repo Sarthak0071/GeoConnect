@@ -154,7 +154,8 @@ import { deleteChat } from "./chatUtils";
 import BlockedUsersPopup from "./BlockedUsersPopup";
 import CreateGroupChat from "./CreateGroupChat";
 import { auth } from "../../firebase";
-import "./Chat.css";
+// import "./Chat.css";
+import "./ChatSidebar.css";
 
 const ChatSidebar = ({
   chats,
