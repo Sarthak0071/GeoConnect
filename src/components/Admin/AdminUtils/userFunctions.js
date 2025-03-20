@@ -1,3 +1,4 @@
+// userFunctions.js
 import { db } from "../../../firebase"; // Adjust path
 import { doc, updateDoc, deleteDoc, collection, query, getDocs, where, writeBatch } from "firebase/firestore";
 
