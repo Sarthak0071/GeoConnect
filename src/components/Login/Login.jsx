@@ -1,10 +1,9 @@
 
 
 
-
 // import React, { useState } from "react";
 // import { useNavigate } from "react-router-dom";
-// import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+// import { signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 // import { auth, googleProvider, db } from "../../firebase";
 // import { doc, getDoc } from "firebase/firestore";
 // import "./Login.css";
@@ -16,6 +15,35 @@
 //   const [error, setError] = useState("");
 //   const navigate = useNavigate();
 
+//   const checkIfUserBanned = async (uid) => {
+//     const userDocRef = doc(db, "users", uid);
+//     const userDoc = await getDoc(userDocRef);
+    
+//     if (userDoc.exists()) {
+//       const userData = userDoc.data();
+      
+//       // Check if user is banned
+//       if (userData.banned || userData.authDisabled) {
+//         // Sign out the user immediately if they're banned
+//         await signOut(auth);
+//         return {
+//           isBanned: true,
+//           reason: userData.banReason || "Your account has been suspended"
+//         };
+//       }
+      
+//       return {
+//         isBanned: false,
+//         userData
+//       };
+//     }
+    
+//     return {
+//       isBanned: false,
+//       userData: null
+//     };
+//   };
+
 //   const handleLogin = async (e) => {
 //     e.preventDefault();
 //     setError("");
@@ -25,18 +53,23 @@
 //       const userCredential = await signInWithEmailAndPassword(auth, email, password);
 //       const user = userCredential.user;
 
-//       // Fetch user data from Firestore
-//       const userDocRef = doc(db, "users", user.uid);
-//       const userDoc = await getDoc(userDocRef);
+//       // Check if user is banned
+//       const banCheck = await checkIfUserBanned(user.uid);
+      
+//       if (banCheck.isBanned) {
+//         setError(`Account access denied: ${banCheck.reason}`);
+//         setLoading(false);
+//         return;
+//       }
 
-//       if (userDoc.exists()) {
-//         const userData = userDoc.data();
-//         console.log("User data:", userData); // Debug: Check the fetched data
-//         if (userData.role === "admin") {
-//           console.log("Redirecting to /admin"); // Debug: Confirm admin redirect
+//       // If not banned, proceed with normal flow
+//       if (banCheck.userData) {
+//         console.log("User data:", banCheck.userData);
+//         if (banCheck.userData.role === "admin") {
+//           console.log("Redirecting to /admin");
 //           navigate("/admin");
 //         } else {
-//           console.log("Redirecting to /home"); // Debug: Confirm home redirect
+//           console.log("Redirecting to /home");
 //           navigate("/home");
 //         }
 //       } else {
@@ -58,13 +91,18 @@
 //       const userCredential = await signInWithPopup(auth, googleProvider);
 //       const user = userCredential.user;
 
-//       const userDocRef = doc(db, "users", user.uid);
-//       const userDoc = await getDoc(userDocRef);
+//       // Check if user is banned
+//       const banCheck = await checkIfUserBanned(user.uid);
+      
+//       if (banCheck.isBanned) {
+//         setError(`Account access denied: ${banCheck.reason}`);
+//         return;
+//       }
 
-//       if (userDoc.exists()) {
-//         const userData = userDoc.data();
-//         console.log("Google user data:", userData); // Debug
-//         if (userData.role === "admin") {
+//       // If not banned, proceed with normal flow
+//       if (banCheck.userData) {
+//         console.log("Google user data:", banCheck.userData);
+//         if (banCheck.userData.role === "admin") {
 //           console.log("Google redirecting to /admin");
 //           navigate("/admin");
 //         } else {
@@ -73,7 +111,7 @@
 //         }
 //       } else {
 //         console.log("New Google user, redirecting to /home");
-//         navigate("/home"); // New users go to home (add role creation logic in SignUp if needed)
+//         navigate("/home");
 //       }
 //     } catch (err) {
 //       setError("Google login failed");
@@ -233,9 +271,17 @@ const Login = () => {
       // If not banned, proceed with normal flow
       if (banCheck.userData) {
         console.log("User data:", banCheck.userData);
+        
+        // Check if admin and first login
         if (banCheck.userData.role === "admin") {
-          console.log("Redirecting to /admin");
-          navigate("/admin");
+          // Check if this is their first login (or if firstLogin flag is true)
+          if (banCheck.userData.firstLogin === true) {
+            console.log("Admin's first login, redirecting to password change");
+            navigate("/change-password");
+          } else {
+            console.log("Redirecting to /admin");
+            navigate("/admin");
+          }
         } else {
           console.log("Redirecting to /home");
           navigate("/home");
@@ -270,11 +316,18 @@ const Login = () => {
       // If not banned, proceed with normal flow
       if (banCheck.userData) {
         console.log("Google user data:", banCheck.userData);
+        
+        // Check if admin and first login
         if (banCheck.userData.role === "admin") {
-          console.log("Google redirecting to /admin");
-          navigate("/admin");
+          if (banCheck.userData.firstLogin === true) {
+            console.log("Admin's first login, redirecting to password change");
+            navigate("/change-password");
+          } else {
+            console.log("Redirecting to /admin");
+            navigate("/admin");
+          }
         } else {
-          console.log("Google redirecting to /home");
+          console.log("Redirecting to /home");
           navigate("/home");
         }
       } else {
