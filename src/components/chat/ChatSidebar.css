@@ -1,346 +1,433 @@
-/* ChatSidebar.css - Premium styling for ChatSidebar component */
+/* ChatSidebar.css - Comprehensive styling for ChatSidebar component to match design */
 
-/* Modern Color Palette */
 :root {
-    --sidebar-bg: #f8fafc;
-    --sidebar-accent: #6366f1;
-    --sidebar-accent-hover: #4f46e5;
-    --sidebar-text-primary: #1e293b;
-    --sidebar-text-secondary: #64748b;
-    --sidebar-border: #e2e8f0;
-    --sidebar-item-hover: #f1f5f9;
-    --sidebar-item-active: #eff6ff;
-    --sidebar-delete: #ef4444;
-    --sidebar-delete-bg: rgba(239, 68, 68, 0.1);
-    --sidebar-avatar-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
-    --sidebar-group-avatar-gradient: linear-gradient(135deg, #10b981, #3b82f6);
-    --sidebar-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    --sidebar-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  /* Chat Sidebar Container */
-  .ChatSidebar {
-    width: 340px;
-    height: 100%;
-    background-color: var(--sidebar-bg);
-    border-right: 1px solid var(--sidebar-border);
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.03);
-    transition: var(--sidebar-transition);
-    position: relative;
-    z-index: 10;
-  }
-  
-  /* Chat Header */
-  .ChatHeader {
-    padding: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--sidebar-border);
-    background-color: white;
-    box-shadow: var(--sidebar-shadow);
-  }
-  
-  .ChatHeader h2 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--sidebar-text-primary);
-    letter-spacing: -0.01em;
-  }
-  
-  /* Buttons */
-  .BackButton,
-  .SettingsButton {
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    color: var(--sidebar-text-secondary);
-    font-size: 1.25rem;
-    transition: var(--sidebar-transition);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    border: 1px solid var(--sidebar-border);
-  }
-  
-  .BackButton:hover,
-  .SettingsButton:hover {
-    background-color: var(--sidebar-accent);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-  }
-  
-  /* Settings Menu */
-  .SettingsMenu {
-    padding: 1rem;
-    background-color: white;
-    border-bottom: 1px solid var(--sidebar-border);
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    animation: slideDown 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  }
-  
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .SettingsMenu button {
-    padding: 0.85rem 1rem;
-    border-radius: 10px;
-    background-color: var(--sidebar-item-hover);
-    color: var(--sidebar-text-primary);
-    text-align: left;
-    font-weight: 600;
-    transition: var(--sidebar-transition);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  
-  .SettingsMenu button:hover {
-    background-color: var(--sidebar-accent);
-    color: white;
-    transform: translateX(4px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-  }
-  
-  /* Chat Sections */
-  .ChatSections {
-    flex: 1;
-    overflow-y: auto;
-    padding: 1rem 0;
-    scroll-behavior: smooth;
-  }
-  
-  .ChatSections::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  .ChatSections::-webkit-scrollbar-thumb {
-    background-color: rgba(99, 102, 241, 0.2);
-    border-radius: 10px;
-  }
-  
-  .ChatSections::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
-  
-  .ChatSections p {
-    padding: 2rem 1.5rem;
-    color: var(--sidebar-text-secondary);
-    text-align: center;
-    font-style: italic;
-  }
-  
-  /* Section Title */
-  .SectionTitle {
-    padding: 0.75rem 1.5rem;
-    font-size: 0.8125rem;
-    font-weight: 700;
-    color: var(--sidebar-text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background-color: rgba(241, 245, 249, 0.7);
-    backdrop-filter: blur(8px);
-    position: sticky;
-    top: 0;
-    z-index: 2;
-  }
-  
-  /* Chat User Item */
-  .ChatUser {
-    display: flex;
-    align-items: center;
-    padding: 0.875rem 1.25rem;
-    border-left: 3px solid transparent;
-    transition: var(--sidebar-transition);
-    position: relative;
-    margin: 0.25rem 0.5rem;
-    border-radius: 12px;
-  }
-  
-  .ChatUser.Active {
-    background-color: var(--sidebar-item-active);
-    border-left-color: var(--sidebar-accent);
-    box-shadow: 0 2px 10px rgba(99, 102, 241, 0.1);
-  }
-  
-  .ChatUser:hover:not(.Active) {
-    background-color: var(--sidebar-item-hover);
-    transform: translateX(2px);
-  }
-  
-  /* User Avatar */
-  .UserAvatar {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 14px;
-    background: var(--sidebar-avatar-gradient);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-    margin-right: 1rem;
-    flex-shrink: 0;
-    box-shadow: 0 3px 10px rgba(99, 102, 241, 0.2);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .ChatUser.Active .UserAvatar {
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-  }
-  
-  /* Special styling for group avatars */
-  .UserAvatar:has(:contains("👥")) {
-    background: var(--sidebar-group-avatar-gradient);
-    box-shadow: 0 3px 10px rgba(16, 185, 129, 0.2);
-  }
-  
-  /* Chat Info */
-  .ChatInfo {
-    flex: 1;
-    min-width: 0;
-    cursor: pointer;
-  }
-  
-  .ChatHeaderRow {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.25rem;
-  }
-  
-  .UserName {
-    font-weight: 700;
-    color: var(--sidebar-text-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    letter-spacing: -0.01em;
-    font-size: 0.9375rem;
-  }
-  
-  .TimeStamp {
-    font-size: 0.75rem;
-    color: var(--sidebar-text-secondary);
-    font-weight: 500;
-    background-color: rgba(241, 245, 249, 0.5);
-    padding: 0.2rem 0.4rem;
-    border-radius: 6px;
-  }
-  
-  .MessagePreview {
-    font-size: 0.8125rem;
-    color: var(--sidebar-text-secondary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.4;
-  }
-  
-  /* Delete Chat Button */
-  .DeleteChatButton {
+  --sidebar-bg: #ffffff;
+  --sidebar-accent: #4f46e5;
+  --sidebar-accent-hover: #4338ca;
+  --sidebar-text-primary: #1e293b;
+  --sidebar-text-secondary: #64748b;
+  --sidebar-border: #e2e8f0;
+  --sidebar-item-hover: #f8fafc;
+  --sidebar-item-active: #eff6ff;
+  --sidebar-delete: #ef4444;
+  --sidebar-delete-bg: rgba(239, 68, 68, 0.1);
+  --sidebar-avatar-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+  --sidebar-group-avatar-gradient: linear-gradient(135deg, #10b981, #3b82f6);
+  --sidebar-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --sidebar-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Chat Sidebar Container */
+.ChatSidebar {
+  width: 320px;
+  height: 100%;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.03);
+  transition: var(--sidebar-transition);
+  position: relative;
+  z-index: 10;
+}
+
+/* Chat Header */
+.ChatHeader {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--sidebar-border);
+  background-color: white;
+}
+
+.ChatHeader h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--sidebar-text-primary);
+  letter-spacing: -0.01em;
+}
+
+/* Buttons */
+.BackButton,
+.SettingsButton {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  color: var(--sidebar-text-secondary);
+  font-size: 1.25rem;
+  transition: var(--sidebar-transition);
+  border: none;
+}
+
+.BackButton:hover,
+.SettingsButton:hover {
+  background-color: var(--sidebar-item-hover);
+  color: var(--sidebar-accent);
+}
+
+/* Settings Menu */
+.SettingsMenu {
+  padding: 0.75rem;
+  background-color: white;
+  border-bottom: 1px solid var(--sidebar-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
     opacity: 0;
-    padding: 0.5rem;
-    color: var(--sidebar-text-secondary);
-    border-radius: var(--radius-full);
-    transition: var(--sidebar-transition);
-    background: transparent;
-    transform: scale(0.9);
+    transform: translateY(-10px);
   }
-  
-  .ChatUser:hover .DeleteChatButton {
+  to {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0);
   }
-  
-  .DeleteChatButton:hover {
-    background-color: var(--sidebar-delete-bg);
-    color: var(--sidebar-delete);
-    transform: rotate(15deg) scale(1.1);
+}
+
+.SettingsMenu button {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background-color: var(--sidebar-item-hover);
+  color: var(--sidebar-text-primary);
+  text-align: left;
+  font-weight: 600;
+  transition: var(--sidebar-transition);
+  display: flex;
+  align-items: center;
+}
+
+.SettingsMenu button:hover {
+  background-color: var(--sidebar-accent);
+  color: white;
+}
+
+/* Search Bar */
+.SearchContainer {
+  padding: 1rem;
+  position: relative;
+  background-color: white;
+  border-bottom: 1px solid var(--sidebar-border);
+}
+
+.SearchInput {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border-radius: 9999px;
+  border: 1px solid var(--sidebar-border);
+  background-color: var(--sidebar-item-hover);
+  font-size: 0.875rem;
+  transition: var(--sidebar-transition);
+  color: var(--sidebar-text-primary);
+}
+
+.SearchInput:focus {
+  outline: none;
+  border-color: var(--sidebar-accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.SearchIcon {
+  position: absolute;
+  left: 1.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--sidebar-text-secondary);
+  font-size: 0.875rem;
+}
+
+/* All Messages Header */
+.AllMessagesHeader {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--sidebar-text-secondary);
+  background-color: var(--sidebar-bg);
+  border-bottom: 1px solid var(--sidebar-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.AllMessagesCount {
+  font-size: 0.75rem;
+  color: var(--sidebar-text-secondary);
+  background-color: var(--sidebar-item-hover);
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+}
+
+/* Chat Sections */
+.ChatSections {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+.ChatSections::-webkit-scrollbar {
+  width: 4px;
+}
+
+.ChatSections::-webkit-scrollbar-thumb {
+  background-color: rgba(99, 102, 241, 0.2);
+  border-radius: 10px;
+}
+
+.ChatSections::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.ChatSections p {
+  padding: 2rem 1.5rem;
+  color: var(--sidebar-text-secondary);
+  text-align: center;
+  font-style: italic;
+}
+
+/* Section Title - Style for compatibility but make less prominent */
+.SectionTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--sidebar-text-secondary);
+  padding: 0.75rem 1.5rem;
+  background-color: rgba(241, 245, 249, 0.4);
+}
+
+/* Chat User Item */
+.ChatUser {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 1rem;
+  border-left: none;
+  transition: var(--sidebar-transition);
+  position: relative;
+  margin: 0;
+  border-radius: 0;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+}
+
+.ChatUser.Active {
+  background-color: var(--sidebar-item-active);
+  border-left: none;
+  box-shadow: none;
+}
+
+.ChatUser:hover:not(.Active) {
+  background-color: var(--sidebar-item-hover);
+}
+
+/* User Avatar */
+.UserAvatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--sidebar-avatar-gradient);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(99, 102, 241, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Special styling for group avatars */
+.UserAvatar:has(:contains("👥")) {
+  background: var(--sidebar-group-avatar-gradient);
+}
+
+/* Remove the pulse animation from avatars */
+.UserAvatar::after {
+  display: none;
+}
+
+/* Chat Info */
+.ChatInfo {
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.ChatHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.UserName {
+  font-weight: 600;
+  color: var(--sidebar-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+  font-size: 0.9375rem;
+}
+
+.TimeStamp {
+  font-size: 0.75rem;
+  color: var(--sidebar-text-secondary);
+  font-weight: 400;
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+.MessagePreview {
+  font-size: 0.8125rem;
+  color: var(--sidebar-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+}
+
+/* Typing indicator */
+.ChatInfo .MessagePreview:contains("Typing...") {
+  color: var(--sidebar-accent);
+  font-style: italic;
+}
+
+/* Delete Chat Button */
+.DeleteChatButton {
+  opacity: 0;
+  padding: 0.5rem;
+  color: var(--sidebar-text-secondary);
+  border-radius: 50%;
+  transition: var(--sidebar-transition);
+  background: transparent;
+  transform: scale(0.9);
+}
+
+.ChatUser:hover .DeleteChatButton {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.DeleteChatButton:hover {
+  background-color: var(--sidebar-delete-bg);
+  color: var(--sidebar-delete);
+}
+
+/* Unread count styling */
+.UnreadCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #10b981;
+  color: white;
+  font-weight: bold;
+  font-size: 0.7rem;
+  padding: 0.125rem 0.375rem;
+  border-radius: 50%;
+  margin-left: 0.375rem;
+  min-width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Empty state styling */
+.ChatSections p:empty::after {
+  content: "No conversations yet";
+  color: var(--sidebar-text-secondary);
+  font-size: 0.9375rem;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .ChatSidebar {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--sidebar-border);
   }
-  
-  /* Empty state styling */
-  .ChatSections p:empty::after {
-    content: "Start a conversation";
-    color: var(--sidebar-text-secondary);
-    font-size: 0.9375rem;
-  }
-  
-  /* Media Queries */
-  @media (max-width: 768px) {
-    .ChatSidebar {
-      width: 100%;
-      height: auto;
-      border-right: none;
-      border-bottom: 1px solid var(--sidebar-border);
-    }
-  
-    .ChatUser {
-      padding: 0.75rem 1rem;
-    }
-    
-    .SectionTitle {
-      position: static;
-    }
-  }
-  
-  /* Subtle animations for user interactions */
+
   .ChatUser {
-    animation: fadeIn 0.5s ease;
+    padding: 0.75rem 1rem;
   }
   
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .SearchContainer {
+    padding: 0.75rem;
   }
-  
-  /* Status indicator pulse animation */
-  .UserAvatar::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 12px;
-    height: 12px;
-    background-color: #10b981;
-    border-radius: 50%;
-    border: 2px solid white;
-    animation: pulse 2s infinite;
+}
+
+/* Subtle animations for user interactions */
+.ChatUser {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
   }
-  
-  @keyframes pulse {
-    0% {
-      transform: scale(1);
-      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
-    }
-    70% {
-      transform: scale(1);
-      box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
-    }
-    100% {
-      transform: scale(1);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
+
+/* Pinned Chats Section */
+.PinnedChatsSection {
+  margin-bottom: 0.5rem;
+}
+
+.PinnedHeader {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--sidebar-accent);
+  background-color: rgba(239, 246, 255, 0.5);
+}
+
+.PinnedHeader svg {
+  margin-right: 0.375rem;
+  font-size: 0.875rem;
+}
+
+/* Active Now Section */
+.ActiveNowSection {
+  border-top: 1px solid var(--sidebar-border);
+  padding-top: 0.5rem;
+}
+
+.ActiveNowHeader {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--sidebar-accent);
+}
+
+.ActiveNowHeader svg {
+  margin-right: 0.375rem;
+  font-size: 0.875rem;
+}
+
+/* Active dots on avatars for active users */
+.ChatUser.Active .UserAvatar::before {
+  content: "";
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  width: 8px;
+  height: 8px;
+  background-color: #10b981;
+  border-radius: 50%;
+  border: 2px solid white;
+  z-index: 1;
+}
