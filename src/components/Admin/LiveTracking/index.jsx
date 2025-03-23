@@ -7,7 +7,7 @@ import UserDetails from "./UserDetails";
 import { useLiveUsers, useFilteredUsers } from "../AdminUtils/liveTrackingHooks";
 import "./LiveTracking.css";
 
-const API_KEY = "AIzaSyDIZ4wZgZyI7Zxbb4DPwnvDmQ6JFMyVum4";
+const API_KEY = "AIzaSyDGanuI81nlP5V5XgaGxl4Dxc3k7X-E0TQ";
 
 const LiveTracking = () => {
   const { users, loading, error } = useLiveUsers();

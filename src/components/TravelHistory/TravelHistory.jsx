@@ -17,7 +17,7 @@ const TravelHistory = () => {
 
   // Load Google Maps API using the same API key as in Home component
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyDIZ4wZgZyI7Zxbb4DPwnvDmQ6JFMyVum4",
+    googleMapsApiKey: "AIzaSyDGanuI81nlP5V5XgaGxl4Dxc3k7X-E0TQ",
   });
 
   useEffect(() => {

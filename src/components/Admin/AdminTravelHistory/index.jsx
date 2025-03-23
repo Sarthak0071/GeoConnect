@@ -8,7 +8,7 @@ import { useTravelUsers, useFilteredUsers, useTravelHistory } from "../AdminUtil
 import "../LiveTracking/LiveTracking.css"; // Shared styles
 import "./AdminTravelHistory.css";
 
-const API_KEY = "AIzaSyDIZ4wZgZyI7Zxbb4DPwnvDmQ6JFMyVum4";
+const API_KEY = "AIzaSyDGanuI81nlP5V5XgaGxl4Dxc3k7X-E0TQ";
 
 const AdminTravelHistory = () => {
   const { users, loading, error } = useTravelUsers();
