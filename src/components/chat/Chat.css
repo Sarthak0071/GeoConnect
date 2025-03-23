@@ -57,3 +57,21 @@
     height: 100vh;
   }
 }
+
+
+/* Add this to your existing Chat.css */
+.typing-indicator {
+  padding: 8px 12px;
+  margin: 4px 10px;
+  font-size: 0.9em;
+  color: #555;
+  font-style: italic;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
