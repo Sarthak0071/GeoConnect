@@ -1,3 +1,4 @@
+// bannedUserFunctions.js
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase"; // Adjust path as needed
 
