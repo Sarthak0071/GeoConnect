@@ -286,3 +286,54 @@
   }
   
  
+
+
+
+
+
+
+
+
+
+
+
+  /* Existing styles remain unchanged, adding new ones below */
+
+/* Action button styles */
+.action-btn.view-actions-btn {
+  background-color: #17a2b8;
+  margin-right: 5px;
+}
+
+.action-btn.view-actions-btn:hover {
+  background-color: #138496;
+}
+
+/* Action history modal styles */
+.action-history-modal {
+  width: 80%;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.action-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.action-history-table th,
+.action-history-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.action-history-table th {
+  background-color: #f5f5f5;
+}
+
+.error-text {
+  color: red;
+}
