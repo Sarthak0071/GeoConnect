@@ -1,3 +1,4 @@
+// bannedUserHooks.js
 import { useState, useEffect } from "react";
 import { collection, query, getDocs, orderBy, where } from "firebase/firestore";
 import { db } from "../../../firebase"; // Adjust path as needed
