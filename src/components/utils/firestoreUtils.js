@@ -16,9 +16,12 @@ import {
   where
 } from "firebase/firestore";
 
+
+// location = spot , field = visited/current selected  
 export const storeLocationData = async (location, field) => {
   try {
-    const user = auth.currentUser;
+
+    const user = auth.currentUser;   
     if (!user) return;
     const userRef = doc(db, "users", user.uid);
     if (field === "currentSelected") {
@@ -94,6 +97,11 @@ export const fetchUserData = async (userId) => {
     return null;
   }
 };
+
+
+
+
+// ChatBot 
 
 export const storeChatSession = async (sessionId, messages) => {
   try {

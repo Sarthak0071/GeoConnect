@@ -25,5 +25,3 @@ export const fetchTouristPlacesFromServer = async (city, apiKey) => {
     return [];
   }
 };
-
-

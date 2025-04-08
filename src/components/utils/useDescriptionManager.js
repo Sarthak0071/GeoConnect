@@ -27,7 +27,8 @@ export const useDescriptionManager = () => {
         });
       }
       
-      // Process the next item in the queue
+   
+      // takes the first place from the queue 
       const place = descriptionQueue.current.shift();
       
       // Skip if description is already cached
@@ -44,7 +45,7 @@ export const useDescriptionManager = () => {
       try {
         const description = await fetchDescription(place);
         
-        // Update the descriptions cache with a state update function
+        // Store the generated description in state
         setDescriptions(prev => ({
           ...prev,
           [place.name]: description
@@ -63,7 +64,7 @@ export const useDescriptionManager = () => {
           [place.name]: "Description not available at the moment."
         }));
         
-        // If this is the selected place, mark as no longer loading
+        // If this is the selected place, mark as no longer loading even if there was an error
         if (selectedPlaceRef.current && selectedPlaceRef.current.name === place.name) {
           setLoadingDescription(false);
         }
@@ -78,6 +79,9 @@ export const useDescriptionManager = () => {
     }
   }, [descriptions]);
 
+
+
+
   // Queue a description generation request
   const queueDescriptionGeneration = useCallback((place, isSelected = false) => {
     // Set as selected place if needed
@@ -86,7 +90,7 @@ export const useDescriptionManager = () => {
       setLoadingDescription(true);
     }
     
-    // Don't add duplicates to the queue
+    // if there is no description for the place and it's not already in the queue, add it to the queue
     if (!descriptionQueue.current.some(p => p.name === place.name) && !descriptions[place.name]) {
       descriptionQueue.current.push(place);
       processQueue();
