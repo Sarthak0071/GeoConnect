@@ -1,464 +1,277 @@
-/* ChatMessages.css - Premium styling for ChatMessages component */
+/* Instagram-style Chat Messages */
 
-/* Modern Color Palette for Chat Messages */
 :root {
-  --msg-bg-sent: linear-gradient(135deg, #6366f1, #3f36e5);
-  --msg-bg-received: #ffffff;
-  --msg-text-sent: #ffffff;
-  --msg-text-primary: #1e293b;
-  --msg-text-secondary: #64748b;
-  --msg-time-sent: rgba(255, 255, 255, 0.85);
-  --msg-time-received: #94a3b8;
-  --msg-sender-color: #6366f1;
-  --msg-shadow-sent: 0 4px 12px rgba(79, 70, 229, 0.25);
-  --msg-shadow-received: 0 2px 10px rgba(0, 0, 0, 0.08);
-  --msg-bg-container: #f8fafc;
-  --msg-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --instagram-blue: #3797F0;
+  --instagram-bg: #FAFAFA;
+  --instagram-bubble-received: #FFFFFF;
+  --instagram-text-primary: #262626;
+  --instagram-text-secondary: #8E8E8E;
+  --instagram-border: #DBDBDB;
+  --instagram-shadow: rgba(0, 0, 0, 0.1);
 }
 
-/* Chat Messages Container */
 .ChatMessages {
   flex: 1;
   overflow-y: auto;
-  padding: 1.5rem 1.75rem;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  background-color: var(--msg-bg-container);
-  background-image: 
-      radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, rgba(99, 102, 241, 0.05) 0%, transparent 50%);
-  scroll-behavior: smooth;
+  background-color: var(--instagram-bg);
   position: relative;
 }
 
-/* Custom Scrollbar */
+/* Instagram-style scrollbar */
 .ChatMessages::-webkit-scrollbar {
   width: 8px;
 }
 
-.ChatMessages::-webkit-scrollbar-thumb {
-  background-color: rgba(99, 102, 241, 0.3);
-  border-radius: 4px;
-}
-
-.ChatMessages::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(99, 102, 241, 0.5);
-}
-
 .ChatMessages::-webkit-scrollbar-track {
-  background-color: rgba(0, 0, 0, 0.02);
+  background: transparent;
+}
+
+.ChatMessages::-webkit-scrollbar-thumb {
+  background: #C7C7C7;
   border-radius: 4px;
 }
 
-/* Message Groups - Add space between different sender groups */
-.MessageGroup {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-}
-
-/* Message Bubble */
+/* Message Bubbles - Instagram Style */
 .MessageBubble {
-  max-width: 68%;
-  padding: 0.875rem 1.125rem;
-  border-radius: 16px;
+  max-width: 60%;
+  padding: 12px 16px;
+  margin: 2px 0;
+  font-size: 14px;
+  line-height: 18px;
   position: relative;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: var(--msg-transition);
-  animation: messageAppear 0.3s ease forwards;
-  transform-origin: bottom;
-  word-break: break-word;
-  margin-bottom: 0.3rem;
 }
 
-/* Last message in a group */
-.MessageBubble:last-child {
-  margin-bottom: 0;
-}
-
-/* Sent Message (by current user) */
+/* Sent Messages - Instagram Blue */
 .MessageBubble.Sent {
   align-self: flex-end;
-  background: var(--msg-bg-sent);
-  color: var(--msg-text-sent);
-  border-bottom-right-radius: 4px;
-  box-shadow: var(--msg-shadow-sent);
+  background-color: var(--instagram-blue);
+  color: white;
+  border-radius: 22px 22px 4px 22px;
 }
 
-/* Received Message (from other users) */
+/* Received Messages - Instagram White */
 .MessageBubble.Received {
   align-self: flex-start;
-  background-color: var(--msg-bg-received);
-  color: var(--msg-text-primary);
-  border-bottom-left-radius: 4px;
-  box-shadow: var(--msg-shadow-received);
+  background-color: var(--instagram-bubble-received);
+  color: var(--instagram-text-primary);
+  border: 1px solid var(--instagram-border);
+  border-radius: 22px 22px 22px 4px;
 }
 
-/* Message animations */
-@keyframes messageAppear {
-  0% {
-      opacity: 0;
-      transform: translateY(10px) scale(0.98);
-  }
-  100% {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-  }
-}
-
-/* Hover effects */
-.MessageBubble:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-}
-
-.MessageBubble.Sent:hover {
-  box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
-}
-
-/* Message shapes for consecutive bubbles */
+/* Message Groups - Instagram Style */
 .MessageBubble.First {
-  border-bottom-right-radius: 16px;
-  border-bottom-left-radius: 16px;
+  margin-top: 8px;
 }
 
 .MessageBubble.Middle {
-  border-top-right-radius: 6px;
-  border-top-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  border-bottom-left-radius: 6px;
-  margin-top: 0.2rem;
+  border-radius: 18px;
+  margin: 1px 0;
 }
 
 .MessageBubble.Last {
-  border-top-right-radius: 6px;
-  border-top-left-radius: 6px;
-  margin-top: 0.2rem;
-}
-
-/* Message tail decorations */
-.MessageBubble.Sent.First::after,
-.MessageBubble.Sent.Single::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: -8px;
-  width: 12px;
-  height: 12px;
-  background: linear-gradient(135deg, transparent 50%, #3f36e5 50%);
-  transform: rotate(-45deg);
-}
-
-.MessageBubble.Received.First::after,
-.MessageBubble.Received.Single::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: -8px;
-  width: 12px;
-  height: 12px;
-  background: linear-gradient(225deg, transparent 50%, #ffffff 50%);
-  transform: rotate(45deg);
-  box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.04);
-}
-
-/* Message Sender (for group chats) */
-.MessageSender {
-  font-size: 0.8125rem;
-  font-weight: 700;
-  margin-bottom: 0.35rem;
-  color: var(--msg-sender-color);
-  letter-spacing: -0.01em;
-  display: flex;
-  align-items: center;
-}
-
-.MessageSender::before {
-  content: '';
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background-color: var(--msg-sender-color);
-  border-radius: 50%;
-  margin-right: 6px;
+  margin-bottom: 8px;
 }
 
 /* Message Content */
 .MessageBubble p {
   margin: 0;
-  margin-bottom: 0.35rem;
-  white-space: pre-wrap;
-  line-height: 1.5;
-  font-size: 0.9375rem;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-.MessageBubble.Sent p {
-  font-weight: 500;
-}
-
-/* Message Time */
+/* Timestamp - Instagram Style */
 .MessageTime {
-  display: block;
-  font-size: 0.75rem;
-  text-align: right;
-  opacity: 0.9;
-  font-weight: 500;
+  font-size: 11px;
+  margin-top: 4px;
+  font-weight: 400;
 }
 
 .MessageBubble.Sent .MessageTime {
-  color: var(--msg-time-sent);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .MessageBubble.Received .MessageTime {
-  color: var(--msg-time-received);
+  color: var(--instagram-text-secondary);
 }
 
-/* Only show time on last message in a group */
-.MessageBubble:not(.Last):not(.Single) .MessageTime {
-  display: none;
-}
-
-/* Date separators */
+/* Date Separator - Instagram Style */
 .DateSeparator {
   align-self: center;
-  padding: 6px 12px;
-  background-color: rgba(99, 102, 241, 0.1);
-  color: var(--msg-text-secondary);
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 12px;
-  margin: 1.5rem 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  font-size: 12px;
+  color: var(--instagram-text-secondary);
+  margin: 20px 0;
+  font-weight: 500;
 }
 
-/* Message status indicators */
-.MessageStatus {
-  display: inline-flex;
-  margin-left: 4px;
-  font-size: 0.7rem;
-  align-items: center;
-}
-
-.MessageStatus.Sent {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.MessageStatus.Delivered::before {
-  content: '✓';
-  font-size: 0.75rem;
-  margin-left: 2px;
-}
-
-.MessageStatus.Read::before {
-  content: '✓✓';
-  font-size: 0.75rem;
-  margin-left: 2px;
-}
-
-/* Message pending animation */
-.MessageBubble.Pending {
-  opacity: 0.8;
-}
-
-.MessageStatus.Pending {
-  animation: pendingDots 1.5s infinite;
-}
-
-@keyframes pendingDots {
-  0%, 20% { content: '.'; }
-  40% { content: '..'; }
-  60%, 100% { content: '...'; }
-}
-
-/* Typing indicator animation */
+/* Typing Indicator - Instagram Style */
 .TypingIndicator {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background-color: var(--msg-bg-received);
-  border-radius: 16px;
+  padding: 12px 16px;
+  background: var(--instagram-bubble-received);
+  border: 1px solid var(--instagram-border);
+  border-radius: 22px 22px 22px 4px;
   width: fit-content;
-  box-shadow: var(--msg-shadow-received);
-  margin-top: 0.5rem;
+  margin: 8px 0;
 }
 
 .TypingDot {
-  width: 8px;
-  height: 8px;
-  margin: 0 3px;
-  background-color: var(--msg-sender-color);
+  width: 6px;
+  height: 6px;
+  background: var(--instagram-blue);
   border-radius: 50%;
-  opacity: 0.6;
-  animation: typingAnimation 1.5s infinite ease-in-out;
+  display: inline-block;
+  margin: 0 1px;
+  animation: instagramTyping 1.4s infinite;
+  opacity: 0.5;
 }
 
-.TypingDot:nth-child(2) {
-  animation-delay: 0.2s;
+@keyframes instagramTyping {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
 }
 
-.TypingDot:nth-child(3) {
-  animation-delay: 0.4s;
+/* Message Status - Instagram Style */
+.MessageStatus {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 11px;
 }
 
-@keyframes typingAnimation {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.5); }
-  100% { transform: scale(1); }
+.MessageStatus.Sent {
+  color: rgba(255, 255, 255, 0.7);
 }
 
-/* Special styling for media content */
+.MessageStatus.Delivered {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.MessageStatus.Read {
+  color: white;
+}
+
+/* Media Messages - Instagram Style */
 .MessageMedia {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-  position: relative;
-  border-radius: 12px;
+  margin: 4px 0;
+  max-width: 300px;
+  border-radius: 20px;
   overflow: hidden;
 }
 
-.MessageBubble img, 
-.MessageBubble video {
-  max-width: 100%;
-  border-radius: 8px;
+.MessageMedia img,
+.MessageMedia video {
+  width: 100%;
+  height: auto;
   display: block;
+  border-radius: 20px;
 }
 
-/* File attachments */
+/* File Attachments - Instagram Style */
 .FileAttachment {
   display: flex;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.04);
-  border-radius: 8px;
-  padding: 0.75rem;
-  margin: 0.5rem 0;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.04);
+  margin: 4px 0;
 }
 
 .MessageBubble.Sent .FileAttachment {
-  background-color: rgba(255, 255, 255, 0.15);
-}
-
-.FileIcon {
-  margin-right: 0.75rem;
-  font-size: 1.5rem;
-}
-
-.FileDetails {
-  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .FileName {
-  font-weight: 600;
-  font-size: 0.875rem;
-  margin-bottom: 0.25rem;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .FileSize {
-  font-size: 0.75rem;
-  opacity: 0.8;
+  font-size: 11px;
+  color: var(--instagram-text-secondary);
 }
 
-/* Emoji reactions */
+/* Message Reactions - Instagram Style */
 .MessageReactions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem;
-  margin-top: 0.5rem;
+  gap: 4px;
+  margin-top: 4px;
 }
 
 .Reaction {
-  display: inline-flex;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.05);
+  padding: 4px 8px;
   border-radius: 12px;
-  padding: 0.2rem 0.4rem;
-  font-size: 0.75rem;
-  cursor: pointer;
+  background: rgba(0, 0, 0, 0.05);
+  font-size: 12px;
 }
 
 .MessageBubble.Sent .Reaction {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.Reaction.Active {
-  background: rgba(99, 102, 241, 0.1);
-}
-
-.ReactionEmoji {
-  margin-right: 0.25rem;
-}
-
-.ReactionCount {
-  font-weight: 600;
-}
-
-/* New message notification */
+/* New Messages Notification - Instagram Style */
 .NewMessagesNotification {
   position: absolute;
-  bottom: 1rem;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: var(--msg-sender-color);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 999px;
-  font-size: 0.875rem;
+  background: white;
+  color: var(--instagram-blue);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
   font-weight: 600;
-  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  animation: fadeIn 0.3s ease;
-  z-index: 10;
+  z-index: 100;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translate(-50%, 10px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
-}
-
-/* Media Queries */
-@media (max-width: 768px) {
-  .ChatMessages {
-      padding: 1rem;
-  }
-  
-  .MessageBubble {
-      max-width: 80%;
-      padding: 0.75rem 1rem;
-  }
-  
-  .MessageBubble.First::after,
-  .MessageBubble.Single::after {
-      display: none; /* Hide tails on mobile */
-  }
-}
-
-/* Message with a reply */
+/* Reply Messages - Instagram Style */
 .MessageReply {
-  background-color: rgba(0, 0, 0, 0.03);
-  padding: 0.5rem;
-  border-radius: 8px;
-  border-left: 2px solid var(--msg-sender-color);
-  margin-bottom: 0.5rem;
-  font-size: 0.85rem;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 8px 12px;
+  border-radius: 12px;
+  margin-bottom: 6px;
+  font-size: 13px;
 }
 
 .MessageBubble.Sent .MessageReply {
-  background-color: rgba(255, 255, 255, 0.15);
-  border-left: 2px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .ReplyingSender {
   font-weight: 600;
-  color: var(--msg-sender-color);
-  margin-bottom: 0.2rem;
+  color: var(--instagram-blue);
+  margin-bottom: 2px;
 }
 
 .MessageBubble.Sent .ReplyingSender {
-  color: rgba(255, 255, 255, 0.9);
+  color: white;
 }
 
 .ReplyContent {
-  opacity: 0.85;
+  color: var(--instagram-text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Message Sender Name in Group Chats */
+.MessageSender {
+  font-size: 12px;
+  color: var(--instagram-text-secondary);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+/* Instagram-style animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.MessageBubble {
+  animation: fadeIn 0.2s ease-out;
 }

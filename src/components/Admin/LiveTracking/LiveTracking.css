@@ -194,12 +194,15 @@
   }
   
   /* Map Container */
-  .map-container {
+  /* .map-container {
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     overflow: hidden;
     position: relative;
+  } */
+  .map-container {
+    height: 70vh; /* Map takes up 70% of the viewport height on larger screens */
   }
   
   .map {
