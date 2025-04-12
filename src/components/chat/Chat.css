@@ -1,7 +1,6 @@
 /* Chat.css - Styling for main Chat component */
 
-/* Main Chat Container */
-
+/* Variables */
 :root {
   --primary-color: #4f46e5;
   --primary-hover: #4338ca;
@@ -22,7 +21,26 @@
   --radius-full: 9999px;
   --transition: all 0.3s ease;
   --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --sidebar-width-desktop: 320px;
+  --sidebar-width-tablet: 280px;
+  --sidebar-width-mobile: 100%;
 }
+
+/* Global styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  overflow-x: hidden;
+}
+
+/* Main Chat Container */
 .ChatContainer {
   display: flex;
   height: 100vh;
@@ -32,6 +50,7 @@
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
+  position: relative;
 }
 
 /* No Chat Selected State */
@@ -44,28 +63,322 @@
   color: var(--text-secondary);
   font-size: 1.25rem;
   font-weight: 500;
+  padding: 1rem;
+  text-align: center;
 }
 
 .NoChatSelected p {
   margin: 0;
 }
 
-/* Media Queries */
-@media (max-width: 768px) {
-  .ChatContainer {
-    flex-direction: column;
-    height: 100vh;
-  }
+/* ChatSidebar styles */
+.ChatSidebar {
+  width: var(--sidebar-width-desktop);
+  height: 100%;
+  background-color: var(--bg-primary);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform var(--transition), width var(--transition);
+  z-index: 20;
 }
 
+.SidebarHeader {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-/* Add this to your existing Chat.css */
+.ChatList {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.ChatItem {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: var(--transition);
+}
+
+.ChatItem:hover {
+  background-color: var(--bg-accent);
+}
+
+.ChatItem.active {
+  background-color: var(--bg-accent);
+  border-left: 3px solid var(--primary-color);
+}
+
+/* ChatWindow styles */
+.ChatWindow {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform var(--transition);
+}
+
+.ChatHeader {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-primary);
+}
+
+/* Back button for mobile view */
+.BackButton {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  padding: 0 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.BackButton:hover {
+  color: var(--primary-hover);
+}
+
+.MessageContainer {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background-color: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
+}
+
+.Message {
+  max-width: 70%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  border-radius: var(--radius-md);
+  word-break: break-word;
+}
+
+.Message.sent {
+  align-self: flex-end;
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  border-bottom-right-radius: 0;
+}
+
+.Message.received {
+  align-self: flex-start;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border-bottom-left-radius: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.MessageTime {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  opacity: 0.7;
+}
+
+.MessageForm {
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  background-color: var(--bg-primary);
+  align-items: center;
+}
+
+.MessageInput {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 1rem;
+  resize: none;
+  min-height: 44px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.MessageInput:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
+.SendButton {
+  margin-left: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.SendButton:hover {
+  background-color: var(--primary-hover);
+}
+
+.SendButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Typing indicator */
 .typing-indicator {
   padding: 8px 12px;
   margin: 4px 10px;
   font-size: 0.9em;
-  color: #555;
+  color: var(--text-secondary);
   font-style: italic;
+  align-self: flex-start;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.typing-indicator {
   animation: pulse 1.5s infinite;
 }
 
+/* Extra functionality */
+.BlockUserButton {
+  background-color: transparent;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: var(--transition);
+}
+
+.BlockUserButton:hover {
+  background-color: #fef2f2;
+}
+
+.UnblockUserButton {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: var(--transition);
+}
+
+.UnblockUserButton:hover {
+  background-color: var(--bg-accent);
+}
+
+/* Media Queries for responsive design */
+@media (max-width: 1024px) {
+  .ChatContainer {
+    max-width: 100%;
+    border-radius: 0;
+  }
+  
+  .ChatSidebar {
+    width: var(--sidebar-width-tablet);
+  }
+}
+
+@media (max-width: 768px) {
+  /* Instagram-style mobile layout */
+  .ChatContainer {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .ChatSidebar {
+    width: var(--sidebar-width-mobile);
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(0);
+    height: 100%;
+  }
+  
+  .ChatWindow {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(100%);
+    height: 100%;
+  }
+  
+  /* Sidebar visible (default mobile state) */
+  .mobile-view-sidebar {
+    transform: translateX(0);
+  }
+  
+  /* Chat visible (when a chat is selected) */
+  .mobile-view-chat {
+    transform: translateX(0);
+  }
+  
+  /* Sidebar hidden (when chat is active) */
+  .mobile-view-sidebar-hidden {
+    transform: translateX(-100%);
+  }
+  
+  /* Show back button in mobile view */
+  .BackButton {
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .ChatHeader {
+    padding-left: 0.5rem;
+  }
+
+  .MessageContainer {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .Message {
+    max-width: 85%;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .ChatHeader {
+    padding: 0.5rem;
+    padding-left: 0.25rem;
+  }
+  
+  .MessageForm {
+    padding: 0.5rem;
+  }
+  
+  .MessageInput {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+  
+  .SendButton {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .BackButton {
+    font-size: 1.25rem;
+    padding: 0 0.25rem;
+  }
+}

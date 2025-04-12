@@ -13,8 +13,10 @@ import TravelHistory from "./components/TravelHistory/TravelHistory";
 import NearbyUsers from "./components/NearUsers/NearbyUsers";
 import AdminNavigation from "./components/Admin/AdminNavigation";
 
+
 function App() {
   return (
+    
     <Router>
       <Routes>
         {/* Public routes */}
