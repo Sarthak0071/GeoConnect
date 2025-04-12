@@ -1,3 +1,10 @@
+
+
+
+
+
+
+
 import React, { useState, useEffect } from "react";
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from "@react-google-maps/api";
 import AdminSidebar from "../AdminSidebar";
@@ -8,6 +15,7 @@ import { useTravelUsers, useFilteredUsers, useTravelHistory } from "../AdminUtil
 import "../LiveTracking/LiveTracking.css"; // Shared styles
 import "./AdminTravelHistory.css";
 
+// Replace with your own API key or use environment variables
 const API_KEY = "AIzaSyDGanuI81nlP5V5XgaGxl4Dxc3k7X-E0TQ";
 
 const AdminTravelHistory = () => {
@@ -21,13 +29,14 @@ const AdminTravelHistory = () => {
   const [mapZoom, setMapZoom] = useState(2);
   const [map, setMap] = useState(null);
 
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: API_KEY
-  });
+
+    const { isLoaded } = useJsApiLoader({
+      googleMapsApiKey: "AIzaSyDGanuI81nlP5V5XgaGxl4Dxc3k7X-E0TQ", id: 'google-map-script',
+    });
 
   const handleUserSelect = async (user) => {
     setSelectedUser(user);
+    setShowInfoWindow(null); // Clear any previously selected location
     await fetchUserTravelHistory(user.id);
     if (groupedHistory.length > 0 && map) {
       const mostRecent = groupedHistory[0];
@@ -38,11 +47,16 @@ const AdminTravelHistory = () => {
   };
 
   const handleLocationClick = (location) => {
-    setShowInfoWindow(location);
-    setMapCenter({ lat: location.lat, lng: location.lng });
-    setMapZoom(15);
-    if (map) {
-      map.panTo({ lat: location.lat, lng: location.lng });
+    if (showInfoWindow?.locationName === location.locationName) {
+      // Toggle off if clicking the same marker again
+      setShowInfoWindow(null);
+    } else {
+      setShowInfoWindow(location);
+      setMapCenter({ lat: location.lat, lng: location.lng });
+      setMapZoom(15);
+      if (map) {
+        map.panTo({ lat: location.lat, lng: location.lng });
+      }
     }
   };
 
@@ -50,10 +64,30 @@ const AdminTravelHistory = () => {
     setMap(mapInstance);
   };
 
-  const markerIcon = {
-    url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-    scaledSize: new window.google.maps.Size(40, 40),
-    anchor: new window.google.maps.Point(20, 40),
+  // Modified marker generation with custom offset for info windows
+  const createMarkerIcon = (index) => {
+    return {
+      url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+      scaledSize: new window.google.maps.Size(40, 40),
+      anchor: new window.google.maps.Point(20, 40),
+      labelOrigin: new window.google.maps.Point(20, 15)
+    };
+  };
+
+  // Custom InfoWindow position offsets for markers
+  const getInfoWindowPosition = (location, index) => {
+    // Base position
+    const position = { lat: location.lat, lng: location.lng };
+    
+    // Add small offsets based on index to reduce overlap
+    // This will space out the InfoWindows slightly
+    if (index % 2 === 0) {
+      position.lat += 0.0005;
+    } else {
+      position.lat -= 0.0005;
+    }
+    
+    return position;
   };
 
   const formatDateRange = (startDate, endDate, count) => {
@@ -113,7 +147,8 @@ const AdminTravelHistory = () => {
                     options={{
                       mapTypeControl: true,
                       streetViewControl: true,
-                      fullscreenControl: true
+                      fullscreenControl: true,
+                      maxZoom: 18
                     }}
                   >
                     {groupedHistory.map((location, index) => (
@@ -121,7 +156,8 @@ const AdminTravelHistory = () => {
                         key={index}
                         position={{ lat: location.lat, lng: location.lng }}
                         onClick={() => handleLocationClick(location)}
-                        icon={markerIcon}
+                        icon={createMarkerIcon(index)}
+                        zIndex={showInfoWindow?.locationName === location.locationName ? 1000 : 10}
                         label={{
                           text: String(index + 1),
                           color: "white",
@@ -131,11 +167,15 @@ const AdminTravelHistory = () => {
                       >
                         {showInfoWindow?.locationName === location.locationName && (
                           <InfoWindow
-                            position={{ lat: location.lat, lng: location.lng }}
+                            position={getInfoWindowPosition(location, index)}
                             onCloseClick={() => setShowInfoWindow(null)}
+                            options={{
+                              pixelOffset: new window.google.maps.Size(0, -35),
+                              maxWidth: 250
+                            }}
                           >
-                            <div>
-                              <strong>{location.locationName}</strong>
+                            <div className="info-window-content">
+                              <h3>{location.locationName}</h3>
                               <p>{formatDateRange(location.startDate, location.endDate, location.count)}</p>
                             </div>
                           </InfoWindow>
@@ -166,3 +206,6 @@ const AdminTravelHistory = () => {
 };
 
 export default AdminTravelHistory;
+
+
+

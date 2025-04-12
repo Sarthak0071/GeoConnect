@@ -1,3 +1,4 @@
+
 import React from "react";
 import "./AdminTravelHistory.css";
 
@@ -57,3 +58,5 @@ const TravelHistoryList = ({ user, history, selectedLocation, onLocationClick })
 };
 
 export default TravelHistoryList;
+
+

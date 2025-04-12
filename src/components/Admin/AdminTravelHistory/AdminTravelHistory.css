@@ -1,3 +1,4 @@
+
 /* AdminTravelHistory.css - Additional styles specific to the travel history admin interface */
 
 /* Fix scrolling issues in the main containers */
@@ -171,3 +172,47 @@
       height: 400px;
     }
   }
+
+
+
+/* Add these styles to your AdminTravelHistory.css file */
+
+/* Info window styling */
+.info-window-content {
+  padding: 5px;
+  min-width: 200px;
+}
+
+.info-window-content h3 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.info-window-content p {
+  margin: 0;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+/* Improve marker highlight when selected */
+.gm-style-iw {
+  padding: 12px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.3) !important;
+}
+
+.gm-style-iw-d {
+  overflow: hidden !important;
+}
+
+/* InfoWindow close button styling */
+.gm-ui-hover-effect {
+  top: 0 !important;
+  right: 0 !important;
+  background-color: #fff !important;
+  border-radius: 50% !important;
+  width: 24px !important;
+  height: 24px !important;
+}
