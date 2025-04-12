@@ -45,6 +45,7 @@ const ChatSidebar = ({
     navigate("/home", { state: { preserveNearbyUsers: true } });
   };
 
+  // delete a chat (one-on-one or group) from the sidebar.
   const handleDeleteChat = async (chatId, otherUserId, isGroup) => {
     const confirmDelete = window.confirm(
       `Are you sure you want to delete this ${isGroup ? "group" : "conversation"}?`
