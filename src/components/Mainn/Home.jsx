@@ -33,7 +33,7 @@ const Home = () => {
 
   // Initialize Google Maps API
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyDGanuI81nlP5V5XgaGxl4Dxc3k7X-E0TQ",
+    googleMapsApiKey: "AIzaSyDGanuI81nlP5V5XgaGxl4Dxc3k7X-E0TQ", id: 'google-map-script',
   });
 
   // Custom hook for location management

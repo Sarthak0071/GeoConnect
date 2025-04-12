@@ -16,7 +16,7 @@ import {
 } from "./firestoreUtils";
 import { fetchTouristPlacesFromServer } from "./touristPlacesUtils";
 
-const API_KEY = "AIzaSyDGanuI81nlP5V5XgaGxl4Dxc3k7X-E0TQ";
+const API_KEY = "AIzaSyDGanuI81nlP5V5XgaGxl4Dxc3k7X-E0TQ"; 
 
 export const useLocationManager = () => {
   const [currentLocation, setCurrentLocation] = useState(null);

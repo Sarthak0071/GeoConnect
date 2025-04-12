@@ -65,9 +65,17 @@
 //       // If not banned, proceed with normal flow
 //       if (banCheck.userData) {
 //         console.log("User data:", banCheck.userData);
+        
+//         // Check if admin and first login
 //         if (banCheck.userData.role === "admin") {
-//           console.log("Redirecting to /admin");
-//           navigate("/admin");
+//           // Check if this is their first login (or if firstLogin flag is true)
+//           if (banCheck.userData.firstLogin === true) {
+//             console.log("Admin's first login, redirecting to password change");
+//             navigate("/change-password");
+//           } else {
+//             console.log("Redirecting to /admin");
+//             navigate("/admin");
+//           }
 //         } else {
 //           console.log("Redirecting to /home");
 //           navigate("/home");
@@ -102,11 +110,18 @@
 //       // If not banned, proceed with normal flow
 //       if (banCheck.userData) {
 //         console.log("Google user data:", banCheck.userData);
+        
+//         // Check if admin and first login
 //         if (banCheck.userData.role === "admin") {
-//           console.log("Google redirecting to /admin");
-//           navigate("/admin");
+//           if (banCheck.userData.firstLogin === true) {
+//             console.log("Admin's first login, redirecting to password change");
+//             navigate("/change-password");
+//           } else {
+//             console.log("Redirecting to /admin");
+//             navigate("/admin");
+//           }
 //         } else {
-//           console.log("Google redirecting to /home");
+//           console.log("Redirecting to /home");
 //           navigate("/home");
 //         }
 //       } else {
@@ -207,12 +222,17 @@
 
 
 
+
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { auth, googleProvider, db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import "./Login.css";
+// Import React Toastify
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -292,6 +312,12 @@ const Login = () => {
         navigate("/home"); // Fallback to home if no document exists
       }
 
+      // Show success toast after successful login
+      toast.success("Successfully logged in!!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+
       setLoading(false);
     } catch (err) {
       setError("Invalid email or password");
@@ -334,6 +360,12 @@ const Login = () => {
         console.log("New Google user, redirecting to /home");
         navigate("/home");
       }
+
+      // Show success toast after successful Google login
+      toast.success("Successfully logged in!!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     } catch (err) {
       setError("Google login failed");
       console.error("Google login error:", err);
@@ -419,6 +451,8 @@ const Login = () => {
           </span>
         </div>
       </div>
+      {/* Add ToastContainer to render toasts */}
+      <ToastContainer />
     </div>
   );
 };
