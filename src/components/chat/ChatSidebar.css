@@ -407,7 +407,6 @@
   margin-right: 0.375rem;
   font-size: 0.875rem;
 }
-
 /* Active dots on avatars for active users */
 .ChatUser.Active .UserAvatar::before {
   content: "";
@@ -420,4 +419,23 @@
   border-radius: 50%;
   border: 2px solid white;
   z-index: 1;
+}
+
+
+.BackButtonContainer {
+  padding: 10px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.BackButton {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #007bff; /* Adjust color as needed */
+}
+
+.BackButton:hover {
+  text-decoration: underline;
 }
