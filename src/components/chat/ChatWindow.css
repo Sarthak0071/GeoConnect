@@ -1,351 +1,542 @@
-/* ChatWindow.css - Modern state-of-the-art styling */
+/* ChatWindow.css */
 
+/* Variables (repeated for standalone use) */
 :root {
-  /* Color palette - Modern gradient theme */
-  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-  --primary-color: #4f46e5;
+  --primary-color: #5046e5;
   --primary-hover: #4338ca;
-  --primary-light: rgba(99, 102, 241, 0.1);
-  --secondary-color: #10b981;
+  --primary-light: #eef2ff;
+  --secondary-color: #06b6d4;
+  --secondary-hover: #0891b2;
   --danger-color: #ef4444;
-  --danger-bg: rgba(239, 68, 68, 0.1);
-  --danger-hover: rgba(239, 68, 68, 0.2);
-  --text-primary: #1f2937;
-  --text-secondary: #6b7280;
-  --text-muted: #9ca3af;
+  --danger-hover: #dc2626;
+  --danger-light: #fee2e2;
+  --success-color: #10b981;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-tertiary: #6b7280;
   --text-light: #f9fafb;
   --bg-primary: #ffffff;
-  --bg-secondary: #f9fafb;
+  --bg-secondary: #fbf9f9;
+  --bg-tertiary: #f3f4f6;
   --bg-accent: #eff6ff;
-  --bg-hover: #f3f4f6;
+  --bg-hover: #f5f7ff;
   --border-color: #e5e7eb;
-  --border-light: #f3f4f6;
-  
-  /* Shadow and effects */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-input: 0 2px 8px rgba(0, 0, 0, 0.05);
-  --shadow-button: 0 4px 14px rgba(79, 70, 229, 0.4);
-  
-  /* Radius */
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
   --radius-full: 9999px;
-  
-  /* Transitions */
-  --transition-fast: all 0.15s ease;
   --transition: all 0.3s ease;
-  
-  /* Font */
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --header-height: 64px;
+  --footer-height: 70px;
 }
 
-/* Chat Window Container */
-.ChatWindow {
-  flex: 1;
+.ChatHeader {
+  padding: 0 1.25rem;
+  border-bottom: 1px solid var(--border-color);
   display: flex;
-  flex-direction: column;
-  height: 100%;
-  background-color: var(--bg-primary);
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-}
-
-/* Chat Window Header */
-.ChatWindowHeader {
-  padding: 1.25rem 1.5rem;
-  display: flex;
+  justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--border-light);
   background-color: var(--bg-primary);
-  backdrop-filter: blur(8px);
+  height: var(--header-height);
   position: sticky;
   top: 0;
   z-index: 10;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Back button for mobile view */
+.BackButton {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.75rem;
+  transition: background-color 0.2s ease;
+}
+
+.BackButton:hover {
+  color: var(--primary-hover);
+  background-color: var(--bg-accent);
+}
+
+/* Chat user info with avatar in header */
+.ChatUserInfo {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.ChatUserAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.875rem;
+  color: white;
+  font-weight: 700;
+  background-image: url('https://i.pravatar.cc/150?img=35');
+  background-size: cover;
+  background-position: center;
+  border: 2px solid white;
   box-shadow: var(--shadow-sm);
 }
 
-.ChatWindowHeader h3 {
+.ChatUserInfo h3 {
+  margin: 0;
   font-size: 1.125rem;
   font-weight: 600;
-  margin: 0 1rem 0 0;
-  color: var(--text-primary);
-  letter-spacing: -0.01em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.ChatWindowHeader .UserAvatar {
-  width: 3rem;
-  height: 3rem;
-  border-radius: var(--radius-full);
-  background: var(--primary-gradient);
-  margin-right: 1rem;
-  position: relative;
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-light);
-  font-weight: 700;
-  font-size: 1.25rem;
-}
-
-.ChatWindowHeader button {
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-md);
-  background-color: var(--danger-bg);
-  color: var(--danger-color);
-  font-size: 0.875rem;
-  font-weight: 600;
-  transition: var(--transition);
-  margin-left: auto;
-  border: none;
-  cursor: pointer;
-}
-
-.ChatWindowHeader button:hover {
-  background-color: var(--danger-hover);
-  transform: translateY(-1px);
-}
-
-/* Messages area */
-.ChatMessages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 1.5rem;
+.ChatUserInfo .ChatUserDetails {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border-color) transparent;
-  background-image: 
-    radial-gradient(var(--primary-light) 1px, transparent 1px),
-    radial-gradient(var(--primary-light) 1px, transparent 1px);
-  background-size: 20px 20px;
-  background-position: 0 0, 10px 10px;
-}
-
-.ChatMessages::-webkit-scrollbar {
-  width: 6px;
-}
-
-.ChatMessages::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.ChatMessages::-webkit-scrollbar-thumb {
-  background-color: var(--border-color);
-  border-radius: var(--radius-full);
-}
-
-/* Input Container */
-.InputContainer {
-  padding: 1.25rem 1.5rem;
-  border-top: 1px solid var(--border-light);
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background-color: var(--bg-primary);
-  position: relative;
-  z-index: 10;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
-}
-
-.InputWrapper {
-  flex: 1;
-  position: relative;
-}
-
-.ChatInput {
-  width: 100%;
-  padding: 1rem 1.25rem;
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--border-color);
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  font-size: 0.95rem;
-  transition: var(--transition);
-  box-shadow: var(--shadow-input);
-  font-family: var(--font-sans);
-}
-
-.ChatInput:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-  outline: none;
-}
-
-.ChatInput::placeholder {
-  color: var(--text-muted);
-}
-
-/* Send Button */
-.SendButton {
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: var(--radius-full);
-  background: var(--primary-gradient);
-  color: var(--text-light);
-  display: flex;
-  align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
-  transition: var(--transition);
-  border: none;
-  cursor: pointer;
-  box-shadow: var(--shadow-button);
-  flex-shrink: 0;
 }
 
-.SendButton:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5);
-}
-
-.SendButton:active {
-  transform: translateY(1px);
-}
-
-.SendButton:disabled {
-  background: var(--bg-secondary);
-  color: var(--text-muted);
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-/* Blocked Message */
-.BlockedMessage {
-  padding: 1.25rem 1.5rem;
-  background-color: var(--danger-bg);
-  color: var(--danger-color);
-  text-align: center;
-  font-weight: 500;
-  border-top: 1px solid var(--border-light);
-  margin-top: auto;
-  animation: slideIn 0.3s ease;
-}
-
-.BlockedMessage p {
-  margin: 0;
-  font-size: 1rem;
-}
-
-/* Typing indicator */
-.typing-indicator {
-  padding: 0.75rem 1rem;
-  margin: 0.5rem 0;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  font-style: italic;
+.ChatUserStatus {
+  font-size: 0.75rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  color: var(--text-tertiary);
 }
 
-.typing-indicator:before {
-  content: "";
+.ChatUserStatus::before {
+  content: '';
   display: inline-block;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: var(--radius-full);
-  background-color: var(--primary-color);
-  animation: pulse 1.5s infinite;
+  width: 8px;
+  height: 8px;
+  background-color: var(--success-color);
+  border-radius: 50%;
+  margin-right: 4px;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 0.5; transform: scale(0.75); }
-  50% { opacity: 1; transform: scale(1); }
-}
-
-@keyframes slideIn {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-/* Message styling */
-.MessageWrapper {
+.MessageContainer {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  background-color: var(--bg-tertiary);
   display: flex;
-  margin-bottom: 0.5rem;
-  animation: fadeIn 0.3s ease;
+  flex-direction: column;
+  height: calc(100vh - var(--header-height) - var(--footer-height));
+  scrollbar-width: thin; /* For Firefox */
+  scroll-behavior: smooth;
+  background-image: linear-gradient(45deg, var(--bg-secondary) 25%, transparent 25%, transparent 75%, var(--bg-secondary) 75%, var(--bg-secondary)), 
+                    linear-gradient(45deg, var(--bg-secondary) 25%, transparent 25%, transparent 75%, var(--bg-secondary) 75%, var(--bg-secondary));
+  background-size: 60px 60px;
+  background-position: 0 0, 30px 30px;
+  background-blend-mode: multiply;
 }
 
-.MessageWrapper.sent {
-  justify-content: flex-end;
+.MessageContainer::-webkit-scrollbar {
+  width: 4px;
+}
+
+.MessageContainer::-webkit-scrollbar-thumb {
+  background-color: rgba(107, 114, 128, 0.3);
+  border-radius: var(--radius-full);
 }
 
 .Message {
-  max-width: 75%;
-  padding: 0.875rem 1.25rem;
+  max-width: 70%;
+  padding: 0.875rem 1.125rem;
+  margin-bottom: 1rem;
   border-radius: var(--radius-lg);
-  font-size: 0.95rem;
-  line-height: 1.5;
+  word-break: break-word;
+  position: relative;
   box-shadow: var(--shadow-sm);
+  animation: fadeIn 0.3s ease;
+  line-height: 1.5;
 }
 
-.Message.received {
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  border-top-left-radius: 0.25rem;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .Message.sent {
-  background: var(--primary-gradient);
+  align-self: flex-end;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
   color: var(--text-light);
-  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0;
+}
+
+.Message.sent::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: -8px;
+  width: 16px;
+  height: 16px;
+  background: var(--primary-hover);
+  clip-path: polygon(0 0, 0% 100%, 100% 100%);
+}
+
+.Message.received {
+  align-self: flex-start;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border-bottom-left-radius: 0;
+  box-shadow: var(--shadow-md);
+}
+
+.Message.received::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -8px;
+  width: 16px;
+  height: 16px;
+  background: var(--bg-primary);
+  clip-path: polygon(100% 0, 0% 100%, 100% 100%);
 }
 
 .MessageTime {
   font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-top: 0.25rem;
+  margin-top: 0.375rem;
+  opacity: 0.7;
+  display: block;
   text-align: right;
 }
 
-/* Media Queries */
-@media (max-width: 768px) {
-  .ChatWindowHeader {
-    padding: 1rem;
-  }
-  
-  .InputContainer {
-    padding: 1rem;
-  }
-  
-  .ChatMessages {
-    padding: 1rem;
-  }
-  
-  .SendButton {
-    width: 3rem;
-    height: 3rem;
-  }
-  
-  .ChatInput {
-    padding: 0.875rem 1rem;
+.MessageForm {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  background-color: var(--bg-primary);
+  align-items: flex-start; /* Align children to the left */
+  height: auto; /* Allow height to adjust based on content */
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  gap: 8px; /* Space between typing indicator and input container */
+}
+
+.MessageInputContainer {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 12px; /* Space between textarea and button */
+}
+
+.MessageInput {
+  flex: 1;
+  padding: 0.875rem 1.125rem;
+  border: 2px solid var(--border-color);
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: none;
+  min-height: 48px;
+  max-height: 120px;
+  overflow-y: auto;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.MessageInput:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  background-color: var(--bg-primary);
+}
+
+.SendButton {
+  min-width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+  position: relative;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.SendButton::after {
+  content: '→';
+  font-size: 1.25rem;
+  transform: rotate(-45deg);
+  display: block;
+  font-weight: bold;
+}
+
+.SendButton:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+}
+
+.SendButton:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 1px 4px rgba(79, 70, 229, 0.2);
+}
+
+.SendButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: linear-gradient(135deg, #a5a5a5, #7e7e7e);
+  box-shadow: none;
+}
+
+/* Typing indicator */
+.typing-indicator {
+  padding: 0.5rem 0.875rem;
+  margin: 0; /* Remove margin to avoid extra spacing */
+  font-size: 0.9em;
+  color: var(--text-secondary);
+  font-style: italic;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(8px);
+  width: fit-content;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.typing-indicator::after {
+  content: '...';
+  display: inline-block;
+  animation: ellipsis 1.5s infinite;
+}
+
+@keyframes ellipsis {
+  0% { content: '.'; }
+  33% { content: '..'; }
+  66% { content: '...'; }
+}
+
+/* Extra functionality */
+.BlockUserButton {
+  background-color: transparent;
+  color: var(--danger-color);
+  border: 1px solid var(--danger-color);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.BlockUserButton:hover {
+  background-color: var(--danger-light);
+  color: var(--danger-hover);
+}
+
+/* Blocked user message */
+.BlockedMessage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: var(--danger-light);
+  color: var(--danger-color);
+  margin: 1rem;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+}
+
+/* Empty state message */
+.EmptyStateMessage {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(8px);
+  margin: 2rem auto;
+  max-width: 80%;
+  box-shadow: var(--shadow-md);
+  border: 1px dashed var(--border-color);
+}
+
+/* Media Queries for responsive design */
+@media (max-width: 1024px) {
+  .Message {
+    max-width: 80%;
   }
 }
 
-/* Dark mode - Add this for future use */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text-primary: #f3f4f6;
-    --text-secondary: #d1d5db;
-    --text-muted: #9ca3af;
-    --bg-primary: #111827;
-    --bg-secondary: #1f2937;
-    --bg-accent: #1e293b;
-    --bg-hover: #374151;
-    --border-color: #374151;
-    --border-light: #1f2937;
-    --primary-light: rgba(99, 102, 241, 0.15);
+@media (max-width: 768px) {
+  /* Show back button in mobile view */
+  .BackButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
+  
+  .ChatHeader {
+    padding-left: 0.75rem;
+  }
+
+  .MessageContainer {
+    padding: 1rem;
+    height: calc(100vh - var(--header-height) - var(--footer-height));
+  }
+
+  .MessageForm {
+    padding: 0.75rem 1rem;
+  }
+
+  .MessageInput {
+    min-height: 44px;
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .SendButton {
+    min-width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .Message {
+    max-width: 85%;
+    padding: 0.75rem 1rem;
+  }
+  
+  .ChatHeader {
+    padding: 0.75rem;
+    height: 60px;
+  }
+  
+  .MessageForm {
+    padding: 0.75rem 1rem;
+  }
+
+  .MessageInput {
+    min-height: 44px;
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  .SendButton {
+    min-width: 44px;
+    height: 44px;
+  }
+  
+  .BackButton {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .BlockUserButton {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+  }
+  
+  .ChatUserAvatar {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Safe area insets for notched devices */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .MessageForm {
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* Dark mode support */
+body.dark-mode {
+  --primary-color: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-light: #1e1b4b;
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --bg-tertiary: #0f172a;
+  --bg-accent: #172554;
+  --bg-hover: #1e293b;
+  --text-primary: #f3f4f6;
+  --text-secondary: #d1d5db;
+  --text-tertiary: #9ca3af;
+  --border-color: #374151;
+}
+
+body.dark-mode .MessageInput {
+  background-color: rgba(31, 41, 55, 0.8);
+  border-color: #374151;
+}
+
+body.dark-mode .MessageInput:focus {
+  background-color: rgba(31, 41, 55, 1);
+  border-color: var(--primary-color);
+}
+
+/* Date divider in message list */
+.DateDivider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 0;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.DateDivider::before,
+.DateDivider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--border-color);
+}
+
+.DateDivider::before {
+  margin-right: 0.75rem;
+}
+
+.DateDivider::after {
+  margin-left: 0.75rem;
+}
+
+/* For ChatWindow.jsx - Add profile picture to ChatHeader by CSS injection */
+.ChatUserInfo::before {
+  content: '';
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  display: inline-block;
+  margin-right: 0.875rem;
+  background-image: url('https://i.pravatar.cc/150?img=35');
+  background-size: cover;
+  background-position: center;
+  border: 2px solid white;
+  box-shadow: var(--shadow-sm);
 }
