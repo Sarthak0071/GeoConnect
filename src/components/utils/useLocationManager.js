@@ -1,10 +1,6 @@
-
-
-
-
 // useLocationManager.js
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { 
   reverseGeocode, 
   geocodeLocation, 
@@ -18,6 +14,20 @@ import { fetchTouristPlacesFromServer } from "./touristPlacesUtils";
 
 const API_KEY = "AIzaSyDGanuI81nlP5V5XgaGxl4Dxc3k7X-E0TQ"; 
 
+// Helper function for deep comparison
+const isEqual = (obj1, obj2) => {
+  if (obj1 === obj2) return true;
+  if (!obj1 || !obj2) return false;
+  if (typeof obj1 !== 'object' || typeof obj2 !== 'object') return obj1 === obj2;
+  
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+  
+  if (keys1.length !== keys2.length) return false;
+  
+  return keys1.every(key => isEqual(obj1[key], obj2[key]));
+};
+
 export const useLocationManager = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [allUserLocations, setAllUserLocations] = useState([]);
@@ -26,6 +36,10 @@ export const useLocationManager = () => {
   const [newLocation, setNewLocation] = useState("");
   const [isChangingLocation, setIsChangingLocation] = useState(false);
   const [latestLocationData, setLatestLocationData] = useState(null);
+  
+  // Refs to store previous values for comparison
+  const prevUserLocationsRef = useRef([]);
+  const prevTouristPlacesRef = useRef([]);
 
 
   // get the name of city from lat and lng
@@ -45,7 +59,12 @@ export const useLocationManager = () => {
       await storeLocationData(location, "currentSelected");
 
       const places = await fetchTouristPlacesFromServer(city, API_KEY);
-      setTouristPlaces(places);
+      
+      // Only update tourist places if they've changed
+      if (!isEqual(places, prevTouristPlacesRef.current)) {
+        prevTouristPlacesRef.current = places;
+        setTouristPlaces(places);
+      }
     }
   };
 
@@ -85,7 +104,12 @@ export const useLocationManager = () => {
         await storeLocationData(location, "currentSelected");
 
         const places = await fetchTouristPlacesFromServer(newLocation, API_KEY);
-        setTouristPlaces(places);
+        
+        // Only update tourist places if they've changed
+        if (!isEqual(places, prevTouristPlacesRef.current)) {
+          prevTouristPlacesRef.current = places;
+          setTouristPlaces(places);
+        }
       } else {
         alert("Location not found.");
       }
@@ -97,8 +121,16 @@ export const useLocationManager = () => {
 
   // Function to refresh data when returning from other screens
   const refreshData = useCallback(async () => {
-    // Refresh all users' locations
-    const unsubscribe = fetchAllUsersLocations(setAllUserLocations);
+    // Custom handler to update user locations only if they've changed
+    const handleUserLocationsUpdate = (newLocations) => {
+      if (!isEqual(newLocations, prevUserLocationsRef.current)) {
+        prevUserLocationsRef.current = newLocations;
+        setAllUserLocations(newLocations);
+      }
+    };
+    
+    // Refresh all users' locations with the custom handler
+    const unsubscribe = fetchAllUsersLocations(handleUserLocationsUpdate);
     
     // Refresh tourist places if we have location data
     if (latestLocationData) {
@@ -106,7 +138,12 @@ export const useLocationManager = () => {
         latestLocationData.locationName, 
         API_KEY
       );
-      setTouristPlaces(places);
+      
+      // Only update tourist places if they've changed
+      if (!isEqual(places, prevTouristPlacesRef.current)) {
+        prevTouristPlacesRef.current = places;
+        setTouristPlaces(places);
+      }
     }
     
     return unsubscribe;
@@ -127,8 +164,16 @@ export const useLocationManager = () => {
       handleFetchIPLocation();
     }
 
-    // Subscribe to all users' locations
-    const unsubscribe = fetchAllUsersLocations(setAllUserLocations);
+    // Custom handler to update user locations only if they've changed
+    const handleUserLocationsUpdate = (newLocations) => {
+      if (!isEqual(newLocations, prevUserLocationsRef.current)) {
+        prevUserLocationsRef.current = newLocations;
+        setAllUserLocations(newLocations);
+      }
+    };
+    
+    // Subscribe to all users' locations with the custom handler
+    const unsubscribe = fetchAllUsersLocations(handleUserLocationsUpdate);
     
     return () => unsubscribe();
   }, []);
