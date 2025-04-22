@@ -1,4 +1,5 @@
-// ChatWindow.jsx
+
+
 import React, { useState, useEffect, useRef } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db, auth } from "../../firebase";
@@ -23,6 +24,7 @@ const ChatWindow = ({
   const [isBlockingOther, setIsBlockingOther] = useState(false);
   const [typingUsers, setTypingUsers] = useState({});
   const [typingTimeout, setTypingTimeout] = useState(null);
+  const [otherUserProfileImage, setOtherUserProfileImage] = useState(null);
   const messageContainerRef = useRef(null);
 
   // Scroll to bottom when messages change
@@ -31,6 +33,32 @@ const ChatWindow = ({
       messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Fetch other user's profile image
+  useEffect(() => {
+    if (!otherUserId || isGroup) return;
+    
+    const fetchUserProfileImage = async () => {
+      try {
+        const userDocRef = doc(db, "users", otherUserId);
+        const userDoc = await getDoc(userDocRef);
+        
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          // Use imageData (base64) first, fall back to imageURL
+          if (userData.imageData) {
+            setOtherUserProfileImage(userData.imageData);
+          } else if (userData.imageURL) {
+            setOtherUserProfileImage(userData.imageURL);
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching user profile image:", err);
+      }
+    };
+    
+    fetchUserProfileImage();
+  }, [otherUserId, isGroup]);
 
   // Check blocking status
   useEffect(() => {
@@ -130,7 +158,17 @@ const ChatWindow = ({
           </button>
         )}
         <div className="ChatUserInfo">
-          <h3>{otherUserName || "Chat"}</h3>
+          {/* Avatar from database (Spider-Man image) */}
+          <div 
+            className="ChatUserAvatar"
+            style={otherUserProfileImage ? { backgroundImage: `url(${otherUserProfileImage})` } : null}
+          >
+            {!otherUserProfileImage && otherUserName ? otherUserName.charAt(0).toUpperCase() : ""}
+          </div>
+          <div className="ChatUserDetails">
+            <h3>{otherUserName || "Chat"}</h3>
+            <div className="ChatUserStatus">Online</div>
+          </div>
         </div>
         {otherUserId && !isBlockedByOther && (
           <button
@@ -208,18 +246,7 @@ const ChatWindow = ({
               type="submit"
               disabled={!message.trim()}
               aria-label="Send message"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="send-icon"
-                width="20"
-                height="20"
-              >
-                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-              </svg>
-            </button>
+            ></button>
           </div>
         </form>
       )}

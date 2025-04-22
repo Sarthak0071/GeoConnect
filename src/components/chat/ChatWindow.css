@@ -1,3 +1,4 @@
+
 /* ChatWindow.css */
 
 /* Variables (repeated for standalone use) */
@@ -52,7 +53,6 @@
 
 /* Back button for mobile view */
 .BackButton {
-  display: none;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -91,7 +91,6 @@
   margin-right: 0.875rem;
   color: white;
   font-weight: 700;
-  background-image: url('https://i.pravatar.cc/150?img=35');
   background-size: cover;
   background-position: center;
   border: 2px solid white;
@@ -523,20 +522,4 @@ body.dark-mode .MessageInput:focus {
 
 .DateDivider::after {
   margin-left: 0.75rem;
-}
-
-/* For ChatWindow.jsx - Add profile picture to ChatHeader by CSS injection */
-.ChatUserInfo::before {
-  content: '';
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: var(--primary-color);
-  display: inline-block;
-  margin-right: 0.875rem;
-  background-image: url('https://i.pravatar.cc/150?img=35');
-  background-size: cover;
-  background-position: center;
-  border: 2px solid white;
-  box-shadow: var(--shadow-sm);
 }
