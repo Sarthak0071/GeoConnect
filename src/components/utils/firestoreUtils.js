@@ -1,4 +1,3 @@
-
 // firestoreUtils.js
 import { auth, db } from "../../firebase";
 import { 
@@ -13,8 +12,10 @@ import {
   query,
   orderBy,
   limit,
-  where
+  where,
+  deleteDoc
 } from "firebase/firestore";
+import { deleteUser as deleteAuthUser } from "firebase/auth";
 
 
 // location = spot , field = visited/current selected  
@@ -59,10 +60,14 @@ export const fetchAllUsersLocations = (setAllUserLocations) => {
           name: data.name || "Unknown",
           lat: data.currentSelected.lat,
           lng: data.currentSelected.lng,
+          timestamp: data.currentSelected.date || new Date().toISOString().split("T")[0],
         });
       }
     });
+    console.log("Fetched updated user locations:", locations.length);
     setAllUserLocations(locations);
+  }, (error) => {
+    console.error("Error fetching all user locations:", error);
   });
 };
 
@@ -226,3 +231,41 @@ export const fetchRecentChatSessions = async (limit = 5) => {
     return [];
   }
 };
+
+export const deleteUser = async () => {
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      return { success: false, error: "No user is currently logged in." };
+    }
+
+    // First delete user's document from Firestore
+    const userDocRef = doc(db, "users", user.uid);
+    await deleteDoc(userDocRef);
+
+    // Then delete the Firebase Auth account
+    try {
+      await deleteAuthUser(user);
+      return { success: true };
+    } catch (authError) {
+      // If the error is about re-authentication required
+      if (authError.code === "auth/requires-recent-login") {
+        return {
+          success: false,
+          error: "For security reasons, please log out and log back in before deleting your account.",
+          requiresReauth: true
+        };
+      }
+      throw authError;
+    }
+  } catch (error) {
+    console.error("Error deleting user account:", error);
+    return { success: false, error: error.message };
+  }
+};
+
+
+
+
+
+
