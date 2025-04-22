@@ -1,7 +1,6 @@
 
 
 
-
 // import React, { useEffect, useState } from "react";
 // import { doc, getDoc, updateDoc } from "firebase/firestore";
 // import { auth, db } from "../../firebase";
@@ -12,6 +11,7 @@
 //   const [isEditing, setIsEditing] = useState(false);
 //   const [editedName, setEditedName] = useState("");
 //   const [editedDob, setEditedDob] = useState("");
+//   const [editedDescription, setEditedDescription] = useState("");
 //   const [loading, setLoading] = useState(true);
 //   const [saveLoading, setSaveLoading] = useState(false);
 
@@ -34,6 +34,7 @@
 //           setUserData(data);
 //           setEditedName(data.name || "");
 //           setEditedDob(data.dob || "");
+//           setEditedDescription(data.description || "");
 //         } else {
 //           console.log("No user data found in Firestore.");
 //         }
@@ -64,12 +65,14 @@
 //       await updateDoc(userDocRef, {
 //         name: editedName,
 //         dob: editedDob,
+//         description: editedDescription,
 //       });
 
 //       setUserData({
 //         ...userData,
 //         name: editedName,
 //         dob: editedDob,
+//         description: editedDescription,
 //       });
 //       setIsEditing(false);
 //     } catch (error) {
@@ -81,6 +84,7 @@
 //   const handleCancelClick = () => {
 //     setEditedName(userData.name || "");
 //     setEditedDob(userData.dob || "");
+//     setEditedDescription(userData.description || "");
 //     setIsEditing(false);
 //   };
 
@@ -167,6 +171,23 @@
 //                 <span className="info-value">{userData.dob || "Not set"}</span>
 //               )}
 //             </div>
+
+//             <div className="info-item description-item">
+//               <span className="info-label">Description</span>
+//               {isEditing ? (
+//                 <textarea
+//                   value={editedDescription}
+//                   onChange={(e) => setEditedDescription(e.target.value)}
+//                   className="edit-input description-input"
+//                   rows="4"
+//                   placeholder="Write something about yourself..."
+//                 />
+//               ) : (
+//                 <span className="info-value description-value">
+//                   {userData.description || "Not set"}
+//                 </span>
+//               )}
+//             </div>
 //           </div>
 //         </div>
 
@@ -182,15 +203,15 @@
 
 //         {isEditing && (
 //           <div className="edit-actions">
-//             <button 
-//               className="cancel-button" 
+//             <button
+//               className="cancel-button"
 //               onClick={handleCancelClick}
 //               disabled={saveLoading}
 //             >
 //               Cancel
 //             </button>
-//             <button 
-//               className="save-button" 
+//             <button
+//               className="save-button"
 //               onClick={handleSaveClick}
 //               disabled={saveLoading}
 //             >
@@ -208,6 +229,9 @@
 
 
 
+
+
+
 import React, { useEffect, useState } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
@@ -219,6 +243,8 @@ const UserProfile = () => {
   const [editedName, setEditedName] = useState("");
   const [editedDob, setEditedDob] = useState("");
   const [editedDescription, setEditedDescription] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saveLoading, setSaveLoading] = useState(false);
 
@@ -235,18 +261,19 @@ const UserProfile = () => {
       const userDocRef = doc(db, "users", user.uid);
       try {
         const userDoc = await getDoc(userDocRef);
-
         if (userDoc.exists()) {
           const data = userDoc.data();
           setUserData(data);
           setEditedName(data.name || "");
           setEditedDob(data.dob || "");
           setEditedDescription(data.description || "");
+          console.log("Fetched user data:", data);
         } else {
           console.log("No user data found in Firestore.");
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
+        alert("Failed to load profile data.");
       }
       setLoading(false);
     };
@@ -258,32 +285,91 @@ const UserProfile = () => {
     setIsEditing(true);
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (!file.type.startsWith("image/")) {
+        alert("Please select an image file.");
+        return;
+      }
+      
+      setImageFile(file);
+      
+      // Create a preview of the image
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const convertImageToBase64 = () => {
+    return new Promise((resolve, reject) => {
+      if (!imageFile) {
+        resolve(null);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        resolve(event.target.result);
+      };
+      reader.onerror = (error) => {
+        console.error("Error converting image:", error);
+        reject(error);
+      };
+      reader.readAsDataURL(imageFile);
+    });
+  };
+
   const handleSaveClick = async () => {
     setSaveLoading(true);
     const user = auth.currentUser;
     if (!user) {
-      console.log("No user is currently logged in.");
+      alert("No user is currently logged in.");
       setSaveLoading(false);
       return;
     }
 
     const userDocRef = doc(db, "users", user.uid);
     try {
-      await updateDoc(userDocRef, {
+      const updatedData = {
         name: editedName,
         dob: editedDob,
         description: editedDescription,
-      });
+      };
+
+      // If there's a new image, convert it to base64 and store it
+      if (imageFile) {
+        try {
+          const base64Image = await convertImageToBase64();
+          updatedData.imageData = base64Image;
+          // Remove old imageURL if it exists
+          if (userData.imageURL) {
+            updatedData.imageURL = null;
+          }
+        } catch (error) {
+          console.error("Error processing image:", error);
+          alert("Failed to process image. Please try again with a smaller image.");
+          setSaveLoading(false);
+          return;
+        }
+      }
+
+      await updateDoc(userDocRef, updatedData);
 
       setUserData({
         ...userData,
-        name: editedName,
-        dob: editedDob,
-        description: editedDescription,
+        ...updatedData,
       });
+      setImageFile(null);
+      setImagePreview(null);
       setIsEditing(false);
+      alert("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating user data:", error);
+      alert("Failed to update profile.");
     }
     setSaveLoading(false);
   };
@@ -292,6 +378,8 @@ const UserProfile = () => {
     setEditedName(userData.name || "");
     setEditedDob(userData.dob || "");
     setEditedDescription(userData.description || "");
+    setImageFile(null);
+    setImagePreview(null);
     setIsEditing(false);
   };
 
@@ -303,6 +391,21 @@ const UserProfile = () => {
       month: "long",
       day: "numeric",
     });
+  };
+
+  const getProfileImage = () => {
+    // First try to use base64 image data (new approach)
+    if (isEditing && imagePreview) {
+      return imagePreview;
+    }
+    if (userData.imageData) {
+      return userData.imageData;
+    }
+    // Fall back to the old imageURL if it exists
+    if (userData.imageURL) {
+      return userData.imageURL;
+    }
+    return null;
   };
 
   if (loading) {
@@ -327,7 +430,21 @@ const UserProfile = () => {
     <div className="user-profile-container">
       <div className="profile-header">
         <div className="profile-avatar">
-          {userData.name ? userData.name.charAt(0).toUpperCase() : "U"}
+          {getProfileImage() ? (
+            <img
+              src={getProfileImage()}
+              alt="Profile"
+              className="profile-picture"
+              onError={() => {
+                console.error("Failed to load image");
+                setUserData({ ...userData, imageData: null, imageURL: null });
+              }}
+            />
+          ) : (
+            <div className="avatar-fallback">
+              {userData.name ? userData.name.charAt(0).toUpperCase() : "U"}
+            </div>
+          )}
         </div>
         <h1>About Me</h1>
         {!isEditing && (
@@ -341,6 +458,22 @@ const UserProfile = () => {
         <div className="profile-section">
           <h2>Personal Information</h2>
           <div className="profile-info">
+            {isEditing && (
+              <div className="info-item">
+                <span className="info-label">Profile Picture</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="edit-input file-input"
+                />
+                {imagePreview && (
+                  <div className="image-preview">
+                    <img src={imagePreview} alt="Preview" />
+                  </div>
+                )}
+              </div>
+            )}
             <div className="info-item">
               <span className="info-label">Name</span>
               {isEditing ? (
