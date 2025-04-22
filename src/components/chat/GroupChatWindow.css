@@ -32,22 +32,6 @@
 */
 
 /* Add custom styles for group-specific elements */
-.ChatUserInfo::before {
-  content: '👥'; /* Use a group icon instead of a user avatar */
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: var(--primary-color);
-  display: inline-block;
-  margin-right: 0.875rem;
-  color: white;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid white;
-  box-shadow: var(--shadow-sm);
-}
 
 /* Media Queries */
 @media (max-width: 768px) {

@@ -455,7 +455,7 @@ const GroupChatWindow = ({ groupId, groupName, messages, handleSendMessage, onBa
             ←
           </button>
         )}
-        <div className="ChatUserInfo">
+        <div className="ChatUserInfoo">
           <h3>{groupName}</h3>
         </div>
         <div className="GroupActions">
