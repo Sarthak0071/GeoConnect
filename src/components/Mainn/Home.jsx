@@ -1,10 +1,4 @@
-
-
-
-
-
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { useLocation, useNavigate } from "react-router-dom";
 import MapView from "./MapView";
@@ -27,6 +21,7 @@ const Home = () => {
   const [mapType, setMapType] = useState("roadmap");
   const [showAboutMe, setShowAboutMe] = useState(false);
   const [initialized, setInitialized] = useState(false);
+  const [lastRefreshTimestamp, setLastRefreshTimestamp] = useState(0);
   
   const location = useLocation();
   const navigate = useNavigate();
@@ -50,17 +45,27 @@ const Home = () => {
     refreshData
   } = useLocationManager();
 
+  // Throttled version of refresh data to prevent multiple refreshes
+  const throttledRefreshData = useCallback(() => {
+    const now = Date.now();
+    // Only refresh if it's been at least 2 seconds since the last refresh
+    if (now - lastRefreshTimestamp > 2000) {
+      refreshData();
+      setLastRefreshTimestamp(now);
+    }
+  }, [refreshData, lastRefreshTimestamp]);
+
   // This effect runs when returning from other pages
   useEffect(() => {
     // Check if we're returning from chat or travel-history
     if (location.state?.returnTo === "/" && initialized) {
-      // Refresh map data to ensure everything shows correctly
-      refreshData();
+      // Only refresh if necessary (throttled)
+      throttledRefreshData();
     } else if (!initialized && isLoaded) {
       // First time initialization
       setInitialized(true);
     }
-  }, [location, isLoaded, initialized, refreshData]);
+  }, [location, isLoaded, initialized, throttledRefreshData]);
 
   // Intercept navigation to other pages to set state
   const handleNavigation = (path) => {
@@ -126,7 +131,7 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default React.memo(Home);
 
 
 
