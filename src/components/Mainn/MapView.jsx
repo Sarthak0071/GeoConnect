@@ -1,7 +1,18 @@
-
-
-import React, { useState } from "react";
+import React, { useState, useCallback, memo } from "react";
 import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
+
+const areEqual = (prevProps, nextProps) => {
+  // Only re-render if these props change
+  return (
+    prevProps.currentLocation?.lat === nextProps.currentLocation?.lat &&
+    prevProps.currentLocation?.lng === nextProps.currentLocation?.lng &&
+    prevProps.zoomLevel === nextProps.zoomLevel &&
+    prevProps.mapType === nextProps.mapType &&
+    prevProps.selectedPlace === nextProps.selectedPlace &&
+    prevProps.allUserLocations.length === nextProps.allUserLocations.length &&
+    prevProps.touristPlaces.length === nextProps.touristPlaces.length
+  );
+};
 
 const MapView = ({
   currentLocation,
@@ -10,9 +21,30 @@ const MapView = ({
   touristPlaces,
   zoomLevel,
   mapType,
+  setSelectedPlace,
 }) => {
   const [selectedUser, setSelectedUser] = useState(null); // For user info window
   const [selectedTouristPlace, setSelectedTouristPlace] = useState(null); // For tourist place info window
+  
+  // Memoize handlers to prevent unnecessary re-renders
+  const handleUserClick = useCallback((user) => {
+    setSelectedUser(user);
+  }, []);
+  
+  const handleTouristPlaceClick = useCallback((place) => {
+    setSelectedTouristPlace(place);
+    if (setSelectedPlace) {
+      setSelectedPlace(place);
+    }
+  }, [setSelectedPlace]);
+  
+  const handleCloseUserInfo = useCallback(() => {
+    setSelectedUser(null);
+  }, []);
+  
+  const handleCloseTouristInfo = useCallback(() => {
+    setSelectedTouristPlace(null);
+  }, []);
 
   return (
     <div style={{ height: "500px", width: "100%" }}>
@@ -21,6 +53,12 @@ const MapView = ({
         zoom={zoomLevel}
         mapTypeId={mapType}
         mapContainerStyle={{ height: "100%", width: "100%" }}
+        options={{ 
+          disableDefaultUI: false,
+          zoomControl: true,
+          streetViewControl: true,
+          mapTypeControl: true
+        }}
       >
         {/* Display current user location with a blue marker */}
         {currentLocation && (
@@ -47,7 +85,7 @@ const MapView = ({
                 scaledSize: new window.google.maps.Size(40, 40),
                 anchor: new window.google.maps.Point(20, 40),
               }}
-              onClick={() => setSelectedUser(user)} // Open InfoWindow on click
+              onClick={() => handleUserClick(user)} // Use memoized handler
             />
           ) : null
         )}
@@ -56,7 +94,7 @@ const MapView = ({
         {selectedUser && (
           <InfoWindow
             position={{ lat: selectedUser.lat, lng: selectedUser.lng }}
-            onCloseClick={() => setSelectedUser(null)}
+            onCloseClick={handleCloseUserInfo} // Use memoized handler
           >
             <div>
               <strong>{selectedUser.name}</strong>
@@ -76,7 +114,7 @@ const MapView = ({
                 scaledSize: new window.google.maps.Size(40, 40),
                 anchor: new window.google.maps.Point(20, 40),
               }}
-              onClick={() => setSelectedTouristPlace(place)} // Open InfoWindow on click
+              onClick={() => handleTouristPlaceClick(place)} // Use memoized handler
             />
           ) : null
         )}
@@ -85,7 +123,7 @@ const MapView = ({
         {selectedTouristPlace && (
           <InfoWindow
             position={selectedTouristPlace.location}
-            onCloseClick={() => setSelectedTouristPlace(null)}
+            onCloseClick={handleCloseTouristInfo} // Use memoized handler
           >
             <div>
               <strong>{selectedTouristPlace.name}</strong>
@@ -97,6 +135,6 @@ const MapView = ({
   );
 };
 
-export default MapView;
+export default memo(MapView, areEqual);
 
 
