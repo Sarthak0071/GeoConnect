@@ -95,21 +95,29 @@ export const useLocationManager = () => {
           lng: geocodedLocation.lng,
         };
         
+        // Update UI immediately - blue marker position
         setCurrentLocation(location);
         setMainCity(newLocation);
         setIsChangingLocation(false);
         setLatestLocationData(location);
   
+        // Store data in firestore
         await storeLocationData(location, "manuallySelected");
         await storeLocationData(location, "currentSelected");
-
-        const places = await fetchTouristPlacesFromServer(newLocation, API_KEY);
         
-        // Only update tourist places if they've changed
-        if (!isEqual(places, prevTouristPlacesRef.current)) {
-          prevTouristPlacesRef.current = places;
-          setTouristPlaces(places);
-        }
+        // Force refresh allUserLocations to see other users' updates
+        const unsubscribe = fetchAllUsersLocations(newLocations => {
+          prevUserLocationsRef.current = newLocations;
+          setAllUserLocations(newLocations);
+        });
+
+        // Finally fetch tourist places
+        const places = await fetchTouristPlacesFromServer(newLocation, API_KEY);
+        prevTouristPlacesRef.current = places;
+        setTouristPlaces(places);
+        
+        // Cleanup the temporary listener
+        setTimeout(() => unsubscribe(), 1000);
       } else {
         alert("Location not found.");
       }
