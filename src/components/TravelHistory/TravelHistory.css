@@ -6,6 +6,15 @@
     background-color: #f8f9fa;
   }
   
+  /* Clean styling for the map container */
+  .history-map {
+    flex: 2;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    min-height: 400px;
+  }
+  
   .travel-history-header {
     text-align: center;
     margin-bottom: 20px;
@@ -36,14 +45,6 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
     max-width: 350px;
-  }
-  
-  .history-map {
-    flex: 2;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    min-height: 400px;
   }
   
   .no-history {
@@ -154,24 +155,6 @@
   .info-window p {
     margin: 0;
     font-size: 14px;
-  }
-  
-  /* Custom styles for map markers and labels */
-  .map-marker-label {
-    color: #fff;
-    background-color: rgba(33, 150, 243, 0.8);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: bold;
-    text-transform: capitalize;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    margin-top: -35px;
-    white-space: nowrap;
-  }
-  
-  /* Make sure the label appears above the marker */
-  .gm-style-iw {
-    z-index: 1000 !important;
   }
   
   @media (max-width: 768px) {
