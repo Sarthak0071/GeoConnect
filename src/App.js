@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Login from "./components/Login/Login";
@@ -12,17 +12,36 @@ import Chat from "./components/chat/Chat";
 import TravelHistory from "./components/TravelHistory/TravelHistory";
 import NearbyUsers from "./components/NearUsers/NearbyUsers";
 import AdminNavigation from "./components/Admin/AdminNavigation";
-
+import { auth } from "./firebase";
+import { checkBannedStatus } from "./components/utils/authUtils";
 
 function App() {
-  return (
+  // Check for banned status whenever a user logs in
+  useEffect(() => {
+    let unsubscribe = null;
     
+    const authStateListener = auth.onAuthStateChanged((user) => {
+      // If user is logged in, set up banned status listener
+      if (user) {
+        unsubscribe = checkBannedStatus(user.uid);
+      }
+    });
+    
+    // Clean up subscriptions when component unmounts
+    return () => {
+      authStateListener();
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
+
+  return (
     <Router>
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
+        <Route path="/login" element={<Login />} />
         
         {/* Protected route for password change */}
         <Route 
