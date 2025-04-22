@@ -1,7 +1,4 @@
-
-
-
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback, memo } from "react";
 import { fetchAllUsersLocations, fetchUserData } from "../utils/firestoreUtils";
 import { auth, db } from "../../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
@@ -20,6 +17,7 @@ const NearbyUsers = () => {
   const location = useLocation();
   const unsubscribeRef = useRef(null);
   const dataFetchedRef = useRef(false);
+  const previousNearbyUsersRef = useRef([]);
 
   useEffect(() => {
     if (!auth.currentUser) return;
@@ -30,6 +28,15 @@ const NearbyUsers = () => {
       }
     });
     return () => unsubscribe();
+  }, []);
+
+  // Custom comparison function to avoid unnecessary state updates
+  const updateNearbyUsers = useCallback((users) => {
+    // Only update if the users list has changed
+    if (JSON.stringify(users) !== JSON.stringify(previousNearbyUsersRef.current)) {
+      previousNearbyUsersRef.current = users;
+      setNearbyUsers(users);
+    }
   }, []);
 
   useEffect(() => {
@@ -61,7 +68,7 @@ const NearbyUsers = () => {
                 );
                 return distance <= 50000;
               });
-              setNearbyUsers(nearby);
+              updateNearbyUsers(nearby);
               dataFetchedRef.current = true;
             });
           }
@@ -82,38 +89,46 @@ const NearbyUsers = () => {
         dataFetchedRef.current = false; // Only reset when leaving NearbyUsers completely
       }
     };
-  }, [location.pathname, blockedUsers]);
+  }, [location.pathname, blockedUsers, updateNearbyUsers]);
 
-  const handleChatStart = (user) => {
-    navigate(`/chat/${user.uid}`, { state: { fromNearbyUsers: true } });
-  };
+  const handleChatStart = useCallback((user) => {
+    navigate(`/chat/${user.uid}`, { state: { fromNearbyUsers: true, returnTo: "/" } });
+  }, [navigate]);
 
-  const handleNavigate = (lat, lng) => {
+  const handleNavigate = useCallback((lat, lng) => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
     window.open(url, "_blank");
-  };
+  }, []);
 
-  const handleShowAbout = async (userId) => {
+  const handleShowAbout = useCallback(async (userId) => {
     try {
       const userData = await fetchUserData(userId);
       setSelectedUserDetails(userData);
     } catch (error) {
       console.error("Error fetching user details:", error);
     }
-  };
+  }, []);
 
-  const closeAboutPopup = () => {
+  const closeAboutPopup = useCallback(() => {
     setSelectedUserDetails(null);
-  };
+  }, []);
 
-  const formatTimestamp = (timestamp) => {
+  const formatTimestamp = useCallback((timestamp) => {
     if (!timestamp) return "N/A";
     return new Date(timestamp.toDate()).toLocaleString();
-  };
+  }, []);
+
+  const toggleShowPopup = useCallback(() => {
+    setShowPopup(prev => !prev);
+  }, []);
+
+  const toggleShowAll = useCallback(() => {
+    setShowAll(true);
+  }, []);
 
   return (
     <div className="nearby-container">
-      <button className="view-nearby-btn" onClick={() => setShowPopup(true)}>
+      <button className="view-nearby-btn" onClick={toggleShowPopup}>
         View Nearby Users
       </button>
       {showPopup && (
@@ -155,11 +170,11 @@ const NearbyUsers = () => {
               <p className="no-users">No nearby users found.</p>
             )}
             {nearbyUsers.length > 4 && !showAll && (
-              <button className="view-more-btn" onClick={() => setShowAll(true)}>
+              <button className="view-more-btn" onClick={toggleShowAll}>
                 View More
               </button>
             )}
-            <button className="close-btn" onClick={() => setShowPopup(false)}>
+            <button className="close-btn" onClick={toggleShowPopup}>
               Close
             </button>
           </div>
@@ -189,4 +204,4 @@ const NearbyUsers = () => {
   );
 };
 
-export default NearbyUsers;
+export default memo(NearbyUsers);
