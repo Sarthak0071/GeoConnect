@@ -1,7 +1,48 @@
-import React, { useState, useCallback, memo } from "react";
+import React, { useState, useCallback, memo, useEffect } from "react";
 import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
 
 const areEqual = (prevProps, nextProps) => {
+  // Check if touristPlaces have changed by comparing actual data
+  const areTouristPlacesEqual = () => {
+    if (prevProps.touristPlaces.length !== nextProps.touristPlaces.length) {
+      return false;
+    }
+    
+    for (let i = 0; i < prevProps.touristPlaces.length; i++) {
+      const prevPlace = prevProps.touristPlaces[i];
+      const nextPlace = nextProps.touristPlaces[i];
+      
+      if (prevPlace.name !== nextPlace.name ||
+          prevPlace.location?.lat !== nextPlace.location?.lat ||
+          prevPlace.location?.lng !== nextPlace.location?.lng) {
+        return false;
+      }
+    }
+    
+    return true;
+  };
+  
+  // Check if all user locations have changed
+  const areAllUserLocationsEqual = () => {
+    if (prevProps.allUserLocations.length !== nextProps.allUserLocations.length) {
+      return false;
+    }
+    
+    // Deep comparison of user locations
+    for (let i = 0; i < prevProps.allUserLocations.length; i++) {
+      const prevUser = prevProps.allUserLocations[i];
+      const nextUser = nextProps.allUserLocations[i];
+      
+      if (prevUser.uid !== nextUser.uid ||
+          prevUser.lat !== nextUser.lat ||
+          prevUser.lng !== nextUser.lng) {
+        return false;
+      }
+    }
+    
+    return true;
+  };
+  
   // Only re-render if these props change
   return (
     prevProps.currentLocation?.lat === nextProps.currentLocation?.lat &&
@@ -9,8 +50,8 @@ const areEqual = (prevProps, nextProps) => {
     prevProps.zoomLevel === nextProps.zoomLevel &&
     prevProps.mapType === nextProps.mapType &&
     prevProps.selectedPlace === nextProps.selectedPlace &&
-    prevProps.allUserLocations.length === nextProps.allUserLocations.length &&
-    prevProps.touristPlaces.length === nextProps.touristPlaces.length
+    areAllUserLocationsEqual() &&
+    areTouristPlacesEqual()
   );
 };
 
@@ -25,6 +66,11 @@ const MapView = ({
 }) => {
   const [selectedUser, setSelectedUser] = useState(null); // For user info window
   const [selectedTouristPlace, setSelectedTouristPlace] = useState(null); // For tourist place info window
+  
+  // Force re-render when allUserLocations change
+  useEffect(() => {
+    console.log("Map received updated user locations:", allUserLocations.length);
+  }, [allUserLocations]);
   
   // Memoize handlers to prevent unnecessary re-renders
   const handleUserClick = useCallback((user) => {
@@ -77,7 +123,7 @@ const MapView = ({
         {allUserLocations.map((user, index) =>
           currentLocation?.lat !== user.lat || currentLocation?.lng !== user.lng ? ( // Avoid duplicate blue marker
             <Marker
-              key={`user-${index}`}
+              key={`user-${user.uid}-${index}`}
               position={{ lat: user.lat, lng: user.lng }}
               title={user.name}
               icon={{
