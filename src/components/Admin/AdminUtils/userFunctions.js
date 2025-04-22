@@ -1,4 +1,3 @@
-
 import { doc, updateDoc, deleteDoc, collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../../firebase"; // Adjust path as needed
 
@@ -33,7 +32,9 @@ export const toggleBanStatus = async (
       await updateDoc(userRef, {
         banned: false,
         banReason: null,
-        bannedAt: null
+        bannedAt: null,
+        authDisabled: false, // Ensure auth is enabled for unbanned users
+        unbannedAt: new Date() // Track when the user was unbanned
       });
       await logAdminAction(
         currentAdmin.id,
@@ -42,13 +43,21 @@ export const toggleBanStatus = async (
         user.name || user.email,
         null // No note required for unban in current setup
       );
-      setUsers(prev => prev.map(u => u.id === user.id ? { ...u, banned: false, banReason: null, bannedAt: null } : u));
+      setUsers(prev => prev.map(u => u.id === user.id ? { 
+        ...u, 
+        banned: false, 
+        banReason: null, 
+        bannedAt: null,
+        authDisabled: false,
+        unbannedAt: new Date() 
+      } : u));
     } else {
-      // Ban logic
+      // Ban logic - this needs to trigger immediate logout
       await updateDoc(userRef, {
         banned: true,
         banReason,
-        bannedAt: new Date()
+        bannedAt: new Date(),
+        authDisabled: true // This flag helps ensure immediate logout
       });
       await logAdminAction(
         currentAdmin.id,
@@ -57,7 +66,13 @@ export const toggleBanStatus = async (
         user.name || user.email,
         { reason: banReason }
       );
-      setUsers(prev => prev.map(u => u.id === user.id ? { ...u, banned: true, banReason, bannedAt: new Date() } : u));
+      setUsers(prev => prev.map(u => u.id === user.id ? { 
+        ...u, 
+        banned: true, 
+        banReason, 
+        bannedAt: new Date(),
+        authDisabled: true
+      } : u));
     }
     setShowBanModal(false);
     setSelectedUser(null);
