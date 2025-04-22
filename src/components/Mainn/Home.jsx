@@ -106,6 +106,7 @@ const Home = () => {
             updateLocation={updateLocation}
           />
           <MapView
+            key={`map-${currentLocation?.lat}-${currentLocation?.lng}-${allUserLocations.length}-${touristPlaces.length}`}
             currentLocation={currentLocation}
             allUserLocations={allUserLocations}
             selectedPlace={selectedPlace}
