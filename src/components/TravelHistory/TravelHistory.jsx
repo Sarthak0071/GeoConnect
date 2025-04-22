@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db, auth } from "../../firebase"; // Adjust this path to where your Firebase config is
@@ -130,15 +129,14 @@ const TravelHistory = () => {
     height: '100%'
   };
 
-  // Custom marker styles to include labels
-  const markerIcon = {
-    path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z",
-    fillColor: "#2196F3",
-    fillOpacity: 0.9,
-    strokeWeight: 1,
-    strokeColor: "#0D47A1",
-    scale: 1.5,
-    anchor: { x: 12, y: 24 },
+  // Simplified marker implementation
+  const getSimpleMarker = () => {
+    return {
+      // Use URL to an actual circle image without shadows
+      url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+      // No size adjustments, no shadow points
+      scaledSize: new window.google.maps.Size(24, 24)
+    };
   };
 
   if (!isLoaded || loading) {
@@ -194,7 +192,20 @@ const TravelHistory = () => {
             options={{ 
               streetViewControl: false, 
               mapTypeControl: true,
-              fullscreenControl: true
+              fullscreenControl: true,
+              zoomControl: true,
+              // Simplify options
+              clickableIcons: false,
+              styles: [
+                {
+                  featureType: "poi",
+                  stylers: [{ visibility: "off" }]
+                },
+                {
+                  featureType: "transit",
+                  stylers: [{ visibility: "off" }]
+                }
+              ]
             }}
           >
             {groupedHistory.map((location, index) => (
@@ -202,13 +213,9 @@ const TravelHistory = () => {
                 key={index}
                 position={{ lat: location.lat, lng: location.lng }}
                 onClick={() => handleLocationClick(location)}
-                icon={markerIcon}
-                label={{
-                  text: location.locationName,
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  className: "map-marker-label"
-                }}
+                icon={getSimpleMarker()}
+                // Remove label to eliminate black text
+                label={null}
               />
             ))}
 
