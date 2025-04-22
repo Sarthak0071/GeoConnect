@@ -1,9 +1,6 @@
-
-
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { deleteChat } from "./chatUtils";
+import { deleteChat, subscribeToTyping } from "./chatUtils";
 import BlockedUsersPopup from "./BlockedUsersPopup";
 import CreateGroupChat from "./CreateGroupChat";
 import { auth, db } from "../../firebase";
@@ -26,6 +23,7 @@ const ChatSidebar = ({
   const [filteredChats, setFilteredChats] = useState(chats);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [userProfileImages, setUserProfileImages] = useState({});
+  const [typingStatus, setTypingStatus] = useState({});
 
   // Add resize listener to track device size
   useEffect(() => {
@@ -74,6 +72,22 @@ const ChatSidebar = ({
     if (chats.length > 0) {
       fetchUserImages();
     }
+  }, [chats]);
+
+  // Subscribe to typing status for all chats
+  useEffect(() => {
+    const unsubscribers = chats.map(chat => {
+      return subscribeToTyping(chat.id, (typing) => {
+        setTypingStatus(prev => ({
+          ...prev,
+          [chat.id]: typing
+        }));
+      });
+    });
+
+    return () => {
+      unsubscribers.forEach(unsubscribe => unsubscribe());
+    };
   }, [chats]);
 
   // Filter chats when search term or chats change
@@ -192,6 +206,32 @@ const ChatSidebar = ({
     );
   };
 
+  // Check if the other user is typing in a chat
+  const isOtherUserTyping = (chat) => {
+    if (!typingStatus[chat.id]) return false;
+    
+    const currentUserId = auth.currentUser?.uid;
+    // For one-on-one chats, check if the other user is typing
+    if (!chat.isGroup) {
+      return typingStatus[chat.id][chat.otherUserId] === true;
+    }
+    // For group chats, check if any user other than current user is typing
+    else {
+      const typingUsers = Object.keys(typingStatus[chat.id]).filter(
+        userId => typingStatus[chat.id][userId] === true && userId !== currentUserId
+      );
+      return typingUsers.length > 0;
+    }
+  };
+
+  // Get message preview text
+  const getMessagePreview = (chat) => {
+    if (isOtherUserTyping(chat)) {
+      return "Typing...";
+    }
+    return chat.lastMessage || "No messages yet";
+  };
+
   return (
     <>
       <div className="ChatHeader">
@@ -273,8 +313,8 @@ const ChatSidebar = ({
                     {formatTime(chat.lastMessageTime)}
                   </span>
                 </div>
-                <div className="MessagePreview">
-                  {chat.lastMessage || "No messages yet"}
+                <div className={`MessagePreview ${isOtherUserTyping(chat) ? "typing" : ""}`}>
+                  {getMessagePreview(chat)}
                 </div>
               </div>
               <button

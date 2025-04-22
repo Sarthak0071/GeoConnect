@@ -214,7 +214,6 @@ body {
 .close-button {
   background: none;
   border: none;
-  color: white;
   font-size: 28px;
   cursor: pointer;
   transition: all 0.2s;
