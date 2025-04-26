@@ -6,6 +6,8 @@ import { db } from "../../firebase";
 import { doc, setDoc } from "firebase/firestore";
 import "./Login.css";
 import Popup from "./Popup";
+import ErrorMessage from "./ErrorMessage";
+import FormField from "./FormField";
 import logo from "../Mainn/logo.png";
 
 const SignUp = () => {
@@ -19,6 +21,8 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const navigate = useNavigate();
 
   // Image slideshow effect
@@ -29,6 +33,77 @@ const SignUp = () => {
     
     return () => clearInterval(interval);
   }, []);
+
+  const handleBlur = (field) => {
+    setTouched({ ...touched, [field]: true });
+    validateField(field);
+  };
+
+  const validateField = (field) => {
+    let newErrors = { ...fieldErrors };
+    
+    switch (field) {
+      case 'name':
+        if (!name.trim()) {
+          newErrors.name = "Name is required";
+        } else {
+          delete newErrors.name;
+        }
+        break;
+      case 'email':
+        if (!email.trim()) {
+          newErrors.email = "Email is required";
+        } else if (!email.endsWith("@gmail.com")) {
+          newErrors.email = "Must be a valid @gmail.com address";
+        } else {
+          delete newErrors.email;
+        }
+        break;
+      case 'password':
+        if (!password) {
+          newErrors.password = "Password is required";
+        } else if (password.length < 8) {
+          newErrors.password = "Password must be at least 8 characters";
+        } else if (!/[A-Z]/.test(password)) {
+          newErrors.password = "Include at least one uppercase letter";
+        } else if (!/[0-9]/.test(password)) {
+          newErrors.password = "Include at least one number";
+        } else if (!/[@$!%*?&#]/.test(password)) {
+          newErrors.password = "Include at least one special character";
+        } else {
+          delete newErrors.password;
+        }
+        break;
+      case 'confirmPassword':
+        if (password !== confirmPassword) {
+          newErrors.confirmPassword = "Passwords do not match";
+        } else {
+          delete newErrors.confirmPassword;
+        }
+        break;
+      case 'gender':
+        if (!gender) {
+          newErrors.gender = "Please select your gender";
+        } else {
+          delete newErrors.gender;
+        }
+        break;
+      case 'dob':
+        if (!dob) {
+          newErrors.dob = "Date of birth is required";
+        } else if (!validateDOB(dob)) {
+          newErrors.dob = "You must be at least 18 years old";
+        } else {
+          delete newErrors.dob;
+        }
+        break;
+      default:
+        break;
+    }
+    
+    setFieldErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const validateEmail = (email) => email.endsWith("@gmail.com");
 
@@ -47,53 +122,44 @@ const SignUp = () => {
     const age = today.getFullYear() - birthDate.getFullYear();
     const m = today.getMonth() - birthDate.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      return age - 1;
+      return age - 1 >= 18;
     }
     return age >= 18;
   };
 
+  const validateForm = () => {
+    // Validate all fields
+    let isValid = true;
+    
+    ['name', 'email', 'password', 'confirmPassword', 'gender', 'dob'].forEach(field => {
+      if (!validateField(field)) {
+        isValid = false;
+      }
+    });
+    
+    return isValid;
+  };
+
   const handleSignUp = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
-
-    if (!name.trim()) {
-      setError("Name cannot be empty");
-      setLoading(false);
+    
+    // Mark all fields as touched
+    const allTouched = {
+      name: true,
+      email: true,
+      password: true,
+      confirmPassword: true,
+      gender: true,
+      dob: true
+    };
+    setTouched(allTouched);
+    
+    if (!validateForm()) {
       return;
     }
-
-    if (!validateEmail(email)) {
-      setError("Email must be a valid @gmail.com address");
-      setLoading(false);
-      return;
-    }
-
-    if (!validatePassword(password)) {
-      setError(
-        "Password must be at least 8 characters long with uppercase, number, and special character"
-      );
-      setLoading(false);
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      setLoading(false);
-      return;
-    }
-
-    if (!gender) {
-      setError("Please select your gender");
-      setLoading(false);
-      return;
-    }
-
-    if (!dob || !validateDOB(dob)) {
-      setError("You must be at least 18 years old to sign up");
-      setLoading(false);
-      return;
-    }
+    
+    setLoading(true);
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -117,6 +183,7 @@ const SignUp = () => {
   };
 
   const handleGoogleSignUp = async () => {
+    setError("");
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
@@ -140,6 +207,12 @@ const SignUp = () => {
     navigate("/");
   };
 
+  const genderOptions = [
+    { value: "Male", label: "Male" },
+    { value: "Female", label: "Female" },
+    { value: "Prefer not to say", label: "Prefer not to say" }
+  ];
+
   return (
     <div className="auth-container">
       <div className="auth-left">
@@ -152,83 +225,81 @@ const SignUp = () => {
           <h1 className="auth-title">Create an account</h1>
           <p className="auth-subtitle">Join to start your journey</p>
           
-          {error && <div className="auth-error">{error}</div>}
+          {error && <ErrorMessage message={error} />}
           
           <form className="auth-form" onSubmit={handleSignUp}>
-            <div className="form-group">
-              <label htmlFor="name">Full Name</label>
-              <input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter your full name"
-                required
-              />
-            </div>
+            <FormField
+              id="name"
+              label="Full Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter your full name"
+              required
+              error={touched.name ? fieldErrors.name : ""}
+              onBlur={() => handleBlur('name')}
+            />
             
-            <div className="form-group">
-              <label htmlFor="email">Email address</label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                required
-              />
-            </div>
+            <FormField
+              id="email"
+              label="Email address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              required
+              error={touched.email ? fieldErrors.email : ""}
+              onBlur={() => handleBlur('email')}
+            />
             
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Create a strong password"
-                required
-              />
-            </div>
+            <FormField
+              id="password"
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Create a strong password"
+              required
+              error={touched.password ? fieldErrors.password : ""}
+              onBlur={() => handleBlur('password')}
+            />
             
-            <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
-              <input
-                id="confirmPassword"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm your password"
-                required
-              />
-            </div>
+            <FormField
+              id="confirmPassword"
+              label="Confirm Password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm your password"
+              required
+              error={touched.confirmPassword ? fieldErrors.confirmPassword : ""}
+              onBlur={() => handleBlur('confirmPassword')}
+            />
             
             <div className="form-row">
-              <div className="form-group half">
-                <label htmlFor="gender">Gender</label>
-                <select
-                  id="gender"
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                  required
-                >
-                  <option value="">Select</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Prefer not to say">Prefer not to say</option>
-                </select>
-              </div>
+              <FormField
+                id="gender"
+                label="Gender"
+                type="select"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                required
+                options={genderOptions}
+                half
+                error={touched.gender ? fieldErrors.gender : ""}
+                onBlur={() => handleBlur('gender')}
+              />
               
-              <div className="form-group half">
-                <label htmlFor="dob">Date of Birth</label>
-                <input
-                  id="dob"
-                  type="date"
-                  value={dob}
-                  onChange={(e) => setDob(e.target.value)}
-                  required
-                />
-              </div>
+              <FormField
+                id="dob"
+                label="Date of Birth"
+                type="date"
+                value={dob}
+                onChange={(e) => setDob(e.target.value)}
+                required
+                half
+                error={touched.dob ? fieldErrors.dob : ""}
+                onBlur={() => handleBlur('dob')}
+              />
             </div>
             
             <button 

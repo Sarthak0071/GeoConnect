@@ -1,17 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./Login.css";
 
 const Popup = ({ message, onClose }) => {
+  const [isVisible, setIsVisible] = useState(true);
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (onClose) onClose();
+      setIsVisible(false);
+      setTimeout(() => {
+        if (onClose) onClose();
+      }, 300); // Wait for fade out animation
     }, 3000);
 
     return () => clearTimeout(timer);
   }, [onClose]);
 
   return (
-    <div className="popup">
+    <div className={`popup ${isVisible ? 'popup-visible' : 'popup-hidden'}`}>
       <div className="popup-inner">
         <div className="popup-success">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -20,7 +25,12 @@ const Popup = ({ message, onClose }) => {
         </div>
         <p>{message}</p>
         {onClose && (
-          <button onClick={onClose}>Continue</button>
+          <button onClick={() => {
+            setIsVisible(false);
+            setTimeout(() => onClose(), 300);
+          }}>
+            Continue
+          </button>
         )}
       </div>
     </div>
