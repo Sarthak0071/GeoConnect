@@ -67,10 +67,27 @@ const UserProfile = () => {
       
       setImageFile(file);
       
+      // Show loading state
+      setImagePreview('loading');
+      
       // Create a preview of the image
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result);
+        // This could take time for large images
+        const img = new Image();
+        img.onload = () => {
+          // Once loaded, set the preview
+          setImagePreview(reader.result);
+        };
+        img.onerror = () => {
+          console.error("Error creating image preview");
+          setImagePreview(null);
+        };
+        img.src = reader.result;
+      };
+      reader.onerror = () => {
+        console.error("Error reading image file");
+        setImagePreview(null);
       };
       reader.readAsDataURL(file);
     }
@@ -83,9 +100,45 @@ const UserProfile = () => {
         return;
       }
 
+      // Create a FileReader to read the image
       const reader = new FileReader();
       reader.onload = (event) => {
-        resolve(event.target.result);
+        const img = new Image();
+        img.onload = () => {
+          // Create a canvas to compress the image
+          const canvas = document.createElement('canvas');
+          // Calculate new dimensions while maintaining aspect ratio
+          let width = img.width;
+          let height = img.height;
+          const MAX_WIDTH = 800;
+          const MAX_HEIGHT = 800;
+          
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          
+          // Resize the image
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Convert to base64 with reduced quality
+          const base64Image = canvas.toDataURL('image/jpeg', 0.7);
+          resolve(base64Image);
+        };
+        img.onerror = () => {
+          reject(new Error('Failed to load image for compression'));
+        };
+        img.src = event.target.result;
       };
       reader.onerror = (error) => {
         console.error("Error converting image:", error);
@@ -117,10 +170,15 @@ const UserProfile = () => {
       if (imageFile) {
         try {
           const base64Image = await convertImageToBase64();
-          updatedData.imageData = base64Image;
-          // Remove old imageURL if it exists
-          if (userData.imageURL) {
-            updatedData.imageURL = null;
+          if (base64Image) {
+            updatedData.imageData = base64Image;
+            // Remove old imageURL if it exists
+            if (userData.imageURL) {
+              updatedData.imageURL = null;
+            }
+          } else {
+            // Handle case where conversion failed
+            console.error("Image conversion failed");
           }
         } catch (error) {
           console.error("Error processing image:", error);
@@ -250,14 +308,24 @@ const UserProfile = () => {
     <div className="user-profile-container">
       <div className="profile-header">
         <div className="profile-avatar">
-          {getProfileImage() ? (
+          {imagePreview === 'loading' ? (
+            <div className="avatar-loading">
+              <div className="loading-spinner"></div>
+            </div>
+          ) : getProfileImage() ? (
             <img
               src={getProfileImage()}
               alt="Profile"
               className="profile-picture"
-              onError={() => {
-                console.error("Failed to load image");
-                setUserData({ ...userData, imageData: null, imageURL: null });
+              onError={(e) => {
+                console.error("Failed to load profile image");
+                e.target.onerror = null; // Prevent infinite error loop
+                // Remove bad image references
+                setUserData((prevData) => ({ 
+                  ...prevData, 
+                  imageData: null, 
+                  imageURL: null 
+                }));
               }}
             />
           ) : (

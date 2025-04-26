@@ -222,19 +222,29 @@
 .loading-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 2rem;
+}
+
+.avatar-loading {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  display: flex;
   align-items: center;
   justify-content: center;
-  height: 300px;
 }
 
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f4f6;
-  border-top: 4px solid #6366f1;
   border-radius: 50%;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #4f46e5;
   animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
 }
 
 @keyframes spin {
@@ -243,13 +253,17 @@
 }
 
 .error-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 2rem;
   text-align: center;
-  padding: 3rem;
-  color: #6b7280;
 }
 
 .error-container h2 {
-  color: #4f46e5;
+  color: #ef4444;
   margin-bottom: 1rem;
 }
 
@@ -430,4 +444,28 @@ input:checked + .toggle-slider:before {
 .toggle-label {
   font-size: 14px;
   color: #555;
+}
+
+/* Make sure the avatar fallback is styled properly */
+.avatar-fallback {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #4f46e5;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+/* Make sure the profile picture container can handle loading errors gracefully */
+.profile-picture {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
