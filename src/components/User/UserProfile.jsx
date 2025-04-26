@@ -3,6 +3,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { deleteUser } from "../utils/firestoreUtils";
 import "./UserProfile.css";
+import NotificationPopup from "./NotificationPopup";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
@@ -18,6 +19,7 @@ const UserProfile = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -45,7 +47,10 @@ const UserProfile = () => {
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
-        alert("Failed to load profile data.");
+        setNotification({
+          message: "Failed to load profile data.",
+          type: "error",
+        });
       }
       setLoading(false);
     };
@@ -61,7 +66,10 @@ const UserProfile = () => {
     const file = e.target.files[0];
     if (file) {
       if (!file.type.startsWith("image/")) {
-        alert("Please select an image file.");
+        setNotification({
+          message: "Please select an image file.",
+          type: "error",
+        });
         return;
       }
       
@@ -152,7 +160,10 @@ const UserProfile = () => {
     setSaveLoading(true);
     const user = auth.currentUser;
     if (!user) {
-      alert("No user is currently logged in.");
+      setNotification({
+        message: "No user is currently logged in.",
+        type: "error",
+      });
       setSaveLoading(false);
       return;
     }
@@ -182,7 +193,10 @@ const UserProfile = () => {
           }
         } catch (error) {
           console.error("Error processing image:", error);
-          alert("Failed to process image. Please try again with a smaller image.");
+          setNotification({
+            message: "Failed to process image. Please try again with a smaller image.",
+            type: "error",
+          });
           setSaveLoading(false);
           return;
         }
@@ -197,10 +211,16 @@ const UserProfile = () => {
       setImageFile(null);
       setImagePreview(null);
       setIsEditing(false);
-      alert("Profile updated successfully!");
+      setNotification({
+        message: "Profile updated successfully!",
+        type: "success",
+      });
     } catch (error) {
       console.error("Error updating user data:", error);
-      alert("Failed to update profile.");
+      setNotification({
+        message: "Failed to update profile.",
+        type: "error",
+      });
     }
     setSaveLoading(false);
   };
@@ -266,10 +286,16 @@ const UserProfile = () => {
         
         // If we need re-authentication, handle that
         if (result.requiresReauth) {
-          alert("For security reasons, please log out and log back in before deleting your account.");
-          // You might want to sign the user out here
-          auth.signOut().then(() => {
-            window.location.href = "/login";
+          setNotification({
+            message: "For security reasons, please log out and log back in before deleting your account.",
+            type: "warning",
+            autoClose: false,
+            onClose: () => {
+              // Sign the user out after they click "OK"
+              auth.signOut().then(() => {
+                window.location.href = "/login";
+              });
+            }
           });
         }
       }
@@ -284,6 +310,10 @@ const UserProfile = () => {
 
   const cancelDeleteAccount = () => {
     setShowDeleteConfirm(false);
+  };
+
+  const closeNotification = () => {
+    setNotification(null);
   };
 
   if (loading) {
@@ -306,6 +336,15 @@ const UserProfile = () => {
 
   return (
     <div className="user-profile-container">
+      {notification && (
+        <NotificationPopup
+          message={notification.message}
+          type={notification.type || "success"}
+          onClose={notification.onClose || closeNotification}
+          autoClose={notification.autoClose !== false}
+        />
+      )}
+      
       <div className="profile-header">
         <div className="profile-avatar">
           {imagePreview === 'loading' ? (
