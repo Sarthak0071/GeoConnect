@@ -21,10 +21,18 @@ import { deleteUser as deleteAuthUser } from "firebase/auth";
 // location = spot , field = visited/current selected  
 export const storeLocationData = async (location, field) => {
   try {
-
     const user = auth.currentUser;   
     if (!user) return;
+    
     const userRef = doc(db, "users", user.uid);
+    const userDoc = await getDoc(userRef);
+    
+    // Don't store location data for admin users
+    if (userDoc.exists() && userDoc.data().role === "admin") {
+      console.log("Admin user - skipping location update");
+      return;
+    }
+    
     if (field === "currentSelected") {
       await updateDoc(userRef, {
         [field]: {
@@ -54,13 +62,20 @@ export const fetchAllUsersLocations = (setAllUserLocations) => {
     const locations = [];
     snapshot.forEach((doc) => {
       const data = doc.data();
+      // Skip admin users - don't include them in nearby users list
+      if (data.role === "admin") {
+        return;
+      }
+      
       if (data.currentSelected) {
         locations.push({
           uid: doc.id,
           name: data.name || "Unknown",
           lat: data.currentSelected.lat,
           lng: data.currentSelected.lng,
+          locationName: data.currentSelected.locationName || "",
           timestamp: data.currentSelected.date || new Date().toISOString().split("T")[0],
+          shareLocation: data.shareLocation !== false, // Default to true for backward compatibility
         });
       }
     });
