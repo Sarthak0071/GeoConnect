@@ -26,30 +26,34 @@ function App() {
     const authStateListener = auth.onAuthStateChanged(async (user) => {
       // If user is logged in, set up banned status listener
       if (user) {
-        unsubscribe = checkBannedStatus(user.uid);
-        
-        // Check if we need to show location permission prompt
-        const userRef = doc(db, "users", user.uid);
-        const userDoc = await getDoc(userRef);
-        
-        if (userDoc.exists()) {
-          // Don't show location prompt to admin users
-          if (userDoc.data().role === "admin") {
-            setShowLocationPrompt(false);
-            return;
-          }
+        try {
+          unsubscribe = checkBannedStatus(user.uid);
           
-          // If shareLocation field doesn't exist yet, show the prompt
-          if (userDoc.data().shareLocation === undefined) {
-            setShowLocationPrompt(true);
+          // Check if we need to show location permission prompt
+          const userRef = doc(db, "users", user.uid);
+          const userDoc = await getDoc(userRef);
+          
+          if (userDoc.exists()) {
+            // Don't show location prompt to admin users
+            if (userDoc.data().role === "admin") {
+              setShowLocationPrompt(false);
+              return;
+            }
+            
+            // If shareLocation field doesn't exist yet, show the prompt
+            if (userDoc.data().shareLocation === undefined) {
+              setShowLocationPrompt(true);
+            }
           }
+        } catch (error) {
+          console.error("Error in auth state listener:", error);
         }
       }
     });
     
     // Clean up subscriptions when component unmounts
     return () => {
-      authStateListener();
+      if (authStateListener) authStateListener();
       if (unsubscribe) unsubscribe();
     };
   }, []);
