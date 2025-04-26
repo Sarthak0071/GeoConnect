@@ -7,6 +7,8 @@ import "./Login.css";
 // Import React Toastify
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+// Import logo
+import logo from "../Mainn/logo.png";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,6 +16,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [banMessage, setBanMessage] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -27,6 +31,15 @@ const Login = () => {
       setBanMessage(`Your account has been banned${reason ? `: ${reason}` : ". Please contact support for assistance."}`);
     }
   }, [location]);
+
+  // Image slideshow effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveSlide(prev => (prev + 1) % 4);
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   const checkIfUserBanned = async (uid) => {
     const userDocRef = doc(db, "users", uid);
@@ -100,7 +113,7 @@ const Login = () => {
       }
 
       // Show success toast after successful login
-      toast.success("Successfully logged in!!", {
+      toast.success("Successfully logged in!", {
         position: "top-right",
         autoClose: 3000,
       });
@@ -149,7 +162,7 @@ const Login = () => {
       }
 
       // Show success toast after successful Google login
-      toast.success("Successfully logged in!!", {
+      toast.success("Successfully logged in!", {
         position: "top-right",
         autoClose: 3000,
       });
@@ -169,82 +182,107 @@ const Login = () => {
 
   return (
     <div className="auth-container">
-      <div className="auth-content">
-        <div className="auth-logo">
-          <span>Geo</span>
-          <span className="logo-accent">Connect</span>
-        </div>
-
-        <h1 className="auth-title">Welcome Back</h1>
-        <p className="auth-subtitle">Sign in to continue your journey</p>
-
-        {error && <div className="auth-error">{error}</div>}
-
-        {banMessage && (
-          <div className="ban-alert">
-            <p>{banMessage}</p>
-          </div>
-        )}
-
-        <form className="auth-form" onSubmit={handleLogin}>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              required
-            />
+      <div className="auth-left">
+        <div className="auth-content">
+          <div className="auth-logo">
+            <img src={logo} alt="GeoConnect Logo" />
+            <span>Geo<span className="logo-accent">Connect</span></span>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-            />
+          <h1 className="auth-title">Welcome back!</h1>
+          <p className="auth-subtitle">Enter your credentials to access your account</p>
+
+          {error && <div className="auth-error">{error}</div>}
+
+          {banMessage && (
+            <div className="ban-alert">
+              <p>{banMessage}</p>
+            </div>
+          )}
+
+          <form className="auth-form" onSubmit={handleLogin}>
+            <div className="form-group">
+              <label htmlFor="email">Email address</label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+
+            <div className="forgot-password" onClick={handleForgotPassword}>
+              Forgot password
+            </div>
+
+            <div className="remember-me">
+              <input 
+                type="checkbox" 
+                id="remember" 
+                checked={rememberMe}
+                onChange={() => setRememberMe(!rememberMe)}
+              />
+              <label htmlFor="remember">Remember for 30 days</label>
+            </div>
+
+            <button
+              type="submit"
+              className="auth-button primary-button"
+              disabled={loading}
+            >
+              {loading ? "Signing in..." : "Login"}
+            </button>
+          </form>
+
+          <div className="auth-divider">
+            <span>Or</span>
           </div>
 
-          <div className="forgot-password" onClick={handleForgotPassword}>
-            Forgot Password?
+          <div className="social-buttons">
+            <button onClick={handleGoogleLogin} className="google-button">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21.8,10.4h-8.5v3.3h4.8c-0.5,2.3-2.2,3.5-4.8,3.5c-2.9,0-5.3-2.3-5.3-5.3s2.4-5.3,5.3-5.3c1.3,0,2.5,0.5,3.5,1.3 l2.5-2.5c-1.6-1.4-3.7-2.2-5.9-2.2c-5,0-9,4-9,9s4,9,9,9c7.2,0,8.9-6.3,8.2-10.9C21.9,10.4,21.8,10.4,21.8,10.4z" />
+              </svg>
+              Sign in with Google
+            </button>
+            <button className="apple-button">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.6,13.8c0,3.6,2.5,5.1,2.5,5.1s-2.7,4-4.6,4c-1.8,0-2.3-1.1-4.3-1.1c-2,0-2.6,1.1-4.3,1.1 c-1.9,0-4.7-4.3-4.7-9.4c0-5,3.5-7.5,6.4-7.5c1.6,0,2.8,1.1,4.3,1.1c1.4,0,2.8-1.1,4.3-1.1C20.4,7.3,17.6,10.7,17.6,13.8z M14.5,5 c0.7-0.9,1.3-2.2,1.1-3.5c-1,0.1-2.3,0.8-3,1.7c-0.7,0.8-1.3,2.1-1,3.4C12.8,6.6,13.8,5.9,14.5,5z" />
+              </svg>
+              Sign in with Apple
+            </button>
           </div>
 
-          <button
-            type="submit"
-            className="auth-button primary-button"
-            disabled={loading}
-          >
-            {loading ? "Signing in..." : "Sign In"}
-          </button>
-        </form>
-
-        <div className="auth-divider">
-          <span>or</span>
-        </div>
-
-        <button onClick={handleGoogleLogin} className="auth-button google-button">
-          <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
-            <g transform="matrix(1, 0, 0, 1, 0, 0)">
-              <path d="M21.35,11.1H12v3.21h5.59c-0.54,2.72-2.66,4.41-5.59,4.41c-3.42,0-6.19-2.69-6.19-6.01s2.77-6.01,6.19-6.01 c1.3,0,2.58,0.39,3.71,1.14l2.45-2.45C16.18,3.63,14.14,2.9,12,2.9c-5.03,0-9.1,4.07-9.1,9.1s4.07,9.1,9.1,9.1 c5.03,0,8.55-3.63,8.55-8.73C20.55,11.94,21.03,11.1,21.35,11.1z" />
-            </g>
-          </svg>
-          Sign in with Google
-        </button>
-
-        <div className="auth-footer">
-          Don't have an account?{" "}
-          <span className="auth-link" onClick={handleSignUp}>
-            Create Account
-          </span>
+          <div className="auth-footer">
+            Don't have an account?{" "}
+            <span className="auth-link" onClick={handleSignUp}>
+              Sign Up
+            </span>
+          </div>
         </div>
       </div>
-      {/* Add ToastContainer to render toasts */}
+      <div className="auth-right">
+        <div className="slideshow">
+          <div className={`slideshow-item ${activeSlide === 0 ? 'active' : ''}`}></div>
+          <div className={`slideshow-item ${activeSlide === 1 ? 'active' : ''}`}></div>
+          <div className={`slideshow-item ${activeSlide === 2 ? 'active' : ''}`}></div>
+          <div className={`slideshow-item ${activeSlide === 3 ? 'active' : ''}`}></div>
+        </div>
+      </div>
       <ToastContainer />
     </div>
   );
