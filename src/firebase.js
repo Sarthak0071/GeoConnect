@@ -9,7 +9,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyD3s6E5DpyPPs5R25NdmMgd11BvurAohXI",
   authDomain: "geoconnect-97c66.firebaseapp.com",
   projectId: "geoconnect-97c66",
-  storageBucket: "geoconnect-97c66.firebasestorage.app",
+  storageBucket: "geoconnect-97c66.appspot.com",
   messagingSenderId: "661133239826",
   appId: "1:661133239826:web:1cb371d16444cbf3769acb",
   measurementId: "G-YT6LC3CP03"
