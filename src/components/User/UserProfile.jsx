@@ -10,6 +10,7 @@ const UserProfile = () => {
   const [editedName, setEditedName] = useState("");
   const [editedDob, setEditedDob] = useState("");
   const [editedDescription, setEditedDescription] = useState("");
+  const [shareLocation, setShareLocation] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -37,6 +38,7 @@ const UserProfile = () => {
           setEditedName(data.name || "");
           setEditedDob(data.dob || "");
           setEditedDescription(data.description || "");
+          setShareLocation(data.shareLocation || false);
           console.log("Fetched user data:", data);
         } else {
           console.log("No user data found in Firestore.");
@@ -108,6 +110,7 @@ const UserProfile = () => {
         name: editedName,
         dob: editedDob,
         description: editedDescription,
+        shareLocation: shareLocation,
       };
 
       // If there's a new image, convert it to base64 and store it
@@ -144,10 +147,16 @@ const UserProfile = () => {
     setSaveLoading(false);
   };
 
+  const toggleLocationSharing = async () => {
+    if (!isEditing) return;
+    setShareLocation(!shareLocation);
+  };
+
   const handleCancelClick = () => {
     setEditedName(userData.name || "");
     setEditedDob(userData.dob || "");
     setEditedDescription(userData.description || "");
+    setShareLocation(userData.shareLocation || false);
     setImageFile(null);
     setImagePreview(null);
     setIsEditing(false);
@@ -336,6 +345,29 @@ const UserProfile = () => {
               ) : (
                 <span className="info-value description-value">
                   {userData.description || "Not set"}
+                </span>
+              )}
+            </div>
+
+            <div className="info-item">
+              <span className="info-label">Share My Location</span>
+              {isEditing ? (
+                <div className="toggle-container">
+                  <label className="toggle-switch">
+                    <input
+                      type="checkbox"
+                      checked={shareLocation}
+                      onChange={toggleLocationSharing}
+                    />
+                    <span className="toggle-slider"></span>
+                  </label>
+                  <span className="toggle-label">
+                    {shareLocation ? "Enabled" : "Disabled"}
+                  </span>
+                </div>
+              ) : (
+                <span className="info-value">
+                  {userData.shareLocation ? "Enabled" : "Disabled"}
                 </span>
               )}
             </div>
