@@ -18,7 +18,7 @@ const NearbyUsers = () => {
   const unsubscribeRef = useRef(null);
   const dataFetchedRef = useRef(false);
   const previousNearbyUsersRef = useRef([]);
-
+  
   useEffect(() => {
     if (!auth.currentUser) return;
     const userRef = doc(db, "users", auth.currentUser.uid);
@@ -59,7 +59,9 @@ const NearbyUsers = () => {
                   !user.lat ||
                   !user.lng ||
                   user.uid === auth.currentUser.uid ||
-                  blockedUsers.includes(user.uid)
+                  blockedUsers.includes(user.uid) ||
+                  user.shareLocation === false || // Filter out users who have disabled location sharing
+                  user.role === "admin" // Filter out admin users
                 )
                   return false;
                 const distance = getDistance(

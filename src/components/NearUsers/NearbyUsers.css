@@ -17,6 +17,13 @@
   background-color: #2980b9;
 }
 
+/* Responsive styles */
+@media (max-width: 1204px) {
+  .nearby-container {
+    display: none;
+  }
+}
+
 /* Overlay for popup */
 .nearby-popup-overlay {
   position: fixed;
