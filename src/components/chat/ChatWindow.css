@@ -172,7 +172,7 @@
 .Message.sent {
   align-self: flex-end;
   background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-  color: var(--text-light);
+  color: white;
   border-bottom-right-radius: 0;
 }
 
