@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect, useRef } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db, auth } from "../../firebase";
@@ -50,10 +48,16 @@ const ChatWindow = ({
             setOtherUserProfileImage(userData.imageData);
           } else if (userData.imageURL) {
             setOtherUserProfileImage(userData.imageURL);
+          } else {
+            // No image available, use null to show the fallback
+            setOtherUserProfileImage(null);
           }
+        } else {
+          setOtherUserProfileImage(null);
         }
       } catch (err) {
         console.error("Error fetching user profile image:", err);
+        setOtherUserProfileImage(null);
       }
     };
     
@@ -162,6 +166,11 @@ const ChatWindow = ({
           <div 
             className="ChatUserAvatar"
             style={otherUserProfileImage ? { backgroundImage: `url(${otherUserProfileImage})` } : null}
+            onError={(e) => {
+              console.error("Failed to load profile image");
+              e.target.style.backgroundImage = "none";
+              setOtherUserProfileImage(null);
+            }}
           >
             {!otherUserProfileImage && otherUserName ? otherUserName.charAt(0).toUpperCase() : ""}
           </div>
