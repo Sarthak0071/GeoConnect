@@ -59,10 +59,18 @@ const ChatSidebar = ({
               imageData[userId] = userData.imageData;
             } else if (userData.imageURL) {
               imageData[userId] = userData.imageURL;
+            } else {
+              // No image found, set to null to display fallback
+              imageData[userId] = null;
             }
+          } else {
+            // User document doesn't exist, set to null
+            imageData[userId] = null;
           }
         } catch (err) {
           console.error(`Error fetching image for user ${userId}:`, err);
+          // Set to null on error to display fallback
+          imageData[userId] = null;
         }
       }
       
@@ -186,14 +194,16 @@ const ChatSidebar = ({
       return (
         <img 
           src={userImage} 
-          alt={chat.otherUserName} 
+          alt={chat.otherUserName || "User"} 
           className="UserAvatar" 
           onError={(e) => {
-            e.target.onerror = null;
-            e.target.innerHTML = chat.otherUserName ? chat.otherUserName.charAt(0).toUpperCase() : "U";
-            e.target.style.display = "flex";
-            e.target.style.alignItems = "center";
-            e.target.style.justifyContent = "center";
+            console.error("Failed to load user image");
+            e.target.onerror = null; // Prevent infinite error loop
+            // Replace with fallback
+            const fallbackElement = document.createElement('div');
+            fallbackElement.className = "UserAvatar";
+            fallbackElement.textContent = chat.otherUserName ? chat.otherUserName.charAt(0).toUpperCase() : "U";
+            e.target.parentNode.replaceChild(fallbackElement, e.target);
           }}
         />
       );
