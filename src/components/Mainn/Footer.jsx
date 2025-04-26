@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import { subscribeToChats } from "../chat/chatUtils";
+import { toast } from 'react-toastify';
 
 const Footer = ({ handleNavigation }) => {
   const navigate = useNavigate();
@@ -10,12 +11,25 @@ const Footer = ({ handleNavigation }) => {
 
   // Subscribe to chats to calculate total unread messages
   useEffect(() => {
-    if (!auth.currentUser) return; // Ensure user is authenticated
-    const unsubscribe = subscribeToChats(auth.currentUser.uid, (chats) => {
-      const total = chats.reduce((sum, chat) => sum + (chat.unreadCount || 0), 0);
-      setUnreadTotal(total);
-    });
-    return () => unsubscribe(); // Cleanup subscription on unmount
+    let unsubscribe = null;
+    
+    if (auth.currentUser) {
+      try {
+        unsubscribe = subscribeToChats(auth.currentUser.uid, (chats) => {
+          const total = chats.reduce((sum, chat) => sum + (chat.unreadCount || 0), 0);
+          setUnreadTotal(total);
+        });
+      } catch (error) {
+        console.error("Error subscribing to chats:", error);
+      }
+    }
+    
+    // Cleanup subscription when component unmounts
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
 
   // Define handleLogout
