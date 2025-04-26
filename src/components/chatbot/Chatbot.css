@@ -247,16 +247,26 @@
     }
   }
   
-  @media (max-width: 480px) {
-    .Ai_chatbot_window {
-      width: 280px;
-      height: 400px;
-      bottom: 10px;
-      right: 10px;
+  @media (max-width: 1204px) {
+    /* Hide the original chatbot toggle button when in responsive mode */
+    .Ai_chatbot_toggle {
+      display: none;
     }
     
-    .Ai_chatbot_toggle {
-      padding: 10px 20px;
-      font-size: 14px;
+    /* Only show the chatbot window when it's open */
+    .Ai_chatbot_window {
+      width: 85vw;
+      max-width: 350px;
+      height: 70vh;
+      max-height: 500px;
+      bottom: 70px;
+      right: 10px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .Ai_chatbot_window {
+      width: 90vw;
+      height: 60vh;
     }
   }
