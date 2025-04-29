@@ -1,4 +1,3 @@
-
 import React from "react";
 import "./LiveTracking.css";
 
@@ -20,8 +19,7 @@ const UserDetails = ({ user, onNavigate }) => {
       {user ? (
         <div className="user-details-card">
           <div className="user-header">
-            <img src={user.profilePic || "https://via.placeholder.com/64"} alt="User" />
-            <div>
+            <div className="user-details">
               <h3>{user.name || "Anonymous User"}</h3>
               <p>{user.email || "No email"}</p>
             </div>
