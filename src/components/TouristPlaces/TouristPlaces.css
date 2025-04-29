@@ -207,6 +207,19 @@
   background: linear-gradient(135deg, #258cd1, #226a9c);
 }
 
+/* Mobile Tourist Places Styles */
+.mobile-tourist-places .tourist-places-container {
+  height: 80vh;
+  max-height: 90vh;
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+.mobile-tourist-places .tourist-places-header {
+  padding: 15px 60px 15px 20px; /* Extra padding right for the close button */
+  border-radius: 12px 12px 0 0;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .place-actions {
