@@ -121,6 +121,26 @@
     border-radius: 50%;
     object-fit: cover;
   }
+
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .avatar-fallback {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #3b82f6;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
   
   .status-badge {
     padding: 4px 8px;
@@ -155,6 +175,25 @@
     cursor: pointer;
     transition: all 0.2s;
     border: none;
+    text-decoration: none;
+  }
+  
+  .view-btn {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+  
+  .view-btn:hover {
+    background-color: #bfdbfe;
+  }
+  
+  .track-btn {
+    background-color: #e0f2fe;
+    color: #0369a1;
+  }
+  
+  .track-btn:hover {
+    background-color: #bae6fd;
   }
   
   .ban-btn {
