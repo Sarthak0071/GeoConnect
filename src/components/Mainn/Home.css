@@ -58,7 +58,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
+  padding: 15px 25px;
   background: linear-gradient(to right, #2193b0, #6dd5ed);
   color: white;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -71,9 +71,8 @@ body {
 }
 
 .logo {
-  height: 50px;
+  height: 42px;
   width: auto;
-  margin-right: 15px;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
@@ -108,8 +107,8 @@ body {
 }
 
 .profile-icon-btn {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   border: none;
   background: rgba(255, 255, 255, 0.2);
   color: white;
@@ -119,7 +118,8 @@ body {
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  font-size: 22px;
+  font-size: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .profile-icon-btn:hover {
@@ -184,7 +184,7 @@ body {
 
 .right-panel {
   width: 70%;
-  padding: 20px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -192,12 +192,90 @@ body {
   position: relative;
 }
 
+/* Famous Places Hamburger Menu for Responsive */
+.famous-places-hamburger {
+  display: none;
+  position: fixed;
+  top: 75px;
+  left: 16px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border-radius: 8px;
+  padding: 12px 15px;
+  z-index: 1000;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.famous-places-hamburger i {
+  font-size: 18px;
+}
+
+.famous-places-hamburger:hover {
+  background: linear-gradient(135deg, #258cd1, #226a9c);
+  transform: translateY(-2px);
+}
+
+/* Mobile Tourist Places */
+.mobile-tourist-places {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1001;
+  animation: fadeIn 0.3s ease;
+}
+
+.mobile-tourist-places-content {
+  position: relative;
+  width: 90%;
+  max-width: 500px;
+  max-height: 85vh;
+  margin: 40px auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: slideUp 0.4s ease;
+}
+
+.mobile-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.mobile-close-btn:hover {
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(1.1);
+}
+
 /* Footer */
 .home-footer {
   display: flex;
   justify-content: center;
-  gap: 40px;
-  padding: 15px;
+  gap: 30px;
+  padding: 12px;
   background: linear-gradient(to right, #2c3e50, #4a6b8a);
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -206,7 +284,7 @@ body {
 .desktop-footer {
   display: flex;
   justify-content: center;
-  gap: 40px;
+  gap: 30px;
   width: 100%;
 }
 
@@ -218,23 +296,25 @@ body {
   align-items: center;
 }
 
-.mobile-menu-btn {
+.mobile-menu-btn, .chatbot-btn {
   background: rgba(255, 255, 255, 0.15);
   color: white;
   border: none;
   border-radius: 50%;
-  width: 45px;
-  height: 45px;
+  width: 42px;
+  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   font-size: 18px;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.mobile-menu-btn:hover {
+.mobile-menu-btn:hover, .chatbot-btn:hover {
   background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
 }
 
 .mobile-menu {
@@ -248,7 +328,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  z-index: 100;
 }
 
 .mobile-menu-item {
@@ -282,25 +361,6 @@ body {
   align-items: center;
   justify-content: center;
   margin-left: 5px;
-}
-
-.chatbot-btn {
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 18px;
-  transition: all 0.3s ease;
-}
-
-.chatbot-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
 }
 
 .footer-btn {
@@ -424,6 +484,17 @@ body {
   transform: scale(1.2);
 }
 
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
 /* Responsive Adjustments */
 @media (max-width: 1024px) {
   .content {
@@ -432,25 +503,58 @@ body {
   
   .left-panel, .right-panel {
     width: 100%;
-    max-height: 50%;
+  }
+  
+  .right-panel {
+    padding: 16px 12px;
   }
 }
 
-@media (max-width: 1204px) {
+@media (max-width: 1211px) {
+  .left-panel {
+    display: none;
+  }
+  
+  .right-panel {
+    width: 100%;
+  }
+  
+  .famous-places-hamburger {
+    display: flex;
+  }
+  
+  /* Fix for LocationControls positioning */
+  .right-panel > div:first-child {
+    margin-top: 55px;
+    margin-bottom: 15px;
+    width: 92%;
+    max-width: 450px;
+  }
+}
+
+@media (max-width: 768px) {
   .home-header {
-    padding: 12px 15px;
+    padding: 12px 16px;
   }
   
   .logo {
-    height: 40px;
+    height: 38px;
   }
   
-  .footer-btn {
-    padding: 10px 15px;
+  .right-panel {
+    padding: 12px 10px;
+  }
+  
+  .famous-places-hamburger {
+    top: 70px;
+    padding: 10px 12px;
+  }
+  
+  .famous-places-hamburger span {
     font-size: 14px;
   }
   
-  /* Show mobile footer and hide desktop footer on small screens */
+  /* Show mobile footer and hide desktop footer */
   .desktop-footer {
     display: none;
   }
@@ -460,38 +564,66 @@ body {
   }
   
   .home-footer {
-    padding: 12px;
-    gap: 15px;
+    padding: 10px;
   }
   
   /* Hide the view nearby users button that appears below the map */
   .nearby-users-btn {
     display: none;
   }
+  
+  /* Adjusted LocationControls positioning */
+  .right-panel > div:first-child {
+    margin-top: 50px;
+    margin-bottom: 12px;
+  }
 }
 
 @media (max-width: 480px) {
   .home-header {
-    padding: 10px;
+    padding: 10px 12px;
   }
   
   .logo {
-    height: 35px;
+    height: 34px;
   }
   
   .profile-icon-btn {
-    width: 38px;
-    height: 38px;
-    font-size: 18px;
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
   }
   
-  .dropdown-menu {
-    top: 48px;
-    right: -5px;
-    min-width: 160px;
+  .famous-places-hamburger {
+    top: 60px;
+    left: 12px;
+    padding: 8px 10px;
+  }
+  
+  .famous-places-hamburger i {
+    font-size: 16px;
+  }
+  
+  .famous-places-hamburger span {
+    font-size: 13px;
+  }
+  
+  .mobile-tourist-places-content {
+    width: 95%;
+    margin: 30px auto;
+  }
+  
+  .right-panel > div:first-child {
+    margin-top: 45px;
+    width: 95%;
+  }
+  
+  .mobile-menu-btn, .chatbot-btn {
+    width: 38px;
+    height: 38px;
   }
   
   .home-footer {
-    padding: 10px;
+    padding: 8px;
   }
 }

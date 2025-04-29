@@ -22,6 +22,7 @@ const Home = () => {
   const [showAboutMe, setShowAboutMe] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const [lastRefreshTimestamp, setLastRefreshTimestamp] = useState(0);
+  const [showMobileTouristPlaces, setShowMobileTouristPlaces] = useState(false);
   
   const location = useLocation();
   const navigate = useNavigate();
@@ -42,7 +43,8 @@ const Home = () => {
     isChangingLocation,
     setIsChangingLocation,
     updateLocation,
-    refreshData
+    refreshData,
+    getCurrentDeviceLocation
   } = useLocationManager();
 
   // Throttled version of refresh data to prevent multiple refreshes
@@ -78,6 +80,10 @@ const Home = () => {
     setMapType("satellite");
   };
 
+  const toggleMobileTouristPlaces = () => {
+    setShowMobileTouristPlaces(!showMobileTouristPlaces);
+  };
+
   if (!isLoaded) return <LoadingScreen />;
 
   return (
@@ -104,6 +110,8 @@ const Home = () => {
             newLocation={newLocation}
             setNewLocation={setNewLocation}
             updateLocation={updateLocation}
+            refreshData={refreshData}
+            getCurrentDeviceLocation={getCurrentDeviceLocation}
           />
           <MapView
             key={`map-${currentLocation?.lat}-${currentLocation?.lng}-${allUserLocations.length}-${touristPlaces.length}`}
@@ -118,6 +126,34 @@ const Home = () => {
           <NearbyUsers />
         </div>
       </div>
+
+      {/* Hamburger menu for famous places at specific screen size */}
+      <div className="famous-places-hamburger" onClick={toggleMobileTouristPlaces}>
+        <i className="fas fa-bars"></i>
+        <span>Click for famous places</span>
+      </div>
+
+      {/* Mobile tourist places overlay */}
+      {showMobileTouristPlaces && (
+        <div className="mobile-tourist-places">
+          <div className="mobile-tourist-places-content">
+            <button 
+              className="mobile-close-btn" 
+              onClick={toggleMobileTouristPlaces}
+              aria-label="Close famous places"
+            >
+              <i className="fas fa-times"></i>
+            </button>
+            <TouristPlacesList
+              touristPlaces={touristPlaces}
+              handleShowOnMap={(place) => {
+                handleShowOnMap(place);
+                toggleMobileTouristPlaces();
+              }}
+            />
+          </div>
+        </div>
+      )}
 
       <Footer handleNavigation={handleNavigation} />
 
