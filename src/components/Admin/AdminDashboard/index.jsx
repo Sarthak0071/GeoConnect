@@ -1,9 +1,7 @@
 import React from "react";
-import AdminSidebar from "../AdminSidebar";
 import DashboardHeader from "./DashboardHeader";
 import StatsCard from "./StatsCard";
 import RecentLocations from "./RecentLocations";
-import SystemOverview from "./SystemOverview";
 import { useUserStats, useRecentLocations } from "../AdminUtils/hooks";
 import "./AdminDashboard.css";
 
@@ -13,7 +11,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-layout">
-      <AdminSidebar />
       <main className="admin-main">
         <DashboardHeader />
         <div className="admin-stats-container">
@@ -42,9 +39,8 @@ const AdminDashboard = () => {
             bgClass="total-icon"
           />
         </div>
-        <div className="admin-content-grid">
+        <div className="admin-content-grid single-column">
           <RecentLocations locations={recentLocations} />
-          <SystemOverview />
         </div>
       </main>
     </div>
