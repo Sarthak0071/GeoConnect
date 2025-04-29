@@ -1,7 +1,7 @@
 import React from "react";
 import "./AdminSidebar.css";
 
-const SidebarHeader = ({ collapsed, onToggle }) => (
+const SidebarHeader = ({ collapsed, onToggle, isMobile = false }) => (
   <div className="sidebar-header">
     <div className="sidebar-logo">
       {!collapsed && (
@@ -12,9 +12,11 @@ const SidebarHeader = ({ collapsed, onToggle }) => (
       )}
       {collapsed && <span className="logo-accent">GC</span>}
     </div>
-    <button className="collapse-btn" onClick={onToggle}>
-      {collapsed ? "→" : "←"}
-    </button>
+    {!isMobile && (
+      <button className="collapse-btn" onClick={onToggle}>
+        {collapsed ? "→" : "←"}
+      </button>
+    )}
   </div>
 );
 
