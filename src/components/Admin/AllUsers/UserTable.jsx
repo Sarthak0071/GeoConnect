@@ -1,5 +1,5 @@
-
 import React from "react";
+import { Link } from "react-router-dom";
 import "./AllUsers.css";
 
 const UserTable = ({ users, onDelete, onBan }) => (
@@ -19,7 +19,6 @@ const UserTable = ({ users, onDelete, onBan }) => (
         {users.map(user => (
           <tr key={user.id} className={user.banned ? "banned-user" : ""}>
             <td className="user-cell">
-              <img src={user.profilePic || "https://via.placeholder.com/32"} alt="User" />
               <span>{user.name || "Anonymous User"}</span>
             </td>
             <td>{user.email || "No email"}</td>
@@ -36,6 +35,13 @@ const UserTable = ({ users, onDelete, onBan }) => (
               }
             </td>
             <td className="actions-cell">
+              <Link 
+                to={`/admin/users/${user.id}`} 
+                className="action-btn view-btn"
+              >
+                <i className="fa fa-eye"></i>
+                View
+              </Link>
               <button 
                 className={`action-btn ${user.banned ? "unban-btn" : "ban-btn"}`}
                 onClick={() => onBan(user)}
