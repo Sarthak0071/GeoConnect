@@ -32,18 +32,6 @@ const Footer = ({ handleNavigation }) => {
     };
   }, []);
 
-  // Define handleLogout
-  const handleLogout = () => {
-    auth.signOut() // Sign out from Firebase
-      .then(() => {
-        localStorage.clear();
-        navigate("/");
-      })
-      .catch((error) => {
-        console.error("Logout error:", error);
-      });
-  };
-
   // Define handleTravelHistoryOpen
   const handleTravelHistoryOpen = () => {
     if (handleNavigation) {
@@ -92,10 +80,6 @@ const Footer = ({ handleNavigation }) => {
     <div className="home-footer">
       {/* Desktop Footer - Original UI preserved */}
       <div className="desktop-footer">
-        <button onClick={handleLogout} className="footer-btn">
-          <i className="fas fa-sign-out-alt"></i> Logout
-        </button>
-        
         <button onClick={handleTravelHistoryOpen} className="footer-btn">
           <i className="fas fa-history"></i> Travel History
         </button>
