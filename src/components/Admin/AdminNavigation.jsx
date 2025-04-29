@@ -7,6 +7,7 @@ import BannedUsers from "./BannedUsers";
 import AdminManagement from "./AdminManagement";
 import LiveTracking from "./LiveTracking";
 import AdminTravelHistory from "./AdminTravelHistory";
+import UserDetail from "./UserDetail";
 
 const AdminNavigation = () => {
   return (
@@ -19,6 +20,7 @@ const AdminNavigation = () => {
         <Route path="/AdminManagement" element={<AdminManagement />} />
         <Route path="/live-tracking" element={<LiveTracking />} />
         <Route path="/travel-history" element={<AdminTravelHistory />} />
+        <Route path="/users/:userId" element={<UserDetail />} />
       </Routes>
     </div>
   );
