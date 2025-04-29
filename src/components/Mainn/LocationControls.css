@@ -1,0 +1,210 @@
+.location-controls {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 600px;
+  transition: all 0.3s ease;
+}
+
+.location-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.location-buttons-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.location-controls h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.current-location-btn {
+  background: linear-gradient(135deg, #00b894, #00a884);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.current-location-btn:hover {
+  background: linear-gradient(135deg, #00a884, #009874);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.current-location-btn i {
+  font-size: 0.9rem;
+}
+
+.change-location-btn {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+
+.change-location-btn:hover {
+  background: linear-gradient(135deg, #258cd1, #226a9c);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.location-change-form {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.location-input {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  width: 100%;
+  font-size: 14px;
+  transition: border 0.2s ease;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.location-input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.location-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.update-btn, .cancel-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.update-btn {
+  background: linear-gradient(to right, #2ecc71, #27ae60);
+  color: white;
+  flex: 1;
+}
+
+.update-btn:hover {
+  background: linear-gradient(to right, #27ae60, #219a52);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.cancel-btn {
+  background: linear-gradient(to right, #e74c3c, #c0392b);
+  color: white;
+  flex: 1;
+}
+
+.cancel-btn:hover {
+  background: linear-gradient(to right, #c0392b, #a33025);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive styles */
+@media (max-width: 1211px) {
+  .location-controls {
+    margin-top: 55px;
+    width: 92%;
+    max-width: 450px;
+  }
+}
+
+@media (max-width: 768px) {
+  .location-controls {
+    padding: 14px;
+    margin-top: 50px;
+    border-radius: 8px;
+  }
+  
+  .location-controls h3 {
+    font-size: 1rem;
+  }
+  
+  .current-location-btn, .change-location-btn {
+    padding: 7px 12px;
+    font-size: 13px;
+  }
+  
+  .location-buttons-group {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .location-controls {
+    padding: 12px;
+    margin-top: 45px;
+    width: 95%;
+  }
+  
+  .location-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .location-buttons-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .current-location-btn, .change-location-btn {
+    flex: 1;
+    justify-content: center;
+    text-align: center;
+    margin-left: 0;
+  }
+  
+  .location-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .update-btn, .cancel-btn {
+    width: 100%;
+    padding: 10px;
+  }
+  
+  .location-input {
+    padding: 10px;
+  }
+} 
