@@ -1,4 +1,3 @@
-
 import React from "react";
 import "./AdminTravelHistory.css";
 
@@ -20,7 +19,6 @@ const UsersList = ({ users, selectedUser, onSelect }) => (
               onClick={() => onSelect(user)}
             >
               <div className="user-info">
-                <img src={user.profilePic || "https://via.placeholder.com/32"} alt="User" />
                 <div className="user-details">
                   <h3>{user.name || "Anonymous User"}</h3>
                   <p>{user.email || "No email"}</p>
