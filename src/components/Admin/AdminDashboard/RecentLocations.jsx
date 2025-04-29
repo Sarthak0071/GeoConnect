@@ -8,12 +8,7 @@ const RecentLocations = ({ locations }) => {
 
   const handleViewUser = (userId) => {
     console.log("Viewing user:", userId);
-    // Optional: navigate(`/admin/users/${userId}`);
-  };
-
-  const handleTrackUser = (userId, lat, lng) => {
-    console.log("Tracking user:", userId, "at", lat, lng);
-    // Optional: navigate(`/admin/track/${userId}`);
+    navigate(`/admin/users/${userId}`);
   };
 
   const handleViewAll = () => {
@@ -42,7 +37,6 @@ const RecentLocations = ({ locations }) => {
             locations.map(location => (
               <tr key={location.id}>
                 <td className="user-cell">
-                  <img src="https://via.placeholder.com/32" alt="User" />
                   <span>{location.username}</span>
                 </td>
                 <td>{location.location}</td>
@@ -53,12 +47,6 @@ const RecentLocations = ({ locations }) => {
                     onClick={() => handleViewUser(location.userId)}
                   >
                     View
-                  </button>
-                  <button
-                    className="action-btn track-btn"
-                    onClick={() => handleTrackUser(location.userId, location.lat, location.lng)}
-                  >
-                    Track
                   </button>
                 </td>
               </tr>

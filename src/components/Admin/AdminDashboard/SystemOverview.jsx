@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { collection, query, where, getDocs, getCountFromServer } from "firebase/firestore";
+import { db } from "../../../firebase"; // Adjust path as needed
 import "./AdminDashboard.css";
 
 const SystemOverview = () => {
@@ -6,6 +8,12 @@ const SystemOverview = () => {
   const [serverLoad, setServerLoad] = useState(75);
   const [activeConnections, setActiveConnections] = useState(92);
   const [storageUsed, setStorageUsed] = useState(45);
+  const [openChats, setOpenChats] = useState(0);
+  const [activeGroups, setActiveGroups] = useState(0);
+
+  useEffect(() => {
+    fetchChatStats();
+  }, []);
 
   useEffect(() => {
     if (timeFilter === "today") {
@@ -22,6 +30,22 @@ const SystemOverview = () => {
       setStorageUsed(63);
     }
   }, [timeFilter]);
+
+  const fetchChatStats = async () => {
+    try {
+      // Count open chats (where isOpen = true)
+      const chatsQuery = query(collection(db, "chats"), where("isOpen", "==", true));
+      const chatSnapshot = await getCountFromServer(chatsQuery);
+      setOpenChats(chatSnapshot.data().count);
+
+      // Count active groups
+      const groupsQuery = query(collection(db, "groups"), where("isActive", "==", true));
+      const groupSnapshot = await getCountFromServer(groupsQuery);
+      setActiveGroups(groupSnapshot.data().count);
+    } catch (error) {
+      console.error("Error fetching chat statistics:", error);
+    }
+  };
 
   return (
     <div className="admin-panel system-stats">
@@ -69,6 +93,18 @@ const SystemOverview = () => {
             <div className="progress-text">{storageUsed}%</div>
           </div>
           <p>Storage Used</p>
+        </div>
+        <div className="stat-group">
+          <div className="stat-box">
+            <div className="stat-value">{openChats}</div>
+            <p>Open Chats</p>
+          </div>
+        </div>
+        <div className="stat-group">
+          <div className="stat-box">
+            <div className="stat-value">{activeGroups}</div>
+            <p>Active Groups</p>
+          </div>
         </div>
       </div>
     </div>
