@@ -1,13 +1,5 @@
-
-
-
-
-
-
-
 import React, { useState, useEffect } from "react";
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from "@react-google-maps/api";
-import AdminSidebar from "../AdminSidebar";
 import SearchBar from "../Shared/SearchBar";
 import UsersList from "./UsersList";
 import TravelHistoryList from "./TravelHistoryList";
@@ -102,7 +94,6 @@ const AdminTravelHistory = () => {
 
   return (
     <div className="admin-layout">
-      <AdminSidebar />
       <main className="admin-main">
         <div className="admin-header">
           <h1>User Travel History</h1>
