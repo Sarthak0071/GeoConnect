@@ -1,0 +1,56 @@
+/* InfoWindow styling */
+.info-window-content {
+  padding: 5px;
+  min-width: 200px;
+  position: relative;
+}
+
+.info-window-content h3 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #343a40;
+  padding-right: 20px; /* Make space for the close button */
+}
+
+.close-info-window {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: #f0f0f0;
+  color: #555;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+  padding: 0;
+  line-height: 1;
+}
+
+.close-info-window:hover {
+  background: #e0e0e0;
+  color: #333;
+}
+
+/* Improve Google Maps InfoWindow styling */
+.gm-style-iw {
+  padding: 12px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.3) !important;
+}
+
+.gm-style-iw-d {
+  overflow: hidden !important;
+  max-width: 300px !important;
+}
+
+/* Hide default InfoWindow close button to use our custom one */
+.gm-ui-hover-effect {
+  display: none !important;
+} 
