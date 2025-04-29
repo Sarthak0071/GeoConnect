@@ -166,35 +166,108 @@ export const useLocationManager = () => {
     }
   };
 
-  // Function to refresh data when returning from other screens
-  const refreshData = useCallback(async () => {
-    // Custom handler to update user locations only if they've changed
-    const handleUserLocationsUpdate = (newLocations) => {
-      if (!isEqual(newLocations, prevUserLocationsRef.current)) {
-        prevUserLocationsRef.current = newLocations;
-        setAllUserLocations(newLocations);
+  // Function to get current location and update everything
+  const getCurrentDeviceLocation = useCallback(() => {
+    return new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+            setCurrentLocation({ lat: latitude, lng: longitude });
+            // Reverse geocode to get city name
+            const city = await reverseGeocode(latitude, longitude, API_KEY);
+            setMainCity(city || "Unknown Location");
+            
+            if (city) {
+              const location = { locationName: city, lat: latitude, lng: longitude };
+              setCurrentLocation(location);
+              setLatestLocationData(location);
+              
+              // Get user data to check role and shareLocation preference
+              const userData = await fetchUserData();
+              
+              // Don't update location data for admin users
+              if (userData?.role === "admin") {
+                console.log("Admin user - skipping location update");
+                resolve(location);
+                return;
+              }
+              
+              await storeLocationData(location, "visitedLocations");
+              
+              // Only update currentSelected if user has location sharing enabled
+              if (userData?.shareLocation !== false) {
+                await storeLocationData(location, "currentSelected");
+              }
+        
+              const places = await fetchTouristPlacesFromServer(city, API_KEY);
+              
+              // Only update tourist places if they've changed
+              if (!isEqual(places, prevTouristPlacesRef.current)) {
+                prevTouristPlacesRef.current = places;
+                setTouristPlaces(places);
+              }
+              
+              resolve(location);
+            } else {
+              reject(new Error("Could not determine city from coordinates"));
+            }
+          },
+          (error) => {
+            console.error("Error getting location:", error);
+            handleFetchIPLocation()
+              .then(resolve)
+              .catch(reject);
+          },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+      } else {
+        handleFetchIPLocation()
+          .then(resolve)
+          .catch(reject);
       }
-    };
-    
-    // Refresh all users' locations with the custom handler
-    const unsubscribe = fetchAllUsersLocations(handleUserLocationsUpdate);
-    
-    // Refresh tourist places if we have location data
-    if (latestLocationData) {
-      const places = await fetchTouristPlacesFromServer(
-        latestLocationData.locationName, 
-        API_KEY
-      );
+    });
+  }, []);
+  
+  // Enhanced refresh data function to reset to current location when needed
+  const refreshData = useCallback(async (resetToCurrentDevice = false) => {
+    if (resetToCurrentDevice) {
+      try {
+        // Reset to the device's current location
+        await getCurrentDeviceLocation();
+        console.log("Reset to current device location");
+      } catch (error) {
+        console.error("Error resetting to current location:", error);
+      }
+    } else {
+      // Custom handler to update user locations only if they've changed
+      const handleUserLocationsUpdate = (newLocations) => {
+        if (!isEqual(newLocations, prevUserLocationsRef.current)) {
+          prevUserLocationsRef.current = newLocations;
+          setAllUserLocations(newLocations);
+        }
+      };
       
-      // Only update tourist places if they've changed
-      if (!isEqual(places, prevTouristPlacesRef.current)) {
-        prevTouristPlacesRef.current = places;
-        setTouristPlaces(places);
+      // Refresh all users' locations with the custom handler
+      const unsubscribe = fetchAllUsersLocations(handleUserLocationsUpdate);
+      
+      // Refresh tourist places if we have location data
+      if (latestLocationData) {
+        const places = await fetchTouristPlacesFromServer(
+          latestLocationData.locationName, 
+          API_KEY
+        );
+        
+        // Only update tourist places if they've changed
+        if (!isEqual(places, prevTouristPlacesRef.current)) {
+          prevTouristPlacesRef.current = places;
+          setTouristPlaces(places);
+        }
       }
+      
+      return unsubscribe;
     }
-    
-    return unsubscribe;
-  }, [latestLocationData]);
+  }, [latestLocationData, getCurrentDeviceLocation]);
 
   useEffect(() => {
     // Check if user is admin first
@@ -250,7 +323,8 @@ export const useLocationManager = () => {
     setIsChangingLocation,
     updateLocation,
     refreshData,
-    userSharesLocation
+    userSharesLocation,
+    getCurrentDeviceLocation
   };
 };
 
