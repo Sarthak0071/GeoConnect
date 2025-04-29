@@ -1,4 +1,3 @@
-
 import React from "react";
 import "./AdminTravelHistory.css";
 
@@ -30,7 +29,6 @@ const TravelHistoryList = ({ user, history, selectedLocation, onLocationClick })
         ) : (
           <div className="travel-history-wrapper">
             <div className="user-header">
-              <img src={user.profilePic || "https://via.placeholder.com/32"} alt="User" />
               <h3>{user.name || "Anonymous User"}'s Travel History</h3>
             </div>
             <div className="location-history-wrapper">
