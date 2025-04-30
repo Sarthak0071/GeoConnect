@@ -115,7 +115,7 @@ function App() {
         <Route 
           path="/home" 
           element={
-            <ProtectedRoute>
+            <ProtectedRoute restrictedRoles={["admin"]}>
               <Home />
             </ProtectedRoute>
           } 
@@ -124,7 +124,7 @@ function App() {
         <Route 
           path="/chat/:userId" 
           element={
-            <ProtectedRoute>
+            <ProtectedRoute restrictedRoles={["admin"]}>
               <Chat />
             </ProtectedRoute>
           } 
@@ -133,7 +133,7 @@ function App() {
         <Route 
           path="/chat" 
           element={
-            <ProtectedRoute>
+            <ProtectedRoute restrictedRoles={["admin"]}>
               <Chat />
             </ProtectedRoute>
           } 
@@ -142,7 +142,7 @@ function App() {
         <Route 
           path="/nearby-users" 
           element={
-            <ProtectedRoute>
+            <ProtectedRoute restrictedRoles={["admin"]}>
               <NearbyUsers />
             </ProtectedRoute>
           } 
@@ -151,7 +151,7 @@ function App() {
         <Route 
           path="/user-profile" 
           element={
-            <ProtectedRoute>
+            <ProtectedRoute restrictedRoles={["admin"]}>
               <UserProfile />
             </ProtectedRoute>
           } 
@@ -160,7 +160,7 @@ function App() {
         <Route 
           path="/travel-history" 
           element={
-            <ProtectedRoute>
+            <ProtectedRoute restrictedRoles={["admin"]}>
               <TravelHistory />
             </ProtectedRoute>
           } 
