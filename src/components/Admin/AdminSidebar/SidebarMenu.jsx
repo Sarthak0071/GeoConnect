@@ -1,4 +1,3 @@
-
 import React from "react";
 import { NavLink } from "react-router-dom";
 import "./AdminSidebar.css";
@@ -54,17 +53,6 @@ const SidebarMenu = ({ collapsed }) => (
           <i className="fa fa-history"></i>
         </div>
         {!collapsed && <span>Travel History</span>}
-      </NavLink>
-
-      <div className="menu-section">
-        {!collapsed && <span className="section-title">System</span>}
-      </div>
-
-      <NavLink to="/admin/settings" className="menu-item">
-        <div className="menu-icon">
-          <i className="fa fa-cog"></i>
-        </div>
-        {!collapsed && <span>Settings</span>}
       </NavLink>
     </nav>
   </div>
