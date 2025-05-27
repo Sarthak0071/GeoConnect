@@ -7,7 +7,7 @@ import UserDetails from "./UserDetails";
 import { useLiveUsers, useFilteredUsers } from "../AdminUtils/liveTrackingHooks";
 import "./LiveTracking.css";
 
-const API_KEY = "AIzaSyDGanuI81nlP5V5XgaGxl4Dxc3k7X-E0TQ"; 
+const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 const LiveTracking = () => {
   const { users, loading, error } = useLiveUsers();

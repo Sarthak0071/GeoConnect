@@ -386,7 +386,7 @@ body {
 }
 
 .chat-btn {
-  padding-right: 35px; /* Extra padding on the right for the notification */
+  padding-right: 20px; /* Extra padding on the right for the notification */
 }
 
 .notification-badge {

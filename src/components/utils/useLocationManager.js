@@ -14,9 +14,12 @@ import {
 import { fetchTouristPlacesFromServer } from "./touristPlacesUtils";
 import { auth } from "../../firebase";
 
-const API_KEY = "AIzaSyDGanuI81nlP5V5XgaGxl4Dxc3k7X-E0TQ"; 
+const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
-// Helper function for deep comparison
+/**
+ * Helper function for deep comparison of objects
+ * Used to prevent unnecessary state updates when objects haven't changed
+ */
 const isEqual = (obj1, obj2) => {
   if (obj1 === obj2) return true;
   if (!obj1 || !obj2) return false;
@@ -30,6 +33,10 @@ const isEqual = (obj1, obj2) => {
   return keys1.every(key => isEqual(obj1[key], obj2[key]));
 };
 
+/**
+ * Custom hook to manage location data, user tracking, and tourist places
+ * Provides functions to get, update and track locations
+ */
 export const useLocationManager = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [allUserLocations, setAllUserLocations] = useState([]);
@@ -39,12 +46,18 @@ export const useLocationManager = () => {
   const [isChangingLocation, setIsChangingLocation] = useState(false);
   const [latestLocationData, setLatestLocationData] = useState(null);
   const [userSharesLocation, setUserSharesLocation] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
   
   // Refs to store previous values for comparison
   const prevUserLocationsRef = useRef([]);
   const prevTouristPlacesRef = useRef([]);
 
-  // Check if user has location sharing enabled
+  // Function to clear error message
+  const clearErrorMessage = () => setErrorMessage("");
+  
+  /**
+   * Check if user has location sharing enabled and set state accordingly
+   */
   useEffect(() => {
     if (!auth.currentUser) return;
     
@@ -56,7 +69,10 @@ export const useLocationManager = () => {
     checkLocationSharing();
   }, []);
 
-  // get the name of city from lat and lng
+  /**
+   * Gets city name from latitude and longitude coordinates
+   * Updates map marker and fetches tourist places
+   */
   const handleReverseGeocode = async (lat, lng) => {
     const city = await reverseGeocode(lat, lng, API_KEY);
     setMainCity(city || "Unknown Location");
@@ -94,8 +110,10 @@ export const useLocationManager = () => {
     }
   };
 
-  // if cannot get the nam of city then use Internat ip address to get the location
-  
+  /**
+   * Fallback method to get location from IP address
+   * Used when geolocation API is unavailable or denied
+   */
   const handleFetchIPLocation = async () => {
     const location = await fetchIPLocation();
     if (location) {
@@ -104,10 +122,14 @@ export const useLocationManager = () => {
     }
   };
 
-  // finds the location what user enters and update it  
+  /**
+   * Updates location based on user input
+   * Handles geocoding the entered location name to coordinates
+   * Shows error message if location not found
+   */
   const updateLocation = async () => {
     if (!newLocation.trim()) {
-      alert("Please enter a location!");
+      setErrorMessage("Please enter a location!");
       return;
     }
     
@@ -158,15 +180,19 @@ export const useLocationManager = () => {
         // Cleanup the temporary listener
         setTimeout(() => unsubscribe(), 1000);
       } else {
-        alert("Location not found.");
+        setErrorMessage("Location not found.");
       }
     } catch (error) {
       console.error("Error updating location manually:", error);
-      alert("Error updating location.");
+      setErrorMessage("Error updating location.");
     }
   };
 
-  // Function to get current location and update everything
+  /**
+   * Gets the device's current geolocation
+   * Uses browser's navigator.geolocation API with fallback to IP location
+   * Returns a Promise that resolves with the location data
+   */
   const getCurrentDeviceLocation = useCallback(() => {
     return new Promise((resolve, reject) => {
       if (navigator.geolocation) {
@@ -229,7 +255,10 @@ export const useLocationManager = () => {
     });
   }, []);
   
-  // Enhanced refresh data function to reset to current location when needed
+  /**
+   * Refreshes location data and tourist places
+   * Option to reset to current device location or just refresh data
+   */
   const refreshData = useCallback(async (resetToCurrentDevice = false) => {
     if (resetToCurrentDevice) {
       try {
@@ -269,6 +298,10 @@ export const useLocationManager = () => {
     }
   }, [latestLocationData, getCurrentDeviceLocation]);
 
+  /**
+   * Initializes location tracking when the component mounts
+   * Checks user role and sets up listeners for user locations
+   */
   useEffect(() => {
     // Check if user is admin first
     const checkUserRole = async () => {
@@ -312,6 +345,7 @@ export const useLocationManager = () => {
     checkUserRole();
   }, []);
 
+  // Return all the state and functions needed by components
   return {
     currentLocation,
     allUserLocations,
@@ -324,7 +358,9 @@ export const useLocationManager = () => {
     updateLocation,
     refreshData,
     userSharesLocation,
-    getCurrentDeviceLocation
+    getCurrentDeviceLocation,
+    errorMessage,
+    clearErrorMessage
   };
 };
 

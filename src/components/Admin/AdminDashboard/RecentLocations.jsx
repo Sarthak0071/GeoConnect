@@ -28,7 +28,6 @@ const RecentLocations = ({ locations }) => {
           <tr>
             <th>User</th>
             <th>Location</th>
-            <th>Time</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -40,7 +39,6 @@ const RecentLocations = ({ locations }) => {
                   <span>{location.username}</span>
                 </td>
                 <td>{location.location}</td>
-                <td>{formatTimestamp(location.timestamp)}</td>
                 <td>
                   <button
                     className="action-btn view-btn"
@@ -53,7 +51,7 @@ const RecentLocations = ({ locations }) => {
             ))
           ) : (
             <tr>
-              <td colSpan="4">No users found</td>
+              <td colSpan="3">No users found</td>
             </tr>
           )}
         </tbody>

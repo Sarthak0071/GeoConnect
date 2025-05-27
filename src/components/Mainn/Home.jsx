@@ -11,6 +11,7 @@ import Footer from "./Footer";
 import LoadingScreen from "./LoadingScreen";
 import ProfileOverlay from "./ProfileOverlay";
 import Chatbot from "../chatbot/Chatbot";
+import LocationNotification from "./LocationNotification";
 import "./Home.css";
 import logo from "./logo.png";
 
@@ -29,7 +30,8 @@ const Home = () => {
 
   // Initialize Google Maps API
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyDGanuI81nlP5V5XgaGxl4Dxc3k7X-E0TQ", id: 'google-map-script',
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    id: 'google-map-script',
   });
 
   // Custom hook for location management
@@ -44,14 +46,16 @@ const Home = () => {
     setIsChangingLocation,
     updateLocation,
     refreshData,
-    getCurrentDeviceLocation
+    getCurrentDeviceLocation,
+    errorMessage,
+    clearErrorMessage
   } = useLocationManager();
 
   // Throttled version of refresh data to prevent multiple refreshes
   const throttledRefreshData = useCallback(() => {
     const now = Date.now();
     // Only refresh if it's been at least 2 seconds since the last refresh
-    if (now - lastRefreshTimestamp > 2000) {
+    if (now - lastRefreshTimestamp > 20000) {
       refreshData();
       setLastRefreshTimestamp(now);
     }
@@ -164,6 +168,19 @@ const Home = () => {
           onClose={() => setShowAboutMe(false)}
         />
       )}
+
+      {!isLoaded && (
+        <LoadingScreen
+          logo={logo}
+          loadingText="Loading Maps..."
+          isInitial={!initialized}
+        />
+      )}
+
+      <LocationNotification
+        message={errorMessage}
+        clearMessage={clearErrorMessage}
+      />
     </div>
   );
 };

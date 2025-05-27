@@ -1,4 +1,5 @@
 // firestoreUtils.js
+// Collection of utility functions for interacting with Firestore database
 import { auth, db } from "../../firebase";
 import { 
   doc, 
@@ -18,7 +19,9 @@ import {
 import { deleteUser as deleteAuthUser } from "firebase/auth";
 
 
-// location = spot , field = visited/current selected  
+// Stores a location for the current user in Firestore
+// location: Object containing location data (lat, lng, locationName)
+// field: Type of location data ('visitedLocations', 'currentSelected', 'manuallySelected')
 export const storeLocationData = async (location, field) => {
   try {
     const user = auth.currentUser;   
@@ -56,6 +59,8 @@ export const storeLocationData = async (location, field) => {
   }
 };
 
+// Fetches and subscribes to all users' current locations from Firestore
+// Returns an unsubscribe function to stop listening for updates
 export const fetchAllUsersLocations = (setAllUserLocations) => {
   const usersRef = collection(db, "users");
   return onSnapshot(usersRef, (snapshot) => {
@@ -86,21 +91,8 @@ export const fetchAllUsersLocations = (setAllUserLocations) => {
   });
 };
 
-// export const fetchUserData = async () => {
-//   try {
-//     const user = auth.currentUser;
-//     if (!user) return null;
-//     const userDocRef = doc(db, "users", user.uid);
-//     const userDoc = await getDoc(userDocRef);
-//     if (userDoc.exists()) {
-//       return userDoc.data();
-//     }
-//     return null;
-//   } catch (error) {
-//     console.error("Error fetching user data:", error);
-//     return null;
-//   }
-// };
+// Retrieves the current user's data from Firestore
+// Can also fetch another user's data if userId is provided
 export const fetchUserData = async (userId) => {
   try {
     const user = auth.currentUser;
@@ -119,10 +111,9 @@ export const fetchUserData = async (userId) => {
 };
 
 
+// CHATBOT FUNCTIONS
 
-
-// ChatBot 
-
+// Saves chat messages to Firestore for both logged-in and anonymous users
 export const storeChatSession = async (sessionId, messages) => {
   try {
     const user = auth.currentUser;
@@ -161,6 +152,7 @@ export const storeChatSession = async (sessionId, messages) => {
   }
 };
 
+// Retrieves chat messages for a specific session from Firestore
 export const fetchChatSession = async (sessionId) => {
   try {
     const user = auth.currentUser;
@@ -186,6 +178,7 @@ export const fetchChatSession = async (sessionId) => {
   }
 };
 
+// Clears all messages from a chat session in Firestore
 export const clearChatSession = async (sessionId) => {
   try {
     const user = auth.currentUser;
@@ -216,6 +209,7 @@ export const clearChatSession = async (sessionId) => {
   }
 };
 
+// Gets the current user's name from their Firestore profile
 export const getUserName = async () => {
   try {
     const userData = await fetchUserData();
@@ -226,6 +220,7 @@ export const getUserName = async () => {
   }
 };
 
+// Retrieves the most recent chat sessions for the current user
 export const fetchRecentChatSessions = async (limit = 5) => {
   try {
     const user = auth.currentUser;
@@ -247,6 +242,7 @@ export const fetchRecentChatSessions = async (limit = 5) => {
   }
 };
 
+// Deletes the current user from both Firestore and Firebase Authentication
 export const deleteUser = async () => {
   try {
     const user = auth.currentUser;

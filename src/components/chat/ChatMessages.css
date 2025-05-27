@@ -267,3 +267,11 @@
     padding: 0.5rem 0.75rem;
   }
 }
+
+/* Add a distinct color for the sender's name in group chat messages */
+.SenderName {
+  color: #1976d2; /* A readable blue shade */
+  font-weight: 600;
+  margin-bottom: 2px;
+  display: block;
+}

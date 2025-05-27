@@ -98,7 +98,7 @@ const NearbyUsers = () => {
   }, [navigate]);
 
   const handleNavigate = useCallback((lat, lng) => {
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
     window.open(url, "_blank");
   }, []);
 

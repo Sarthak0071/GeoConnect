@@ -14,9 +14,10 @@ const TravelHistory = () => {
   const [showInfoWindow, setShowInfoWindow] = useState(null);
   const navigate = useNavigate();
 
-  // Load Google Maps API using the same API key as in Home component
+  // Load Google Maps API using environment variable
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyDGanuI81nlP5V5XgaGxl4Dxc3k7X-E0TQ", id: 'google-map-script',
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    id: 'google-map-script',
   });
 
   useEffect(() => {

@@ -60,17 +60,19 @@
   }
   
   .unblock-btn {
-    background: #28a745;
+    background: #0ea5e9;
     color: white;
     border: none;
     padding: 6px 12px;
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s ease;
+    font-weight: 500;
+    font-size: 14px;
   }
   
   .unblock-btn:hover {
-    background: #218838;
+    background: #0284c7;
   }
   
   .no-blocked-text {

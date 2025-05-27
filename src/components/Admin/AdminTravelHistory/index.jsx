@@ -8,7 +8,7 @@ import "../LiveTracking/LiveTracking.css"; // Shared styles
 import "./AdminTravelHistory.css";
 
 // Replace with your own API key or use environment variables
-const API_KEY = "AIzaSyDGanuI81nlP5V5XgaGxl4Dxc3k7X-E0TQ";
+const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 const AdminTravelHistory = () => {
   const { users, loading, error } = useTravelUsers();
@@ -21,10 +21,10 @@ const AdminTravelHistory = () => {
   const [mapZoom, setMapZoom] = useState(2);
   const [map, setMap] = useState(null);
 
-
-    const { isLoaded } = useJsApiLoader({
-      googleMapsApiKey: "AIzaSyDGanuI81nlP5V5XgaGxl4Dxc3k7X-E0TQ", id: 'google-map-script',
-    });
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    id: 'google-map-script',
+  });
 
   const handleUserSelect = async (user) => {
     setSelectedUser(user);

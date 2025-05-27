@@ -10,7 +10,7 @@ export const fetchDescription = async (place) => {
         },
         body: JSON.stringify({
           placeName: place.name,
-          city: place.city || "Unknown city"
+          city: place.locationName || place.city || ""
         }),
       });
   
